@@ -1,0 +1,597 @@
+/* EmployeeDashboard CSS */
+/* This CSS file is specifically for the EmployeeDashboard component */
+
+/* Apply namespacing to avoid conflicts with AdminDashboard */
+.EmployeeDashboard {
+  font-family: Arial, sans-serif;
+}
+
+.EmployeeDashboard .top-header {
+  background: #6c63ff;
+  color: white;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.EmployeeDashboard .header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.EmployeeDashboard .logo-image {
+  height: 70px;
+  width: auto;
+  max-height: 70px;
+}
+
+.EmployeeDashboard .nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.EmployeeDashboard .nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.EmployeeDashboard .nav-links a:hover {
+  opacity: 0.8;
+}
+
+.EmployeeDashboard .main-content {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #f6f9ff;
+  min-height: calc(100vh - 4rem);
+}
+
+.EmployeeDashboard .card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.EmployeeDashboard .card-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.EmployeeDashboard .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  margin-bottom: 12px;
+}
+
+.EmployeeDashboard .card-body {
+  padding: 1rem;
+}
+
+.EmployeeDashboard .table-container {
+  overflow-x: auto;
+}
+
+/* Table styling */
+.EmployeeDashboard .data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  /* Fixed layout for column width control */
+}
+
+/* Individual column widths */
+.EmployeeDashboard .data-table th:nth-child(1) {
+  width: 70px;
+  /* Sr No. or Code */
+}
+
+.EmployeeDashboard .data-table th:nth-child(2) {
+  width: 150px;
+  /* Agent Name */
+}
+
+.EmployeeDashboard .data-table th:nth-child(3) {
+  width: 220px;
+  /* Email */
+}
+
+.EmployeeDashboard .data-table th:nth-child(4) {
+  width: 240px;
+  /* Mobile */
+}
+
+.EmployeeDashboard .data-table th:nth-child(5) {
+  width: 120px;
+  /* Password */
+}
+
+.EmployeeDashboard .data-table th:nth-child(6) {
+  width: 150px;
+  /* Document Status */
+}
+
+.EmployeeDashboard .data-table th:nth-child(7) {
+  width: 160px;
+  /* Admin Approval */
+}
+
+.EmployeeDashboard .data-table th:nth-child(8) {
+  width: 150px;
+  /* Agent Confirm */
+}
+
+.EmployeeDashboard .data-table th:nth-child(9) {
+  width: 150px;
+  /* Wallet Balance */
+}
+
+.EmployeeDashboard .data-table th:nth-child(10) {
+  width: 150px;
+  /* Payment Mode */
+}
+
+.EmployeeDashboard .data-table th:nth-child(11) {
+  width: 150px;
+  /* Payout */
+}
+
+.EmployeeDashboard .data-table th:nth-child(12) {
+  width: 100px;
+  /* Admin Comment */
+}
+
+.EmployeeDashboard .data-table th:nth-child(13) {
+  width: 190px;
+  /* Admin Comment */
+}
+
+.EmployeeDashboard .data-table th {
+  background: #f1f5f9;
+
+  font-weight: 600;
+
+  color: #475569;
+  white-space: nowrap;
+  /* Prevent header wrapping */
+  border-bottom: 1px solid #e5e7eb;
+
+  padding: 10px;
+  text-align: left;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.EmployeeDashboard .data-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.EmployeeDashboard .data-table tr:hover {
+  background: #f8fafc;
+}
+
+/* Document status button styling */
+.EmployeeDashboard .data-table .btn {
+  padding: 6px 10px;
+  font-size: 13px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  width: auto;
+  min-width: 100px;
+  max-width: 130px;
+}
+
+/* Make icons smaller in buttons */
+.EmployeeDashboard .data-table .btn svg,
+.EmployeeDashboard .data-table .btn .w-4,
+.EmployeeDashboard .data-table .btn .h-4 {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+/* Button Styles */
+.EmployeeDashboard .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.EmployeeDashboard .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.EmployeeDashboard .btn-primary {
+  background: #6c63ff;
+  color: white;
+}
+
+.EmployeeDashboard .btn-primary:hover:not(:disabled) {
+  background: #5a51e0;
+}
+
+.EmployeeDashboard .btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.EmployeeDashboard .btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.EmployeeDashboard .btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.EmployeeDashboard .btn-success:hover:not(:disabled) {
+  background: #059669;
+}
+
+.EmployeeDashboard .btn-secondary {
+  background: #4b5563;
+  color: white;
+}
+
+.EmployeeDashboard .btn-secondary:hover:not(:disabled) {
+  background: #374151;
+}
+
+/* Status Badge Styles */
+.EmployeeDashboard .status-badge {
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.EmployeeDashboard .status-badge.status-cell {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.EmployeeDashboard .status-badge .status-active,
+.EmployeeDashboard .status-badge .status-rejected,
+.EmployeeDashboard .status-badge .status-pending {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
+}
+
+.EmployeeDashboard .status-badge .status-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.EmployeeDashboard .status-badge .status-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.EmployeeDashboard .status-badge .status-pending {
+  background-color: #fff3e0;
+  color: #6c63ff;
+}
+
+/* Employee Info Styles */
+.EmployeeDashboard .employee-info {
+  padding: 1rem;
+}
+
+.EmployeeDashboard .info-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.EmployeeDashboard .info-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.EmployeeDashboard .info-label {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.EmployeeDashboard .info-value {
+  font-weight: 500;
+}
+
+.EmployeeDashboard .font-weight {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+/* Spacing Utilities */
+.EmployeeDashboard .spaced10 {
+  margin-right: 10px;
+}
+
+.EmployeeDashboard .spaced5 {
+  margin-right: 5px;
+}
+
+.EmployeeDashboard .spaced2 {
+  margin-right: 2px;
+}
+
+/* Footer */
+.EmployeeDashboard .footer {
+  background: #6c63ff;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Header Actions */
+.EmployeeDashboard .header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Loading Spinner */
+.EmployeeDashboard .animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Welcome Title */
+.EmployeeDashboard .welcome-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Document Button States */
+.EmployeeDashboard .btn-reupload {
+  background-color: #ef4444;
+  color: white;
+}
+
+.EmployeeDashboard .btn-reupload:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.EmployeeDashboard .btn-completed {
+  background-color: #10b981;
+  color: white;
+}
+
+.EmployeeDashboard .btn-completed:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.EmployeeDashboard .btn-pending {
+  background-color: #6c63ff;
+  color: white;
+}
+
+.EmployeeDashboard .btn-pending:hover:not(:disabled) {
+  background-color: #5a51e0;
+}
+
+/* Pagination Controls */
+.EmployeeDashboard .pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.EmployeeDashboard .pagination-controls button {
+  min-width: 80px;
+  margin: 0 10px;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.EmployeeDashboard .pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.EmployeeDashboard .pagination-controls span {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Agent Summary Styles */
+.EmployeeDashboard .summary-container {
+  margin-bottom: 1.5rem;
+}
+
+.EmployeeDashboard .summary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.EmployeeDashboard .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.EmployeeDashboard .summary-box {
+  background: #10b981;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  color: white;
+}
+
+.EmployeeDashboard .summary-box h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.EmployeeDashboard .summary-box p {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Fix styling for nested main tag */
+.EmployeeDashboard .card-header main {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .EmployeeDashboard .data-table {
+    table-layout: auto;
+    /* Allow dynamic sizing on smaller screens */
+  }
+
+  .EmployeeDashboard .data-table th,
+  .EmployeeDashboard .data-table td {
+    padding: 8px 6px;
+    /* Further reduce padding on smaller screens */
+  }
+
+  .EmployeeDashboard .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .EmployeeDashboard .nav-links {
+    display: none;
+  }
+
+  .EmployeeDashboard .card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .EmployeeDashboard .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .EmployeeDashboard .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .EmployeeDashboard .info-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .EmployeeDashboard .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .EmployeeDashboard .pagination-controls {
+    flex-wrap: wrap;
+  }
+
+  .EmployeeDashboard .pagination-controls button {
+    min-width: 60px;
+    margin: 5px;
+  }
+
+  .EmployeeDashboard .table-container {
+    margin: 0 -1rem;
+    width: 100%;
+  }
+
+
+
+  .EmployeeDashboard .data-table th,
+  .EmployeeDashboard .data-table td {
+    padding: 0.5rem;
+  }
+
+
+  /* Button Styles */
+  .apply-btn-emp {
+    padding: 0.5rem 1.5rem;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+  }
+
+  .apply-btn-emp:hover:not(:disabled) {
+    background-color: #dc2626;
+  }
+
+  .apply-btn-emp:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+  }
+}
+  .EmployeeDashboard .data-table {
+    font-size: 0.875rem;
+    width: 100%;
+    min-width: 1200px;
+    /* Adjust based on your needs */
+    table-layout: auto;
+  }

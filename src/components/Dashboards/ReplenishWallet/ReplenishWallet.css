@@ -1,0 +1,442 @@
+/* Basic styling for the table */
+.replenish-wallet-wrapper .table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.replenish-wallet-wrapper .proposals-table {
+  width: 100%;
+  min-width: 1200px; /* Ensure minimum width for better readability */
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: fixed; /* Control column widths */
+}
+
+.proposals-table th,
+.proposals-table td {
+  padding: 10px 6px;
+  text-align: left;
+  font-size: 13px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: normal; /* Allow text wrapping */
+  word-break: break-word; /* Break words when needed */
+  overflow: visible; /* Keep content visible */
+  vertical-align: middle; /* Center align content vertically */
+}
+
+/* Explicitly set width for each column to ensure proper display */
+.proposals-table th:nth-child(1),
+.proposals-table td:nth-child(1) {
+   width: 50px; /* Sr No column */
+}
+
+.proposals-table th:nth-child(2),
+.proposals-table td:nth-child(2) {
+  width: 200px; /* Payment Ref No column */
+  min-width: 200px;
+}
+
+.proposals-table th:nth-child(3),
+.proposals-table td:nth-child(3) {
+  width: 120px; /* Agent Code column */
+}
+
+.proposals-table th:nth-child(4),
+.proposals-table td:nth-child(4) {
+  width: 180px; /* Agent Name column */
+}
+
+.proposals-table th:nth-child(5),
+.proposals-table td:nth-child(5),
+.proposals-table th:nth-child(6),
+.proposals-table td:nth-child(6) {
+  width: 110px; /* Amount columns */
+}
+
+.proposals-table th:nth-child(7),
+.proposals-table td:nth-child(7) {
+  width: 100px; /* Status column */
+}
+
+.proposals-table th:nth-child(8),
+.proposals-table td:nth-child(8) {
+  width: 180px; /* UTR column */
+}
+
+.proposals-table th:nth-child(9),
+.proposals-table td:nth-child(9) {
+ width: 180px; /* Increased from previous width */
+  text-align: center;
+  min-width: 180px;
+}
+
+.proposals-table th:nth-child(10),
+.proposals-table td:nth-child(10) {
+  width: 120px; /* Create Date column */
+   text-align: center;
+}
+
+/* Basic styling for the table */
+.replenish-wallet-wrapper .table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.replenish-wallet-wrapper .proposals-table {
+  width: 100%;
+  min-width: 1200px; /* Ensure minimum width for better readability */
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: fixed; /* Control column widths */
+}
+
+
+
+/* General page styling */
+.replenish-wallet-wrapper .main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.replenish-wallet-wrapper .card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.replenish-wallet-wrapper .card-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.replenish-wallet-wrapper .wallet-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.replenish-wallet-wrapper .proposal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+    margin-bottom: 12px;
+}
+
+.replenish-wallet-wrapper .wallet-info {
+  padding: 1.5rem;
+}
+
+.replenish-wallet-wrapper .agent-info-card {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.replenish-wallet-wrapper .agent-info-card h2 {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.replenish-wallet-wrapper .top-header {
+  background-color: #6c63ff;
+  padding: 0 1rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.replenish-wallet-wrapper .header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.replenish-wallet-wrapper .logo-image {
+  height: 60px;
+  width: auto;
+  max-height: 60px;
+}
+
+/* Navigation and button styles */
+.replenish-wallet-wrapper .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.replenish-wallet-wrapper .nav-links a {
+  color: white;
+  text-decoration: none;
+ 
+}
+
+.replenish-wallet-wrapper .nav-links a:hover {
+  text-decoration: underline;
+}
+
+.replenish-wallet-wrapper .btn-danger {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.replenish-wallet-wrapper .footer {
+  background-color: #6c63ff;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+.replenish-wallet-wrapper .action-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.replenish-wallet-wrapper .back-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #4b5563;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.replenish-wallet-wrapper .refresh-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Message styles */
+.replenish-wallet-wrapper .loading-message, 
+.replenish-wallet-wrapper .no-data-message {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.replenish-wallet-wrapper .success-message, 
+.replenish-wallet-wrapper .error-message {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.replenish-wallet-wrapper .success-message {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.replenish-wallet-wrapper .error-message {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Wallet application section */
+.replenish-wallet-wrapper .section-divider {
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.replenish-wallet-wrapper .section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.replenish-wallet-wrapper .wallet-applications-table {
+  margin-top: 0;
+}
+
+.replenish-wallet-wrapper .action-buttons-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.replenish-wallet-wrapper .approve-button, 
+.replenish-wallet-wrapper .reject-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 100px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.replenish-wallet-wrapper .approve-button {
+  background-color: #059669;
+  color: white;
+}
+
+.replenish-wallet-wrapper .reject-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.replenish-wallet-wrapper .approve-button:hover:not(:disabled) {
+  background-color: #047857;
+  transform: translateY(-1px);
+}
+
+.replenish-wallet-wrapper .reject-button:hover:not(:disabled) {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.replenish-wallet-wrapper .approve-button:disabled, 
+.replenish-wallet-wrapper .reject-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Submit button improvements */
+.replenish-wallet-wrapper .submit-button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 4px;
+  background-color: #059669;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Table styles and fixes */
+.replenish-wallet-wrapper .proposals-table th:first-child,
+.replenish-wallet-wrapper .proposals-table td:first-child {
+  width: 80px;
+  min-width: 80px;
+  text-align: left;
+}
+
+.replenish-wallet-wrapper .wallet-applications-table .proposals-table th:nth-child(7),
+.replenish-wallet-wrapper .wallet-applications-table .proposals-table td:nth-child(7) {
+  width: 200px; /* Actions column - increase width */
+  min-width: 200px;
+}
+
+.replenish-wallet-wrapper .wallet-applications-table .action-buttons-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.replenish-wallet-wrapper .payment-ref-cell {
+  font-family: monospace;
+  font-size: 14px;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.replenish-wallet-wrapper .table-container {
+  position: relative;
+}
+
+.replenish-wallet-wrapper .table-container::after {
+  content: "← Scroll →";
+  display: block;
+  text-align: center;
+  padding: 5px;
+  background-color: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  border-top: 1px solid #e5e7eb;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.replenish-wallet-wrapper .approve-button svg,
+.replenish-wallet-wrapper .reject-button svg {
+  margin-right: 4px;
+}
+
+.replenish-wallet-wrapper .proposals-table th,
+.replenish-wallet-wrapper .proposals-table td {
+  padding: 12px 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .replenish-wallet-wrapper .action-buttons-container {
+    gap: 5px;
+  }
+  
+  .replenish-wallet-wrapper .approve-button, 
+  .replenish-wallet-wrapper .reject-button {
+    padding: 6px 8px;
+    font-size: 13px;
+    min-width: 80px;
+  }
+}
+
+/* Layout styles */
+.replenish-wallet-wrapper .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.replenish-wallet-wrapper .proposals-table tbody tr:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.replenish-wallet-wrapper .logo span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+}
+.replenish-wallet-wrapper .page-title {
+   font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+}

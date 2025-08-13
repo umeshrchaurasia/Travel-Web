@@ -1,0 +1,457 @@
+/* AdminDashboard CSS with proper namespacing */
+
+.AdminDashboard {
+  font-family: Arial, sans-serif;
+}
+
+
+.AdminDashboard .top-header {
+  background: #6c63ff;
+  color: white;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+  
+.AdminDashboard .header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.AdminDashboard .logo-image {
+  height: 70px;
+  width: auto;
+  max-height: 70px;
+}
+  
+.AdminDashboard .nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+  
+.AdminDashboard .nav-links a {
+  color: white;
+  text-decoration: none;
+}
+  
+.AdminDashboard .main-content {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #f6f9ff;
+  min-height: calc(100vh - 4rem);
+}
+  
+.AdminDashboard .card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+  
+.AdminDashboard .card-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+  
+.AdminDashboard .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+    margin-bottom: 12px;
+}
+  
+.AdminDashboard .card-body {
+  padding: 1rem;
+}
+  
+.AdminDashboard .table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Table styling with fixed column widths */
+.AdminDashboard .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Critical for maintaining fixed column widths */
+}
+
+.AdminDashboard .data-table th,
+.AdminDashboard .data-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.AdminDashboard .data-table th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #475569;
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Specific column widths based on screenshot */
+.AdminDashboard .data-table th:nth-child(1), /* No. */
+.AdminDashboard .data-table td:nth-child(1) {
+  width: 70px;
+  min-width: 70px;
+  max-width: 70px;
+}
+
+.AdminDashboard .data-table th:nth-child(2), /* Full Name */
+.AdminDashboard .data-table td:nth-child(2) {
+  width: 160px;
+  min-width: 160px;
+}
+
+.AdminDashboard .data-table th:nth-child(3), /* Email */
+.AdminDashboard .data-table td:nth-child(3) {
+  width: 200px;
+  min-width: 200px;
+}
+
+.AdminDashboard .data-table th:nth-child(4), /* Mobile */
+.AdminDashboard .data-table td:nth-child(4) {
+  width: 120px;
+  min-width: 120px;
+}
+
+.AdminDashboard .data-table th:nth-child(5), /* Document Status */
+.AdminDashboard .data-table td:nth-child(5) {
+  width: 160px;
+  min-width: 160px;
+}
+
+.AdminDashboard .data-table th:nth-child(6), /* Admin Approval */
+.AdminDashboard .data-table td:nth-child(6) {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.AdminDashboard .data-table th:nth-child(7), /* Agent Approval */
+.AdminDashboard .data-table td:nth-child(7) {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.AdminDashboard .data-table th:nth-child(8), /* Wallet Amount */
+.AdminDashboard .data-table td:nth-child(8) {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.AdminDashboard .data-table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Document status button styling */
+.AdminDashboard .data-table button.btn {
+  width: 150px;
+  height: 34px;
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button styles */
+.AdminDashboard .btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.AdminDashboard .btn-primary {
+  background: #6c63ff;
+  color: white;
+}
+
+.AdminDashboard .btn-primary:hover {
+  background: #5a51e0;
+}
+
+.AdminDashboard .btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.AdminDashboard .btn-danger:hover {
+  background: #dc2626;
+}
+
+.AdminDashboard .btn-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.AdminDashboard .btn-success:hover {
+  background-color: #059669;
+}
+
+/* Make icons smaller in buttons */
+.AdminDashboard .data-table .btn svg,
+.AdminDashboard .data-table .btn .w-4,
+.AdminDashboard .data-table .btn .h-4 {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+/* Status Badge Styles */
+.AdminDashboard .status-badge {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.AdminDashboard .status-badge .status-active,
+.AdminDashboard .status-badge .status-inactive,
+.AdminDashboard .status-badge .status-pending {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  min-width: 70px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.AdminDashboard .status-badge .status-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.AdminDashboard .status-badge .status-inactive {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.AdminDashboard .status-badge .status-pending {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.AdminDashboard .footer {
+  background: #6c63ff;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Spacing Utilities */
+.AdminDashboard .spaced10 {
+  margin-right: 10px;
+}
+
+.AdminDashboard .spaced5 {
+  margin-right: 5px;
+}
+
+.AdminDashboard .spaced2 {
+  margin-right: 2px;
+}
+
+.AdminDashboard .font-weight {
+ font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+/* Employee Info Styles */
+.AdminDashboard .employee-info {
+  padding: 1rem;
+}
+
+.AdminDashboard .info-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.AdminDashboard .info-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.AdminDashboard .info-label {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.AdminDashboard .info-value {
+  font-weight: 500;
+}
+
+.AdminDashboard .header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Welcome Title */
+.AdminDashboard .welcome-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Wallet button styling */
+.AdminDashboard .wallet-button-container {
+  display: flex;
+  align-items: center;
+}
+
+.AdminDashboard .wallet-container {
+  display: flex;
+  align-items: center;
+  background-color: #FFE082;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #FFD54F;
+}
+
+.AdminDashboard .wallet-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #059669;
+}
+
+.AdminDashboard .wallet-icon-wrapper {
+  margin-right: 8px;
+}
+
+.AdminDashboard .wallet-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.AdminDashboard .wallet-text {
+  font-weight: 500;
+}
+
+/* Loading Spinner */
+.AdminDashboard .animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Input and Select styles */
+.AdminDashboard input, 
+.AdminDashboard select {
+  height: 38px;
+  border-color: #e2e8f0;
+  background-color: white;
+}
+
+.AdminDashboard input:read-only {
+  background-color: #f3f4f6;
+}
+
+.AdminDashboard input::placeholder {
+  color: #a0aec0;
+}
+
+/* Required field asterisk */
+.AdminDashboard label.required::after {
+  content: '*';
+  color: #f56565;
+  margin-left: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .AdminDashboard .data-table {
+    table-layout: auto; /* Allow dynamic sizing on smaller screens */
+  }
+  
+  .AdminDashboard .data-table th, 
+  .AdminDashboard .data-table td {
+    padding: 8px 6px; /* Further reduce padding on smaller screens */
+  }
+}
+
+
+.AdminDashboard .logo span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+}
+
+@media (max-width: 768px) {
+  .AdminDashboard .nav-links {
+    display: none;
+  }
+  
+  .AdminDashboard .card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .AdminDashboard .btn-group {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .AdminDashboard .btn {
+    width: 100%;
+  }
+  
+  .AdminDashboard .info-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .AdminDashboard .grid-cols-3,
+  .AdminDashboard .grid-cols-5 {
+    grid-template-columns: 1fr;
+  }
+  
+  .AdminDashboard .gap-4 {
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,418 @@
+/* Signup Component CSS with proper namespacing */
+
+.SignupComponent {
+  font-family: "Open Sans", sans-serif;
+  min-height: 100vh;
+  background: #f6f9ff;
+  color: #444444;
+}
+
+/*--------------------------------------------------------------
+# General Styles for Signup
+--------------------------------------------------------------*/
+.SignupComponent :root {
+  scroll-behavior: smooth;
+}
+
+.SignupComponent a {
+  color: #4154f1;
+  text-decoration: none;
+}
+
+.SignupComponent a:hover {
+  color: #717ff5;
+  text-decoration: none;
+}
+
+.SignupComponent h1,
+.SignupComponent h2,
+.SignupComponent h3,
+.SignupComponent h4,
+.SignupComponent h5,
+.SignupComponent h6 {
+  font-family: "Nunito", sans-serif;
+}
+
+/*--------------------------------------------------------------
+# Container and Layout
+--------------------------------------------------------------*/
+.SignupComponent .container {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.SignupComponent .section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.SignupComponent .min-vh-100 {
+  min-height: 100vh !important;
+}
+
+.SignupComponent .d-flex {
+  display: flex !important;
+}
+
+.SignupComponent .flex-column {
+  flex-direction: column !important;
+}
+
+.SignupComponent .align-items-center {
+  align-items: center !important;
+}
+
+.SignupComponent .justify-content-center {
+  justify-content: center !important;
+}
+
+.SignupComponent .py-4 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.SignupComponent .row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+.SignupComponent .justify-content-center {
+  justify-content: center !important;
+}
+
+.SignupComponent .col-lg-4 {
+  flex: 0 0 auto;
+  width: 33.33333333%;
+}
+
+.SignupComponent .col-md-6 {
+  flex: 0 0 auto;
+  width: 50%;
+}
+
+@media (max-width: 991.98px) {
+  .SignupComponent .col-lg-4 {
+    width: 50%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .SignupComponent .col-lg-4,
+  .SignupComponent .col-md-6 {
+    width: 100%;
+  }
+}
+
+/*--------------------------------------------------------------
+# Logo Section
+--------------------------------------------------------------*/
+.SignupComponent .logo {
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.SignupComponent .logo img {
+  max-height: 50px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.SignupComponent .logo span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #012970;
+  font-family: "Nunito", sans-serif;
+}
+
+.SignupComponent .w-auto {
+  width: auto !important;
+}
+
+.SignupComponent .d-none {
+  display: none !important;
+}
+
+.SignupComponent .d-lg-block {
+  display: block !important;
+}
+
+@media (max-width: 991.98px) {
+  .SignupComponent .d-lg-block {
+    display: none !important;
+  }
+}
+
+/*--------------------------------------------------------------
+# Card Styling
+--------------------------------------------------------------*/
+.SignupComponent .card {
+  margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  background-color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-clip: border-box;
+}
+
+.SignupComponent .mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.SignupComponent .card-body {
+  padding: 30px;
+  flex: 1 1 auto;
+}
+
+.SignupComponent .pt-4 {
+  padding-top: 1.5rem !important;
+}
+
+.SignupComponent .pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.SignupComponent .card-title {
+  padding: 20px 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 0;
+}
+
+.SignupComponent .text-center {
+  text-align: center !important;
+}
+
+.SignupComponent .fs-4 {
+  font-size: calc(1.275rem + 0.3vw) !important;
+}
+
+.SignupComponent .small {
+  font-size: 0.875em;
+}
+
+/*--------------------------------------------------------------
+# Form Styling
+--------------------------------------------------------------*/
+.SignupComponent .row.g-3 {
+  --bs-gutter-x: 1rem;
+  --bs-gutter-y: 1rem;
+}
+
+.SignupComponent .col-12 {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.SignupComponent .form-label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: rgba(1, 41, 112, 0.6);
+}
+
+.SignupComponent .form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.SignupComponent .form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #4154f1;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+}
+
+.SignupComponent .position-relative {
+  position: relative !important;
+}
+
+/*--------------------------------------------------------------
+# Checkbox Styling
+--------------------------------------------------------------*/
+.SignupComponent .form-check {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5em;
+  margin-bottom: 0.125rem;
+}
+
+.SignupComponent .form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-top: 0.25em;
+  vertical-align: top;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  appearance: none;
+  color-adjust: exact;
+  margin-left: -1.5em;
+  float: left;
+}
+
+.SignupComponent .form-check-input:checked {
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.SignupComponent .form-check-input:focus {
+  border-color: #4154f1;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(65, 84, 241, 0.25);
+}
+
+.SignupComponent .form-check-label {
+  color: #444444;
+  margin-bottom: 0;
+}
+
+/*--------------------------------------------------------------
+# Button Styling
+--------------------------------------------------------------*/
+.SignupComponent .btn {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.SignupComponent .btn-primary {
+  color: #fff;
+  background-color: #4154f1;
+  border-color: #4154f1;
+}
+
+.SignupComponent .btn-primary:hover {
+  color: #fff;
+  background-color: #5969f3;
+  border-color: #5969f3;
+}
+
+.SignupComponent .btn-primary:focus {
+  color: #fff;
+  background-color: #5969f3;
+  border-color: #5969f3;
+  box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.5);
+}
+
+.SignupComponent .btn-primary:disabled {
+  color: #fff;
+  background-color: #4154f1;
+  border-color: #4154f1;
+  opacity: 0.65;
+}
+
+.SignupComponent .w-100 {
+  width: 100% !important;
+}
+
+/*--------------------------------------------------------------
+# Alert Styling
+--------------------------------------------------------------*/
+.SignupComponent .alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.SignupComponent .alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/*--------------------------------------------------------------
+# Credits/Footer
+--------------------------------------------------------------*/
+.SignupComponent .credits {
+  padding-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #012970;
+}
+
+.SignupComponent .credits p {
+  margin: 0;
+  padding: 0;
+}
+
+/*--------------------------------------------------------------
+# Responsive Design
+--------------------------------------------------------------*/
+@media (max-width: 1199px) {
+  .SignupComponent .container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .SignupComponent .card-body {
+    padding: 20px;
+  }
+  
+  .SignupComponent .logo span {
+    font-size: 20px;
+  }
+  
+  .SignupComponent .logo img {
+    max-height: 40px;
+  }
+  
+  /* Hide brand name on mobile for better space utilization */
+  .SignupComponent .d-lg-block {
+    display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .SignupComponent .col-lg-4,
+  .SignupComponent .col-md-6 {
+    padding: 0 15px;
+  }
+  
+  .SignupComponent .card-body {
+    padding: 15px;
+  }
+}

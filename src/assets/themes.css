@@ -1,0 +1,45 @@
+:root {
+  /* White & Blue Theme */
+  --color-primary: #3498db;
+  --color-primary-light: #5dade2;
+  --color-primary-dark: #2874a6;
+  
+  --color-secondary: #white;
+  --color-background: #f4f6f9;
+  
+  --color-text-dark: #2c3e50;
+  --color-text-light: #34495e;
+  
+  --color-success: #2ecc71;
+  --color-danger: #e74c3c;
+  --color-warning: #f39c12;
+  
+  /* Typography */
+  --font-family-primary: 'Arial', sans-serif;
+  --font-size-base: 16px;
+  
+  /* Spacing */
+  --spacing-small: 8px;
+  --spacing-medium: 16px;
+  --spacing-large: 24px;
+  
+  /* Border Radius */
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+}
+
+.theme-white-blue {
+  background-color: var(--color-background);
+  color: var(--color-text-dark);
+}
+
+.theme-white-blue .btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.theme-white-blue .sidebar {
+  background-color: var(--color-primary-dark);
+  color: white;
+}
