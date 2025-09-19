@@ -37,6 +37,12 @@ import MIS_Proposal_Admin from './components/Dashboards/MIS_Report/MIS_Proposal_
 import MIS_Agentdetail_Admin from './components/Dashboards/MIS_Report/MIS_Agentdetail_Admin';
 
 import TDS_Proposal from './components/Dashboards/MIS_Report/TDS_Proposal';
+import Update_Agent from './components/Dashboards/AgentDashboards/Update_Agent';
+
+import OcrNumber from './components/Dashboards/OCR/OcrNumber';
+import OCRScanner from './components/Dashboards/OCR/OCRScanner';
+
+
 
 function App() {
   const [userData, setUserData] = useState(() => {
@@ -216,7 +222,23 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/Update_Agent" element={
+            <ProtectedRoute>
+              <Update_Agent userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
 
+          <Route path="/OcrNumber" element={
+            <ProtectedRoute>
+              <OcrNumber userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/OCRScanner" element={
+            <ProtectedRoute>
+              <OCRScanner userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
 
 
         </Routes>

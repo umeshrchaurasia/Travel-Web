@@ -12,6 +12,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
   const initialFormData = {
     UId: userId || '',
     FullName: '',
+    TraderName: '',
     Password: '',
     EmailID: '',
     MobileNumber: '',
@@ -65,6 +66,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     const freshInitialData = {
       UId: userId || '',
       FullName: '',
+      TraderName: '',
       Password: '',
       EmailID: '',
       MobileNumber: '',
@@ -416,7 +418,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
   // Basic validations (synchronous)
   const validations = {
     validateName: (name) => {
-      if (!name || !name.trim()) return "Full name is required";
+      if (!name || !name.trim()) return "Full Name is required";
 
       const nameRegex = /^[A-Za-z\s\-'\.]+$/;
       if (!nameRegex.test(name.trim())) {
@@ -426,6 +428,24 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       const trimmedName = name.trim();
       if (trimmedName.length < 2) return "Name must be at least 2 characters long";
       if (trimmedName.length > 50) return "Name cannot exceed 50 characters";
+
+      return "";
+    },
+
+
+    // Validation for Trader Name
+
+    validateTraderName: (name) => {
+      if (!name || !name.trim()) return "Trader Name is required";
+
+      const nameRegex = /^[A-Za-z\s\-'\.]+$/;
+      if (!nameRegex.test(name.trim())) {
+        return "Name can only contain letters, spaces, hyphens, apostrophes, and periods";
+      }
+
+      const trimmedName = name.trim();
+      if (trimmedName.length < 2) return "Trader Name must be at least 2 characters long";
+      if (trimmedName.length > 50) return "Trader Name cannot exceed 50 characters";
 
       return "";
     },
@@ -520,6 +540,16 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
         setFormErrors(prev => ({
           ...prev,
           FullName: nameError
+        }));
+        break;
+
+      case 'TraderName':
+        processedValue = value; // Allow any characters for now, or add specific regex
+        setFormData(prev => ({ ...prev, [name]: processedValue }));
+        const traderNameError = validations.validateTraderName(processedValue);
+        setFormErrors(prev => ({
+          ...prev,
+          TraderName: traderNameError
         }));
         break;
 
@@ -629,6 +659,10 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     if (formData.FullName) {
       errors.FullName = validations.validateName(formData.FullName);
     }
+    if (formData.TraderName) {
+      errors.TraderName = validations.validateTraderName(formData.TraderName);
+    }
+
     if (formData.Password) {
       errors.Password = validations.validatePassword(formData.Password);
     }
@@ -657,6 +691,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
     const requiredFields = [
       'FullName',
+      'TraderName',
       'Password',
       'EmailID',
       'MobileNumber',
@@ -818,6 +853,8 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               )}
             </div>
 
+
+
             <div className="form-group">
               <label htmlFor="Password" style={{
                 fontWeight: '500',
@@ -864,9 +901,34 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
+
           </div>
 
           <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="TraderName" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>Trader Name</label>
+              <input
+                type="text"
+                id="TraderName"
+                name="TraderName"
+                className={`form-control ${formErrors.TraderName ? 'error' : ''}`}
+                value={formData.TraderName}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter trader name"
+                required
+              />
+              {formErrors.TraderName && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.TraderName}
+                </div>
+              )}
+            </div>
+
             <div className="form-group">
               <label htmlFor="EmailID" style={{
                 fontWeight: '500',
@@ -906,6 +968,10 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               )}
             </div>
 
+
+          </div>
+
+          <div className="form-row">
             <div className="form-group">
               <label htmlFor="MobileNumber" style={{
                 fontWeight: '500',
@@ -944,9 +1010,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
               <label htmlFor="Gender"
                 style={{
@@ -974,6 +1037,11 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               </select>
             </div>
 
+
+          </div>
+
+          <div className="form-row">
+
             <div className="form-group">
               <label htmlFor="DOB"
                 style={{
@@ -998,9 +1066,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
               <label htmlFor="EducationQualification"
                 style={{
@@ -1027,28 +1092,11 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               )}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="GST"
-                style={{
-                  fontWeight: '500',
-                  color: '#333',
-                  fontSize: '16px'
-                }}
-                className="optional-label">GST No (optional)</label>
-              <input
-                type="text"
-                id="GST"
-                name="GST"
-                className="form-control"
-                value={formData.GST}
-                onChange={handleChange}
-                autoComplete="off"
-                placeholder="Enter GST No"
-              />
-            </div>
+
           </div>
 
           <div className="form-row">
+
             <div className="form-group">
               <label htmlFor="PAN_No" style={{
                 fontWeight: '500',
@@ -1100,6 +1148,25 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               <PanValidationDisplay />
             </div>
 
+            <div className="form-group">
+              <label htmlFor="GST"
+                style={{
+                  fontWeight: '500',
+                  color: '#333',
+                  fontSize: '16px'
+                }}
+                className="optional-label">GST No (optional)</label>
+              <input
+                type="text"
+                id="GST"
+                name="GST"
+                className="form-control"
+                value={formData.GST}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter GST No"
+              />
+            </div>
 
           </div>
 

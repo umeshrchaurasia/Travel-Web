@@ -215,7 +215,7 @@ const RazorPaymentPage = ({ userData = null, onLogout = () => { } }) => {
           // Navigate to wallet payment page
           setProcessingPayment(false);
           // navigate('/wallet'); // Go to dashboard
-          navigate('/dashboard');
+          navigate('/GenerateCOI');
         } else {
           console.error("Failed to generate invoice:", invoiceResponse);
           setError("Failed to generate invoice. Please try again.");

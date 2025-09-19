@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-export const BASE_URL = 'http://localhost:3000/api';
-export const PDF_BASE_URL = 'http://localhost:3000';
+//export const BASE_URL = 'http://localhost:3000/api';
+//export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
-//export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
-//export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -145,6 +145,27 @@ export const get_agentlist_admin = async (startdate, enddate) => {
   }
 };
 
+export const get_agentnamelist_admin = async (startdate, enddate,agentname) => {
+  try {
+    const response = await api.post('/get_agentnamelist_admin', {
+      startdate, enddate,agentname
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Get agent list error:', error);
+    throw error;
+  }
+};
+
+export const updateAgentDetails = async (agentData) => {
+  try {
+    const response = await api.post('/updateAgentDetails', agentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating agent details:', error);
+    throw error;
+  }
+};
 
 
 export const getAgentListByUId = async (userId, agentId) => {

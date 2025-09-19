@@ -455,3 +455,69 @@
     gap: 1rem;
   }
 }
+
+/* Button Styles */
+.apply-btn-emp {
+  padding: 0.5rem 1.5rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.apply-btn-emp:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.apply-btn-emp:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+
+
+/* Button styles */
+.AdminDashboard .apply-btn-update {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.AdminDashboard .apply-btn-update {
+  background: #6c63ff;
+  color: white;
+}
+
+.AdminDashboard .apply-btn-update:hover {
+  background: #2a1ddc;
+}
+
+
+/* Button styles */
+.AdminDashboard .apply-btn-replenish {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.AdminDashboard .apply-btn-replenish{
+  background: #ceac3d;
+  color: white;
+}
+
+.AdminDashboard .apply-btn-replenish:hover {
+  background: #a27d03;
+}

@@ -93,18 +93,22 @@ const TDS_Proposal: React.FC = () => {
         return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-GB');
     };
 
-    const calculateUpfrontAmount = (proposal: Proposal): number => {
+    const calculateUpfrontAmounts = (proposal: Proposal) => {
         const preTax = parseFloat(String(proposal.Assiatance_charges_PreTaxAmount)) || 0;
         const postTax = parseFloat(String(proposal.Assiatance_charges_PostTaxAmount)) || 0;
         const discountComm = parseFloat(String(proposal.Discount)) || 0;
         const amountPaid = parseFloat(String(proposal.Fullpay_Discount_amount_to_be_paid)) || 0;
 
-        const upfront_amt_filter = postTax * (discountComm / 100);
+        const upfrontCommAmount = postTax * (discountComm / 100);
 
         // Applying the formula provided by the user
-        const upfrontAmount = amountPaid + (upfront_amt_filter * 0.02);
+        const tdsAmount = Math.round(upfrontCommAmount * 0.02);
 
-        return Math.round(upfrontAmount);
+        return {
+            upfrontCommAmount,
+            tdsAmount,
+            amountToBePaid: amountPaid
+        };
     };
 
     const formatCurrency = (amount?: string | number): string => {
@@ -210,17 +214,18 @@ const TDS_Proposal: React.FC = () => {
             'Agent Name',
             'Selected Payment Mode',
             'Payment Type',
-            'Discount/Comm%',
-             paymentFilter === 'Upfront' ? 'Upfront Amount to be Paid' : 'Full Pay/Discount Amount Paid',
-            'Payment Received'
+            'Discount/Comm%'
         ];
+        if (paymentFilter === 'Upfront') {
+            headers.push('Upfront comm amount', 'TDS@2%', 'Upfront Amount to be Paid');
+        } else {
+            headers.push('Full Pay/Discount Amount Paid');
+        }
+        headers.push('Payment Received');
 
         // Convert data to CSV format
         const csvData = filteredProposals.map((item, index) => {
-            const amountCell = paymentFilter === 'Upfront'
-                ? calculateUpfrontAmount(item).toFixed(2)
-                : item.Fullpay_Discount_amount_to_be_paid || '';
-            return [
+            const row = [
                 index + 1,
                 item.AssitanceNo || '',
                 `\t${item.Certificate_no || ''}`,
@@ -236,10 +241,20 @@ const TDS_Proposal: React.FC = () => {
                 item.AgentName || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
-                item.Discount || '',
-                amountCell,
-                item.Paymentreceived || ''
-            ]
+                item.Discount || ''
+            ];
+            if (paymentFilter === 'Upfront') {
+                const { upfrontCommAmount, tdsAmount, amountToBePaid } = calculateUpfrontAmounts(item);
+                row.push(
+                    upfrontCommAmount.toFixed(2),
+                    tdsAmount.toFixed(2),
+                    amountToBePaid.toFixed(2)
+                );
+            } else {
+                row.push(item.Fullpay_Discount_amount_to_be_paid || '');
+            }
+            row.push(item.Paymentreceived || '');
+            return row;
         });
 
         // Combine headers and data
@@ -513,51 +528,76 @@ const TDS_Proposal: React.FC = () => {
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
+
+                                            {/* Conditionally add new headers for Upfront */}
+                                            {paymentFilter === 'Upfront' && (
+                                                <>
+                                                    <th className="coi-table-header">Upfront comm amount</th>
+                                                    <th className="coi-table-header">TDS@2%</th>
+                                                </>
+                                            )}
+
                                             <th className="coi-table-header">
                                                 {paymentFilter === 'Upfront' ? 'Upfront Amount Paid' : 'Full Pay/Discount Amount Paid'}
                                             </th>
+
                                             <th className="coi-table-header">Payment Received</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredProposals.map((proposal: Proposal, index: number) => (
-                                            <tr key={proposal.proposal_id || index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f8f9fa' }}>
-                                                <td className="coi-table-cell">{index + 1}</td>
-                                                <td className="coi-table-cell">{proposal.AssitanceNo || ''}</td>
-                                                <td className="coi-table-cell">{proposal.Certificate_no || ''}</td>
-                                                <td className="coi-table-cell">{proposal.Planname || ''}</td>
-                                                <td className="coi-table-cell">{proposal.Nameofthepassenger || ''}</td>
-                                                <td className="coi-table-cell">{proposal.PassportNo || ''}</td>
-                                                <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
-                                                <td className="coi-table-cell">{formatDate(proposal.PolicyStartDate)}</td>
-                                                <td className="coi-table-cell">{formatDate(proposal.PolicyEndDate)}</td>
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
-                                                <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
-                                                <td className="coi-table-cell">{proposal.AgentName || ''}</td>
-                                                <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
-                                                <td className="coi-table-cell">{proposal.PaymentType || ''}</td>
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
+                                        {filteredProposals.map((proposal: Proposal, index: number) => {
+                                            // When filter is Upfront, calculate all amounts once for the row
+                                            const upfrontAmounts = paymentFilter === 'Upfront'
+                                                ? calculateUpfrontAmounts(proposal)
+                                                : null;
 
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
-                                                    {paymentFilter === 'Upfront'
-                                                        ? calculateUpfrontAmount(proposal)
-                                                        : proposal.Fullpay_Discount_amount_to_be_paid
-                                                    }
-                                                </td>
+                                            return (
+                                                <tr key={proposal.proposal_id || index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f8f9fa' }}>
+                                                    <td className="coi-table-cell">{index + 1}</td>
+                                                    <td className="coi-table-cell">{proposal.AssitanceNo || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.Certificate_no || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.Planname || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.Nameofthepassenger || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.PassportNo || ''}</td>
+                                                    <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
+                                                    <td className="coi-table-cell">{formatDate(proposal.PolicyStartDate)}</td>
+                                                    <td className="coi-table-cell">{formatDate(proposal.PolicyEndDate)}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.AgentName || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.PaymentType || ''}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
 
-                                                <td className="coi-table-cell">
-                                                    <span style={{
-                                                        padding: '2px 6px',
-                                                        borderRadius: '3px',
-                                                        backgroundColor: proposal.Paymentreceived === 'Payment received' ? '#d4edda' : '#fff3cd',
-                                                        color: proposal.Paymentreceived === 'Payment received' ? '#155724' : '#856404'
-                                                    }}>
-                                                        {proposal.Paymentreceived || ''}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    {/* Conditionally add new data cells for Upfront */}
+                                                    {paymentFilter === 'Upfront' && upfrontAmounts && (
+                                                        <>
+                                                            <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{upfrontAmounts.upfrontCommAmount.toFixed(2)}</td>
+                                                            <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{upfrontAmounts.tdsAmount.toFixed(2)}</td>
+                                                        </>
+                                                    )}
+
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                                        {paymentFilter === 'Upfront' && upfrontAmounts
+                                                            ? upfrontAmounts.amountToBePaid.toFixed(2) // <-- THE FIX IS HERE
+                                                            : proposal.Fullpay_Discount_amount_to_be_paid
+                                                        }
+                                                    </td>
+
+                                                    <td className="coi-table-cell">
+                                                        <span style={{
+                                                            padding: '2px 6px',
+                                                            borderRadius: '3px',
+                                                            backgroundColor: proposal.Paymentreceived === 'Payment received' ? '#d4edda' : '#fff3cd',
+                                                            color: proposal.Paymentreceived === 'Payment received' ? '#155724' : '#856404'
+                                                        }}>
+                                                            {proposal.Paymentreceived || ''}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

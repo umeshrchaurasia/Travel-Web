@@ -131,33 +131,48 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     loadAgents();
   };
 
-    const gotoMIS=()=>{
-     //const empId = displayData.id || displayData.UId;
-     localStorage.setItem('walletData',JSON.stringify(displayData));
+  const gotoMIS = () => {
+    //const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
 
-     navigate('/MIS_Proposal_Admin',{
-      state:{
-        empid:'',
-        agentData:displayData,
-        userType:'Admin',
-        adminId:userData?.UId
+    navigate('/MIS_Proposal_Admin', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
       }
-     });
+    });
   }
 
-    const gotoMISAgent=()=>{
-     //const empId = displayData.id || displayData.UId;
-     localStorage.setItem('walletData',JSON.stringify(displayData));
+  const gotoMISAgent = () => {
+    //const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
 
-     navigate('/MIS_Agentdetail_Admin',{
-      state:{
-        empid:'',
-        agentData:displayData,
-        userType:'Admin',
-        adminId:userData?.UId
+    navigate('/MIS_Agentdetail_Admin', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
       }
-     });
+    });
   }
+
+  const gotoUpdateAgent = () => {
+    //const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    navigate('/Update_Agent', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
+
 
   const handleWalletClick = () => {
     // Store the display data in localStorage to pass it to the wallet page
@@ -240,24 +255,32 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                 </span>
                 <span className="info-value">{displayData.EmailID}</span>
               </div>
+            </div>
+            <div className="info-row" style={{ paddingTop: '25px' }}>
+              <div className="info-item">
+               
+                <div className="">
+                  <button onClick={handleWalletClick} className="apply-btn-replenish">
+                    <Wallet className="w-4 h-4 mr-2" style={{ marginRight: '10px' }} />
+                    Replenish Wallet
+                  </button>
 
-              <div className="wallet-button-container">
-                <div className="wallet-container" onClick={handleWalletClick}>
-                  <div className="wallet-icon-wrapper">
-                    <Wallet className="wallet-icon" />
-                  </div>
-                  <span className="wallet-text">Replenish Wallet</span>
                 </div>
-              </div>
-              <div className="">
-                <button  onClick={gotoMIS} className='apply-btn-emp' style={{ display: '' }}>
-                  MIS Report
-                </button> </div>
+                <div className="">
+                  <button onClick={gotoMIS} className='apply-btn-emp' style={{ display: '' }}>
+                    MIS Report
+                  </button> </div>
 
                 <div className="">
-                <button  onClick={gotoMISAgent} className='apply-btn' style={{ display: '' }}>
-                 Agent MIS Details
-                </button> </div>
+                  <button onClick={gotoMISAgent} className='apply-btn' style={{ display: '' }}>
+                    Agent MIS Details
+                  </button> </div>
+
+                <div className="">
+                  <button onClick={gotoUpdateAgent} className='apply-btn-update' style={{ display: '' }}>
+                    Update Agent Details
+                  </button> </div>
+              </div>
             </div>
           </div>
         </div>

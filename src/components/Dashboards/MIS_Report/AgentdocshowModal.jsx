@@ -9,7 +9,7 @@ import {
     ThumbsDown,
     Eye
 } from 'lucide-react';
-import { getAgentListByUId, updateAgentApproval,BASE_URL } from '../../../services/api';
+import { getAgentListByUId, updateAgentDetails,BASE_URL } from '../../../services/api';
 import '../Modal.css';
 
 

@@ -353,6 +353,33 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
+  const goOcrNumber = () => {
+    const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    navigate('/OcrNumber', {
+      state: {
+        empid: empId,
+        agentData: displayData,
+        userType: 'Employee'
+      }
+    });
+  }
+  
+   const goPlateOCR = () => {
+    const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    navigate('/PlateOCR', {
+      state: {
+        empid: empId,
+        agentData: displayData,
+        userType: 'Employee'
+      }
+    });
+  }
+
+
 
   if (!userData && !userProfile) {
     return (
@@ -424,6 +451,10 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
               <button onClick={gototest} className='apply-btn-emp' style={{ display: '' }}>
                 MIS Report
               </button>
+
+              
+
+              
             </div>
           </div>
         </div>
