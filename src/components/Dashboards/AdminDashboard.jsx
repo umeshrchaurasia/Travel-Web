@@ -144,6 +144,20 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
+  
+   const gotoMISPracto = () => {
+    //const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    navigate('/MIS_Proposal_Admin_Practo', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
 
   const gotoMISAgent = () => {
     //const empId = displayData.id || displayData.UId;
@@ -179,6 +193,13 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     // Navigate to the wallet page
     navigate('/ReplenishWallet', { state: { agentData: displayData } });
+  };
+
+    const handleWallet_PractoClick = () => {
+    // Store the display data in localStorage to pass it to the wallet page
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    // Navigate to the wallet page
+    navigate('/ReplenishWallet_Practo', { state: { agentData: displayData } });
   };
 
   const handleViewDocuments = (agent) => {
@@ -279,6 +300,18 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                 <div className="">
                   <button onClick={gotoUpdateAgent} className='apply-btn-update' style={{ display: '' }}>
                     Update Agent Details
+                  </button> </div>
+
+                 <div className="">
+                  <button onClick={handleWallet_PractoClick} className="apply-btn-replenish_practo">
+                    <Wallet className="w-4 h-4 mr-2" style={{ marginRight: '10px' }} />
+                    Replenish Wallet Practo
+                  </button>                  
+
+                </div>
+                 <div className="">
+                  <button onClick={gotoMISPracto} className='apply-btn-emp' style={{ display: '' }}>
+                    MIS Practo Report
                   </button> </div>
               </div>
             </div>

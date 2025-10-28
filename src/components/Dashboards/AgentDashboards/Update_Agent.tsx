@@ -181,7 +181,7 @@ const Update_Agent: React.FC = () => {
     };
 
     const goBack = (): void => {
-        navigate('/dashboard');
+        navigate('/AgentDashboard');
     };
 
     return (

@@ -4,8 +4,7 @@
   flex-direction: column;
   background-color: #f5f6fa;
 }
-
-.font-weight {
+ .font-weight {
   font-size: 16px;
   font-weight: 600;
   color: #ef4444;
@@ -36,7 +35,7 @@
 }
 
 .logo-image {
-  height: 70px;
+ height: 70px;
   width: auto;
   max-height: 70px;
 }
@@ -51,16 +50,15 @@
 
 
 .nav-link {
-  color: white !important;
+color: white !important; 
   text-decoration: none;
 
   display: flex;
   align-items: center;
-
+ 
   gap: 2rem;
-
+ 
 }
-
 .nav-links a {
   color: white;
   text-decoration: none;
@@ -86,48 +84,6 @@
 
 .logout-button:hover {
   background-color: #b91c1c;
-}
-
-.Premium-btn {
-   padding: 0.5rem 1.5rem;
-  background-color: #059669;
-  color: white;
-  border: 'none'; 
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 500;
-}
-
-.Premium-btn:hover {
-  background-color: #0F766E;
-}
-
-.Premium-btn:disabled {
-  background-color: #0F766E;
-  cursor: not-allowed;
-}
-
-
-
-.Premium-btn-MIS {
-   padding: 0.5rem 1.5rem;
-  background-color: #2563EB ;
-  color: white;
-  border: 'none'; 
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 500;
-}
-
-.Premium-btn-MIS:hover {
-  background-color: #1D4ED8;
-}
-
-.Premium-btn-MIS:disabled {
-  background-color: #1D4ED8;
-  cursor: not-allowed;
 }
 
 /* Main Content Styles */
@@ -166,8 +122,8 @@
 .info-row {
   display: flex;
   gap: 2rem;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
 }
 
 .info-item {
@@ -368,7 +324,26 @@
   margin-left: auto;
 }
 
+.wallet-container {
+  display: flex;
+  align-items: center;
+  background-color: #FFE082;
+  /* Light yellow background */
+  border-radius: 8px;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid #FFD54F;
+  /* Slightly darker yellow border */
+}
 
+.wallet-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #059669;
+}
 
 .wallet-icon-wrapper {
   display: flex;
@@ -377,10 +352,10 @@
   margin-right: 8px;
 }
 
-.wallet-iconA {
+.wallet-icon {
   width: 20px;
   height: 20px;
-  color: #ffffff;
+  color: #FF9800;
   /* Orange color for the icon */
 }
 
@@ -395,10 +370,10 @@
   .info-row {
     flex-direction: column;
     align-items: flex-start;
-
+  
   }
 
-  .wallet-containerA {
+  .wallet-container {
     width: 100%;
     justify-content: center;
   }
@@ -455,24 +430,24 @@
 }
 
 /* Wallet Button Styles */
-.wallet-containerA {
+.wallet-container {
   display: flex;
   align-items: center;
-  background-color: #F59E0B;
+  background-color: #FFE082;
   /* Light yellow background */
   border-radius: 8px;
   padding: 8px 16px;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-
+  border: 2px solid #FFD54F;
   /* Slightly darker yellow border */
 }
 
-.wallet-containerA:hover {
+.wallet-container:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  background-color: #D97706;
+  background-color: #FFD54F;
 }
 
 .wallet-icon-wrapper {
@@ -489,9 +464,9 @@
   /* Orange color for the icon */
 }
 
-.wallet-textA {
+.wallet-text {
   font-weight: 600;
-  color: #ffffff;
+  color: #333;
   font-size: 14px;
 }
 
@@ -512,7 +487,7 @@
   }
 
   .action-button,
-  .wallet-containerA {
+  .wallet-container {
     margin-bottom: 8px;
     min-width: 120px;
     justify-content: center;
@@ -582,49 +557,37 @@
 
 /* --- UPDATED SELECTION CARD STYLES --- */
 .selection-card {
-  background: #ffffff;
-  /* White background */
+  background: #ffffff; /* White background */
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   padding: 2rem;
   width: 320px;
   text-align: center;
   cursor: pointer;
-  border: 1px solid #e0e0e0;
-  /* Lighter grey border */
-  border-top: 4px solid #e0e0e0;
-  /* Default top border color */
+  border: 1px solid #e0e0e0; /* Lighter grey border */
+  border-top: 4px solid #e0e0e0; /* Default top border color */
   transition: all 0.3s ease;
-  overflow: hidden;
-  /* Ensures no overflow for effects */
-  position: relative;
-  /* For potential future badge/overlay */
+  overflow: hidden; /* Ensures no overflow for effects */
+  position: relative; /* For potential future badge/overlay */
 }
 
 .selection-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  background-color: #f7faff;
-  /* Very light blue on hover */
-  border-top-color: #6c63ff;
-  /* Highlight with theme color on hover */
+  background-color: #f7faff; /* Very light blue on hover */
+  border-top-color: #6c63ff; /* Highlight with theme color on hover */
 }
 
 .selection-card:active {
-  transform: translateY(-2px) scale(0.99);
-  /* Gentle press-down effect */
+  transform: translateY(-2px) scale(0.99); /* Gentle press-down effect */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #eef2ff;
-  /* Slightly darker light blue on click */
-  border-top-color: #5a52d9;
-  /* Darker theme color on active */
+  background-color: #eef2ff; /* Slightly darker light blue on click */
+  border-top-color: #5a52d9; /* Darker theme color on active */
 }
-
 /* --- END UPDATED SELECTION CARD STYLES --- */
 
 .selection-icon {
-  color: #6c63ff;
-  /* Matching the theme color */
+  color: #6c63ff; /* Matching the theme color */
   margin-bottom: 1rem;
   display: inline-block;
 }
@@ -654,121 +617,91 @@
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
-  padding: 1.5rem;
-  /* Ensure consistent padding */
+  padding: 1.5rem; /* Ensure consistent padding */
 }
 
 /* --- PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
 .back-to-selection-btn {
   /* Position it absolutely within the .user-info-card */
   position: absolute;
-  top: 1.5rem;
-  /* Adjust top margin for spacing */
-  right: 1.5rem;
-  /* Adjust right margin for spacing */
+  top: 1.5rem; /* Adjust top margin for spacing */
+  right: 1.5rem; /* Adjust right margin for spacing */
 
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  /* Space between icon and text */
-  padding: 0.6rem 1.2rem;
-  /* Comfortable padding */
+  gap: 0.5rem; /* Space between icon and text */
+  padding: 0.6rem 1.2rem; /* Comfortable padding */
 
-  background-color: #e0e7ff;
-  /* Light blue background, predefined color */
-  color: #3b82f6;
-  /* A more distinct blue for text */
-  border: 1px solid #bfdbfe;
-  /* A slightly darker border */
-  border-radius: 0.375rem;
-  /* Rounded corners */
-  font-weight: 600;
-  /* Bolder text */
-  font-size: 0.9rem;
-  /* Slightly smaller font size */
+  background-color: #e0e7ff; /* Light blue background, predefined color */
+  color: #3b82f6; /* A more distinct blue for text */
+  border: 1px solid #bfdbfe; /* A slightly darker border */
+  border-radius: 0.375rem; /* Rounded corners */
+  font-weight: 600; /* Bolder text */
+  font-size: 0.9rem; /* Slightly smaller font size */
   cursor: pointer;
-  transition: all 0.2s ease;
-  /* Smooth transitions */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* Subtle shadow */
+  transition: all 0.2s ease; /* Smooth transitions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
 
 .back-to-selection-btn:hover {
-  background-color: #bfdbfe;
-  /* Darker blue on hover */
-  color: #2563eb;
-  /* Darker text */
+  background-color: #bfdbfe; /* Darker blue on hover */
+  color: #2563eb; /* Darker text */
   border-color: #93c5fd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* More prominent shadow on hover */
-  transform: translateY(-1px);
-  /* Slight lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More prominent shadow on hover */
+  transform: translateY(-1px); /* Slight lift effect */
 }
 
 .back-to-selection-btn:active {
-  background-color: #93c5fd;
-  /* Even darker on active */
+  background-color: #93c5fd; /* Even darker on active */
   color: #1e40af;
   border-color: #60a5fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  /* Recessed shadow on active */
-  transform: translateY(0);
-  /* Return to original position */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Recessed shadow on active */
+  transform: translateY(0); /* Return to original position */
 }
 
 /* Adjust the icon color for consistency with the new button color */
 .back-to-selection-btn svg {
-  color: #3b82f6;
-  /* Matching the button text color */
+  color: #3b82f6; /* Matching the button text color */
 }
 
 .back-to-selection-btn:hover svg {
   color: #2563eb;
 }
-
 /* --- END PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
 
 /* Adjust card header if needed to make space for the button */
 .user-info-card .card-header {
   display: flex;
-  justify-content: space-between;
-  /* This will push the button to the right if it's not absolute */
+  justify-content: space-between; /* This will push the button to the right if it's not absolute */
   align-items: center;
   margin-bottom: 1rem;
 }
 
 /* Ensure welcome title doesn't overlap the button */
 .user-info-card .welcome-title {
-  margin-right: 150px;
-  /* Adjust as needed based on button width */
+    margin-right: 150px; /* Adjust as needed based on button width */
 }
 
 /* Ensure padding around content within the card, assuming .user-details is already styled */
 .user-details {
-  padding-top: 1rem;
-  /* Add some space below the header/button area */
+  padding-top: 1rem; /* Add some space below the header/button area */
 }
 
 /* --- PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
 .back-to-selection-btn {
   /* Position it absolutely within the .user-info-card */
   position: absolute;
-  top: 1.5rem;
-  /* Match top padding of the card header */
-  right: 1.5rem;
-  /* Match right padding of the card header */
+  top: 1.5rem;      /* Match top padding of the card header */
+  right: 1.5rem;    /* Match right padding of the card header */
 
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
 
-  background-color: #e0e7ff;
-  /* Light blue background */
-  color: #3b82f6;
-  /* A distinct blue for text */
-  border: 1px solid #bfdbfe;
-  /* A slightly darker border */
+  background-color: #e0e7ff; /* Light blue background */
+  color: #3b82f6;            /* A distinct blue for text */
+  border: 1px solid #bfdbfe;  /* A slightly darker border */
   border-radius: 0.375rem;
   font-weight: 600;
   font-size: 0.9rem;
@@ -778,8 +711,7 @@
 }
 
 .back-to-selection-btn:hover {
-  background-color: #bfdbfe;
-  /* Darker blue on hover */
+  background-color: #bfdbfe; /* Darker blue on hover */
   color: #2563eb;
   border-color: #93c5fd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -791,4 +723,112 @@
   color: #1e40af;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transform: translateY(0);
+}
+
+/* Add these styles to PlanSelection.css or a relevant CSS file */
+
+.practo-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f6fa;
+  padding: 2rem;
+}
+
+.practo-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  text-align: center;
+  border-top: 5px solid #6c63ff;
+}
+
+.practo-header {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.practo-text {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+}
+
+.transaction-details-card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.detail-item span {
+  color: #6b7280;
+}
+
+.detail-item strong {
+  font-weight: 600;
+}
+
+.transaction-details-card hr {
+  border: 0;
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+.wallet-summary {
+  font-size: 0.95rem;
+}
+
+.action-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button.primary {
+  background-color: #059669; /* Green */
+  color: white;
+}
+
+.action-button.primary:hover {
+  background-color: #047857;
+}
+
+.action-button.secondary {
+  background-color: #e5e7eb; /* Gray */
+  color: #374151;
+}
+
+.action-button.secondary:hover {
+  background-color: #d1d5db;
 }

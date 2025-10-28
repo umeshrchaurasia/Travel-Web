@@ -1,0 +1,438 @@
+.main-content {
+
+  padding: 2rem;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.containerpractoright {
+  position: absolute;
+  top: 7.5rem;
+  /* Adjust top margin for spacing */
+  right: 3rem;
+  /* Adjust right margin for spacing */
+
+  display: flex;
+  align-items: center;
+}
+
+.back-to-selection-btn1 {
+  /* Position it absolutely within the .user-info-card */
+  position: absolute;
+  top: 7.5rem;
+  /* Adjust top margin for spacing */
+  /* Adjust right margin for spacing */
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Space between icon and text */
+  padding: 0.6rem 1.2rem;
+  /* Comfortable padding */
+
+  background-color: #e0e7ff;
+  /* Light blue background, predefined color */
+  color: #3b82f6;
+  /* A more distinct blue for text */
+  border: 1px solid #bfdbfe;
+  /* A slightly darker border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-weight: 600;
+  /* Bolder text */
+  font-size: 0.9rem;
+  /* Slightly smaller font size */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Smooth transitions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow */
+}
+
+
+.back-to-selection-btn1:hover {
+  background-color: #bfdbfe;
+  /* Darker blue on hover */
+  color: #2563eb;
+  /* Darker text */
+  border-color: #93c5fd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* More prominent shadow on hover */
+  transform: translateY(-1px);
+  /* Slight lift effect */
+}
+
+.back-to-selection-btn1:active {
+  background-color: #93c5fd;
+  /* Even darker on active */
+  color: #1e40af;
+  border-color: #60a5fa;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Recessed shadow on active */
+  transform: translateY(0);
+  /* Return to original position */
+}
+
+/* Adjust the icon color for consistency with the new button color */
+.back-to-selection-btn1 svg {
+  color: #3b82f6;
+  /* Matching the button text color */
+}
+
+.back-to-selection-btn1:hover svg {
+  color: #2563eb;
+}
+
+
+
+.back-to-selection-btn2 {
+  /* Position it absolutely within the .user-info-card */
+  position: absolute;
+  top: 8.5rem;
+  /* Adjust top margin for spacing */
+  /* Adjust right margin for spacing */
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Space between icon and text */
+  padding: 0.6rem 1.2rem;
+  /* Comfortable padding */
+
+  background-color: #e0e7ff;
+  /* Light blue background, predefined color */
+  color: #3b82f6;
+  /* A more distinct blue for text */
+  border: 1px solid #bfdbfe;
+  /* A slightly darker border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-weight: 600;
+  /* Bolder text */
+  font-size: 0.9rem;
+  /* Slightly smaller font size */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Smooth transitions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow */
+}
+
+
+.back-to-selection-btn2:hover {
+  background-color: #bfdbfe;
+  /* Darker blue on hover */
+  color: #2563eb;
+  /* Darker text */
+  border-color: #93c5fd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* More prominent shadow on hover */
+  transform: translateY(-1px);
+  /* Slight lift effect */
+}
+
+.back-to-selection-btn2:active {
+  background-color: #93c5fd;
+  /* Even darker on active */
+  color: #1e40af;
+  border-color: #60a5fa;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Recessed shadow on active */
+  transform: translateY(0);
+  /* Return to original position */
+}
+
+/* Adjust the icon color for consistency with the new button color */
+.back-to-selection-btn2 svg {
+  color: #3b82f6;
+  /* Matching the button text color */
+}
+
+.back-to-selection-btn2:hover svg {
+  color: #2563eb;
+}
+
+
+
+.practo-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f6fa;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+
+}
+
+.practo-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  border-top: 5px solid #6c63ff;
+}
+
+.practo-header {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.practo-header-error {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ef4444;
+  /* Red color for error */
+  margin-bottom: 1rem;
+}
+
+
+.practo-text {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.practo-agent-info {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: left;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.practo-agent-info .info-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+
+}
+
+.practo-agent-info strong {
+  color: #374151;
+  margin-right: 0.5rem;
+}
+
+.practo-form {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-item label {
+  min-width: 140px;
+  font-weight: 500;
+  color: #374151;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.form-item .form-control {
+  flex: 1;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.form-item .form-control:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.practo-back-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #6c63ff;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.practo-back-button:hover {
+  background-color: #5a52d9;
+}
+
+
+.Premium-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #059669;
+  color: white;
+  border: 'none';
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.Premium-btn:hover {
+  background-color: #0F766E;
+}
+
+.Premium-btn:disabled {
+  background-color: #0F766E;
+  cursor: not-allowed;
+}
+
+
+
+.Premium-btn-Wallet {
+  padding: 0.5rem 1.5rem;
+  background-color: #EAB308;
+  color: white;
+  border: 'none';
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.Premium-btn-Wallet:hover {
+  background-color: #CA8A04;
+}
+
+.Premium-btn-Wallet:disabled {
+  background-color: #CA8A04;
+  cursor: not-allowed;
+}
+
+
+/* Button Styles */
+.apply-btn-emp {
+  padding: 0.5rem 1.5rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.apply-btn-emp:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.apply-btn-emp:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+
+
+/* Footer Actions for Back Button */
+.footer-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.back-to-plan-btn {
+  background: none;
+  border: none;
+  color: #4b5563;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-to-plan-btn:hover {
+  color: #1f2937;
+}
+
+/* API Message Styling */
+.api-message {
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.api-message.success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.api-message.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Activate Subscription Button */
+.activate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: #2563eb;
+  /* A nice blue color */
+  color: white;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  max-width: 300px;
+  margin: 1rem auto;
+}
+
+.activate-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.activate-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Spinner for loading state */
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

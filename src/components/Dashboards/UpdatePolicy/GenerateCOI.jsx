@@ -53,7 +53,7 @@ const GenerateCOI = () => {
     const data = location.state?.agentData || JSON.parse(sessionStorage.getItem('coiAgentData'));
 
     if (!data) {
-      navigate('/dashboard');
+      navigate('/AgentDashboard');
       return;
     }
 
@@ -358,7 +358,7 @@ const GenerateCOI = () => {
   };
 
   const goBack = () => {
-    navigate('/dashboard');
+    navigate('/AgentDashboard');
   };
 
   const formatDate = (dateString) => {
@@ -410,7 +410,7 @@ const GenerateCOI = () => {
             </button>
             <button
               onClick={handleLogout}
-              className="coi-button coi-logout-button"
+              className="coi-button"
             >
               <LogOut size={18} />
               Logout

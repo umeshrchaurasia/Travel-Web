@@ -7,14 +7,14 @@ import {
 } from 'lucide-react';
 import { logout } from '../../../services/auth';
 import {
-  getProposalDetailsByAgent,
-  applyWalletPayment,
+  getProposalDetailsByAgent_Practo,
+  applyWalletPayment_Practo,
   getAgentById,
-  ApplyWalletBalance,
+
   PDF_BASE_URL // Import the new API function
 } from '../../../services/api';
-import './WalletPage.css';
-import logo from '../../../../src/assets/img/TravelAssist.webp';
+import './WalletPagePracto.css';
+import logo from '../../../../src/assets/img/TravelAssist_practo.webp';
 
 // Function to calculate remaining days and eligibility
 const calculateRemainingDays = (walletUpdateDate, adminApprovedDate) => {
@@ -57,7 +57,7 @@ const calculateRemainingDays = (walletUpdateDate, adminApprovedDate) => {
   };
 };
 
-const WalletPage = () => {
+const WalletPagePracto = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -186,7 +186,9 @@ const WalletPage = () => {
       }
 
       console.log("Fetching proposals for agent:", agentId, "with status:", paymentStatus);
-      const response = await getProposalDetailsByAgent(agentId, paymentStatus);
+      // Change in Practo
+
+      const response = await getProposalDetailsByAgent_Practo(agentId, paymentStatus);
       console.log("API Response:", response);
 
       // Handle the response according to the structure from your API
@@ -245,8 +247,8 @@ const WalletPage = () => {
     }
   };
 
-    const goBack = () => {
-    navigate('/AgentDashboard');
+  const goBack = () => {
+    navigate('/dashboard');
   };
 
 
@@ -258,7 +260,7 @@ const WalletPage = () => {
   };
 
   const handleBackToDashboard = () => {
-    navigate('/AgentDashboard');
+    navigate('/dashboard');
   };
 
   const handleSelectProposal = (proposalId) => {
@@ -306,11 +308,16 @@ const WalletPage = () => {
       setError('');
       setSuccessMessage('');
 
-      // Get policy numbers from selected proposals
-      const selectedPolicies = selectedProposals.map(id => {
+      const selectedPolicies = [];
+      const selectedProposalIds = [];
+
+      selectedProposals.forEach(id => {
         const proposal = proposals.find(p => p.proposal_id === id);
-        return proposal?.Policy_No || proposal?.Certificate_Number;
-      }).filter(Boolean);
+        if (proposal) {
+          selectedPolicies.push(proposal.Policy_No || proposal.Certificate_Number);
+          selectedProposalIds.push(proposal.proposal_id); // Collect proposal IDs
+        }
+      });
 
       if (selectedPolicies.length === 0) {
         setError('No valid policies selected');
@@ -320,20 +327,22 @@ const WalletPage = () => {
 
       // Join policies with pipe symbols
       const policiesString = selectedPolicies.join('||');
+      const proposalIdsString = selectedProposalIds.join('||');
 
       // Construct payload for batch payment API
       const paymentData = {
-        agentCode: userProfile.Agent_Code,
+        agentCode: userProfile.AgentId,
         policyNo: policiesString,
         totalAmount: selectedAmount.toString(),
         paymentMode: 'InProcess',  // Changed to InProcess to match the status in the stored procedure
-        utr: '' // Optional reference number
+        utr: '',
+        proposal_id: proposalIdsString// Optional reference number
       };
 
       console.log("Applying payment:", paymentData);
 
       // Call the API to apply payment
-      const response = await applyWalletPayment(paymentData);
+      const response = await applyWalletPayment_Practo(paymentData);
       console.log("Payment response:", response);
 
       if (response && response.Status === 'Success') {
@@ -390,69 +399,7 @@ const WalletPage = () => {
     setSelectedWalletAmount(e.target.value);
   };
 
-  // Function to handle wallet recharge submission with proper API call
-  const handleWalletRechargeSubmit = async () => {
-    if (!selectedWalletAmount) {
-      setError('Please select a wallet amount');
-      return;
-    }
 
-    setSubmittingWallet(true);
-    setError('');
-    setSuccessMessage('');
-
-    try {
-      // Prepare data for API call
-      const walletData = {
-        AgentId: userProfile.AgentId,
-        Agent_Code: userProfile.Agent_Code,
-        wallet_amount: selectedWalletAmount,
-        // The current date will be handled by the server
-      };
-
-      console.log("Submitting wallet update request:", walletData);
-
-      // Call the API to update wallet balance
-      const response = await ApplyWalletBalance(walletData);
-
-      if (response && response.Status === 'Success') {
-        // Update success message
-        setSuccessMessage(`Wallet updated successfully.Wait Admin Approval`);
-
-        // Update local wallet amount
-        setTotalWalletAmount(parseFloat(selectedWalletAmount));
-
-        // Update wallet status
-        const newWalletStatus = calculateRemainingDays(
-          new Date().toISOString(), // Use current date as the update date
-          null
-        );
-        setWalletStatus(newWalletStatus);
-
-        // Update user profile in localStorage
-        if (userProfile) {
-          const updatedProfile = {
-            ...userProfile,
-            Wallet_Amount: selectedWalletAmount,
-            Wallet_Update_Date: new Date().toISOString()
-          };
-          localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-          localStorage.setItem('walletData', JSON.stringify(updatedProfile));
-          setUserProfile(updatedProfile);
-        }
-
-        // Refresh agent details
-        fetchAgentDetails();
-      } else {
-        setError(response?.Message || 'Failed to update wallet balance');
-      }
-    } catch (error) {
-      console.error('Error updating wallet balance:', error);
-      setError('Failed to update wallet. Please try again.');
-    } finally {
-      setSubmittingWallet(false);
-    }
-  };
 
   if (!userProfile) {
     return (
@@ -478,13 +425,13 @@ const WalletPage = () => {
   const referenceLabel = userProfile.Wallet_Update_Date ? 'Wallet Update Date' : 'Admin Approved Date';
 
   return (
-    <div className="wallet-page-wrapper">
+    <div className="wallet-page-wrapperPr">
       <header className="top-header">
         <div className="header-content">
           <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
           <div className="d-flex justify-content-center py-4">
             <div className="logo d-flex align-items-center w-auto">
-              <span className="d-none d-lg-block">Travel Assistance Service</span>
+              <span className="d-none d-lg-block">Practo Subscription</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
@@ -711,24 +658,7 @@ const WalletPage = () => {
                   </div>
                 </div>
 
-                <button
-                  onClick={handleWalletRechargeSubmit}
-                  disabled={submittingWallet}
-                  style={{
-                    padding: '12px 25px',
-                    backgroundColor: '#6366f1',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: '500',
-                    cursor: submittingWallet ? 'not-allowed' : 'pointer',
-                    width: '180px',
-                    fontSize: '16px',
-                    opacity: submittingWallet ? 0.7 : 1
-                  }}
-                >
-                  {submittingWallet ? 'Submitting...' : 'Submit Request'}
-                </button>
+
               </div>
             </div>
           </div>
@@ -954,4 +884,4 @@ const WalletPage = () => {
   );
 };
 
-export default WalletPage;
+export default WalletPagePracto;

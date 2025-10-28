@@ -42,7 +42,7 @@
 }
 
 .coi-button {
-  background-color: #dc2626;
+  background-color: #ef4444;
   color: white;
   padding: 8px 16px;
   border-radius: 4px;
@@ -53,7 +53,16 @@
   gap: 8px;
 }
 
-.coi-logout-button {
+ .coi-button:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.coi-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+ .coi-logout-button {
   background-color: #dc2626;
 }
 

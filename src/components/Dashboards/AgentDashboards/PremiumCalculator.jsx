@@ -427,8 +427,8 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
                 {error && (<div style={{ color: '#dc2626', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '4px', marginBottom: '15px', textAlign: 'center' }}>{error}</div>)}
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                    <button type="submit" style={{ padding: '10px 30px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Calculate Premium</button>
-                    <button type="button" onClick={handleCancel} style={{ padding: '10px 30px', backgroundColor: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+                    <button className='Premium-btn'  type="submit" >Calculate Premium</button>
+                    <button className='apply-btn-emp'  type="button" onClick={handleCancel}>Cancel</button>
                 </div>
 
                 {lastApiResponse && (
@@ -453,7 +453,7 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
                             )}
                             {(selectedOption === 'full' || selectedOption === 'discount') && agentcollected !== null && (
                                 <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#fef2f2', border: '2px solid #ef4444', transition: 'all 0.3s ease' }}>
-                                    <span style={{ fontSize: '18px', fontWeight: '600', color: '#b91c1c' }}>Agent to be collected<br /><b>₹{agentcollected.toFixed(0)}</b></span>
+                                    <span style={{ fontSize: '18px', fontWeight: '600', color: '#b91c1c' }}>To be collected from Agent<br /><b>₹{agentcollected.toFixed(0)}</b></span>
                                 </div>
                             )}
                             {selectedOption === 'Upfront' && agentcollected !== null && (

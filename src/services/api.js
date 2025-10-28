@@ -16,8 +16,8 @@ import axios from 'axios';
 
 //Live Server
 
-export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
-export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+ export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+ export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -709,4 +709,150 @@ export const cancelpolicy = async (cancelData) => {
     throw error;
   }
 };
+
+
+export const createPractoSubscription = async (payload) => {
+  try {
+    // This uses the 'api' instance you already configured with axios
+    const response = await api.post('/create-practo-subscription', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating Practo subscription:', error);
+    // Re-throw the error so the component's catch block can handle it and show a message
+    throw error;
+  }
+};
+
+
+
+
+//PRACTO
+
+export const createPractoProposal = async (ProposalData) => {
+  try {
+    // This uses the 'api' instance you already configured with axios
+    const response = await api.post('/createPractoProposal', ProposalData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating Practo Proposal:', error);
+    // Re-throw the error so the component's catch block can handle it and show a message
+    throw error;
+  }
+};
+
+export const updatePractoProposalWallet = async (payload) => {
+  try {
+    const response = await api.post('/update-practo-proposal-wallet', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Practo proposal wallet:', error);
+    throw error;
+  }
+};
+
+
+export const getPractoPremium = async (agentId) => {
+  try {
+    const response = await api.post('/getPractoPremium', {
+      AgentId: agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching Practo premium details:', error);
+    throw error;
+  }
+};
+
+
+export const generateInvoicePractoPdf = async (Practo_proposal_id) => {
+  try {
+    const response = await api.post('/generateInvoicePractoPdf', {
+      Practo_proposal_id: Practo_proposal_id
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching InvoicePractoPdf:', error);
+    throw error;
+  }
+};
+
+export const getProposalDetailsByAgent_Practo = async (agentId, paymentStatus) => {
+  try {
+    const response = await api.post('/getProposalDetailsByAgent_Practo', {
+      agentId,
+      paymentStatus
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+// New function to apply wallet payment
+export const applyWalletPayment_Practo = async (paymentData) => {
+  try {
+    console.log('Sending payment data to API:', paymentData);
+
+    // Use api instance with proper headers and base URL
+    const response = await api.post('/insertBatchPayment_Practo', paymentData);
+
+    console.log('API response received:', response.data);
+
+    // Return the data from the response
+    return response.data;
+  } catch (error) {
+    console.error('Error details:', error.response || error);
+    throw error;
+  }
+};
+
+
+export const getBatchPaymentsByStatus_Practo = async (status) => {
+  try {
+    const response = await api.post('/getBatchPaymentsByStatus_Practo', { status });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching batch payments:', error);
+    throw error;
+  }
+};
+
+// Function to update batch payment status and UTR
+export const updateBatchPayment_Practo = async (paymentData) => {
+  try {
+    const response = await api.post('/updateBatchPayment_Practo', paymentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating batch payment:', error);
+    throw error;
+  }
+};
+
+export const getProposalMIS_Practo = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalMIS_Practo', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalTDS_Practo = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalTDS_Practo', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+
+
 export default api;

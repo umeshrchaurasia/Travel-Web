@@ -17,8 +17,6 @@ import GenerateCOI from './components/Dashboards/UpdatePolicy/GenerateCOI';
 import Employee_COI from './components/Dashboards/UpdatePolicy/Employee_COI';
 import Testempcois from './components/Dashboards/UpdatePolicy/Testempcois';
 
-
-
 import UpdatePolicyInsurance from './components/Dashboards/UpdatePolicy/UpdatePolicyInsurance';
 import SecondPage from './components/Dashboards/UpdatePolicy/SecondPage';
 
@@ -39,10 +37,21 @@ import MIS_Agentdetail_Admin from './components/Dashboards/MIS_Report/MIS_Agentd
 import TDS_Proposal from './components/Dashboards/MIS_Report/TDS_Proposal';
 import Update_Agent from './components/Dashboards/AgentDashboards/Update_Agent';
 
-import OcrNumber from './components/Dashboards/OCR/OcrNumber';
-import OCRScanner from './components/Dashboards/OCR/OCRScanner';
 
 
+import Practo from './components/Dashboards/Practo/Practo'
+import PlanSelectionAgent from './components/Dashboards/PlanSelection/PlanSelection';
+
+import PractoWalletDetails from './components/Dashboards/Practo/PractoWalletDetails'
+
+import WalletPagePracto from './components/Dashboards/Practo/WalletPagePracto'
+
+import ReplenishWallet_Practo from './components/Dashboards/ReplenishWallet/ReplenishWallet_Practo'
+
+import MIS_Proposal_Practo from './components/Dashboards/MIS_Report/MIS_Proposal_Practo'
+
+import TDS_Proposal_Practo from './components/Dashboards/MIS_Report/TDS_Proposal_Practo';
+import MIS_Proposal_Admin_Practo from './components/Dashboards/MIS_Report/MIS_Proposal_Admin_Practo';
 
 function App() {
   const [userData, setUserData] = useState(() => {
@@ -92,10 +101,21 @@ function App() {
               ) : userData?.EMPType === 'Emp' ? (
                 <EmployeeDashboard userData={userData} onLogout={handleLogout} />
               ) : (
-                <AgentDashboard userData={userData} onLogout={handleLogout} />
+                <PlanSelectionAgent userData={userData} onLogout={handleLogout} />
               )}
             </ProtectedRoute>
           } />
+
+
+          <Route path="/AgentDashboard" element={
+            <ProtectedRoute>
+              <AgentDashboard userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
+
+
 
           <Route path="/" element={
             <ProtectedRoute>
@@ -228,18 +248,50 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/OcrNumber" element={
+        
+
+
+          <Route path="/Practo" element={
             <ProtectedRoute>
-              <OcrNumber userData={userData} onLogout={handleLogout} />
+              <Practo userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
-          <Route path="/OCRScanner" element={
+          <Route path="/PractoWalletDetails" element={
             <ProtectedRoute>
-              <OCRScanner userData={userData} onLogout={handleLogout} />
+              <PractoWalletDetails userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
+          <Route path="/WalletPagePracto" element={
+            <ProtectedRoute>
+              <WalletPagePracto userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/ReplenishWallet_Practo" element={
+            <ProtectedRoute>
+              <ReplenishWallet_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_Practo" element={
+            <ProtectedRoute>
+              <MIS_Proposal_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+            <Route path="/TDS_Proposal_Practo" element={
+            <ProtectedRoute>
+              <TDS_Proposal_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+           <Route path="/MIS_Proposal_Admin_Practo" element={
+            <ProtectedRoute>
+              <MIS_Proposal_Admin_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
 
         </Routes>
       </div>

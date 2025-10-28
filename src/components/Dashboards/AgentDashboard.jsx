@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  UserCircle, Mail, BadgeCheck, LogOut, UserPlus, RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard
+  UserCircle, Mail, BadgeCheck, LogOut, UserPlus, RefreshCw, Home, Upload, CheckCircle, X,
+   Wallet, CreditCard,ArrowLeftCircle
 } from 'lucide-react';
 
 import { fetchAgentsList, getAgentById } from '../../services/api';
@@ -12,6 +13,7 @@ import './Modal.css';
 import logo from '../../../src/assets/img/TravelAssist.webp';
 
 import PremiumCalculator from './AgentDashboards/PremiumCalculator';
+
 
 const defaultData = {
   agents: [],
@@ -238,7 +240,9 @@ const AgentDashboard = ({ userData = null, onLogout = () => { } }) => {
   };
 
 
-
+const handleGoToPlanSelection = () => {
+   navigate('/dashboard');
+  };
 
 
   if (loading) {
@@ -283,7 +287,13 @@ const AgentDashboard = ({ userData = null, onLogout = () => { } }) => {
         {/* Agent Info Card */}
         <div className="card">
           <div className="card-header">
-            <h2 className="welcome-title">Welcome, {displayData.name || displayData.FullName}</h2>
+            <h2 className="welcome-title">Welcome, {displayData.name || displayData.FullName}
+            
+             <button onClick={handleGoToPlanSelection} className="back-to-selection-btn">
+                    <ArrowLeftCircle size={18} />
+                    <span>Back To Plan Selection</span>
+                  </button>
+            </h2>
           </div>
           <div className="employee-info">
             <div className="info-row">
@@ -310,13 +320,13 @@ const AgentDashboard = ({ userData = null, onLogout = () => { } }) => {
                 <button onClick={goToCOI} className="apply-btn">
                   View COI
                 </button>
-                <div className="wallet-container" onClick={handleWalletClick}>
+                <div className="wallet-containerA" onClick={handleWalletClick}>
                   <div className="wallet-icon-wrapper">
-                    <Wallet className="wallet-icon" />
+                    <Wallet className="wallet-iconA" />
                   </div>
-                  <span className="wallet-text">Wallet</span>
+                  <span className="wallet-textA">Wallet</span>
                 </div>
-                <button onClick={gotoMIS} className='apply-btn-emp' style={{ display: '' }}>
+                <button onClick={gotoMIS} className='Premium-btn-MIS' >
                   MIS Report
                 </button>
               </div>

@@ -2,26 +2,28 @@
    Basic Layout Styles
    ============================================= */
 
-   /* Button Styles */
-.wallet-page-wrapper .coi-buttonL {
+/* Button Styles */
+.wallet-page-wrapperPr .coi-buttonL {
   padding: 8px 16px;
   background-color: #ef4444;
   color: white;
-    border: none;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
   font-weight: 500;
-   gap: 8px;
-   align-items: center; 
-   display: flex;
+  align-items: center;
+  gap: 8px;
+  display: flex;
 }
 
-.wallet-page-wrapper .coi-buttonL:hover:not(:disabled) {
+
+
+.wallet-page-wrapperPr .coi-buttonL:hover:not(:disabled) {
   background-color: #dc2626;
 }
 
-.wallet-page-wrapper .coi-buttonL:disabled {
+.wallet-page-wrapperPr .coi-buttonL:disabled {
   background-color: #d1d5db;
   cursor: not-allowed;
 }
@@ -29,7 +31,7 @@
 
 
 
-.wallet-page-wrapper .top-header {
+.wallet-page-wrapperPr .top-header {
   background-color: #6c63ff;
   padding: 0 1rem;
   position: fixed;
@@ -38,7 +40,7 @@
   z-index: 1000;
 }
 
-.wallet-page-wrapper .header-content {
+.wallet-page-wrapperPr .header-content {
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
@@ -46,24 +48,24 @@
   align-items: center;
 }
 
-.wallet-page-wrapper .logo-image {
- height: 70px;
+.wallet-page-wrapperPr .logo-image {
+  height: 70px;
   width: auto;
   max-height: 70px;
 }
 
-.wallet-page-wrapper .nav-links {
+.wallet-page-wrapperPr .nav-links {
   display: flex;
   gap: 2rem;
   align-items: center;
 }
 
-.wallet-page-wrapper .nav-links a {
+.wallet-page-wrapperPr .nav-links a {
   color: white;
   text-decoration: none;
 }
 
-.wallet-page-wrapper .main-content {
+.wallet-page-wrapperPr .main-content {
   margin-top: 5rem;
   padding: 2rem;
   max-width: 1280px;
@@ -72,14 +74,14 @@
   width: 100%;
 }
 
-.wallet-page-wrapper .card {
+.wallet-page-wrapperPr .card {
   background: white;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
 
-.wallet-page-wrapper .card-header {
+.wallet-page-wrapperPr .card-header {
   padding: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
@@ -87,7 +89,7 @@
   align-items: center;
 }
 
-.wallet-page-wrapper .footer {
+.wallet-page-wrapperPr .footer {
   background-color: #6c63ff;
   color: white;
   padding: 1rem;
@@ -98,20 +100,20 @@
 /* =============================================
    Wallet Information Styles
    ============================================= */
-.wallet-page-wrapper .wallet-info {
+.wallet-page-wrapperPr .wallet-info {
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.wallet-page-wrapper .wallet-balance {
+.wallet-page-wrapperPr .wallet-balance {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.wallet-page-wrapper .wallet-balance h3 {
+.wallet-page-wrapperPr .wallet-balance h3 {
   font-size: 1.25rem;
   font-weight: 500;
   color: #374151;
@@ -119,8 +121,8 @@
   margin-right: 15px;
 }
 
-.wallet-page-wrapper .balance-amount,
-.wallet-page-wrapper .wallet-value {
+.wallet-page-wrapperPr .balance-amount,
+.wallet-page-wrapperPr .wallet-value {
   font-size: 1.5rem;
   font-weight: 700;
   color: #059669;
@@ -128,19 +130,19 @@
 }
 
 /* Negative balance styling */
-.wallet-page-wrapper .negative-balance {
+.wallet-page-wrapperPr .negative-balance {
   color: #dc2626 !important;
 }
 
 /* Agent Info Card Styles */
-.wallet-page-wrapper .agent-info-card {
+.wallet-page-wrapperPr .agent-info-card {
   background-color: transparent;
   padding: 0;
   margin-bottom: 2rem;
   box-shadow: none;
 }
 
-.wallet-page-wrapper .agent-info-card h2 {
+.wallet-page-wrapperPr .agent-info-card h2 {
   margin-top: 0;
   color: #333;
   font-size: 1.75rem;
@@ -150,22 +152,22 @@
   padding-bottom: 0;
 }
 
-.wallet-page-wrapper .agent-details-card,
-.wallet-page-wrapper .agent-details-single-line {
+.wallet-page-wrapperPr .agent-details-card,
+.wallet-page-wrapperPr .agent-details-single-line {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
 }
 
-.wallet-page-wrapper .agent-details-card p,
-.wallet-page-wrapper .agent-details-single-line p {
+.wallet-page-wrapperPr .agent-details-card p,
+.wallet-page-wrapperPr .agent-details-single-line p {
   display: block;
   margin: 0;
   line-height: 1.6;
 }
 
-.wallet-page-wrapper .agent-details-card strong,
-.wallet-page-wrapper .agent-details-single-line strong {
+.wallet-page-wrapperPr .agent-details-card strong,
+.wallet-page-wrapperPr .agent-details-single-line strong {
   font-weight: 600;
   color: #333;
   margin-right: 0.25rem;
@@ -174,7 +176,7 @@
 /* =============================================
    Wallet Status and Eligibility Styles
    ============================================= */
-.wallet-page-wrapper .wallet-update-info {
+.wallet-page-wrapperPr .wallet-update-info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -184,7 +186,7 @@
   color: #4b5563;
 }
 
-.wallet-page-wrapper .eligibility-status-container {
+.wallet-page-wrapperPr .eligibility-status-container {
   background-color: #f9fafb;
   border-radius: 8px;
   padding: 15px;
@@ -193,7 +195,7 @@
   width: 100%;
 }
 
-.wallet-page-wrapper .eligibility-status-header {
+.wallet-page-wrapperPr .eligibility-status-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -201,48 +203,48 @@
   flex-wrap: nowrap;
 }
 
-.wallet-page-wrapper .eligibility-status-item {
+.wallet-page-wrapperPr .eligibility-status-item {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.wallet-page-wrapper .eligibility-status-item strong {
+.wallet-page-wrapperPr .eligibility-status-item strong {
   font-weight: 600;
   color: #374151;
   white-space: nowrap;
   margin-right: 8px;
 }
 
-.wallet-page-wrapper .status-value,
-.wallet-page-wrapper .days-value {
+.wallet-page-wrapperPr .status-value,
+.wallet-page-wrapperPr .days-value {
   display: flex;
   align-items: center;
   gap: 5px;
   font-weight: 500;
 }
 
-.wallet-page-wrapper .status-value.eligible {
+.wallet-page-wrapperPr .status-value.eligible {
   color: #10b981;
 }
 
-.wallet-page-wrapper .status-value.not-eligible {
+.wallet-page-wrapperPr .status-value.not-eligible {
   color: #ef4444;
 }
 
-.wallet-page-wrapper .days-value.valid {
+.wallet-page-wrapperPr .days-value.valid {
   color: #059669;
 }
 
-.wallet-page-wrapper .days-value.warning {
+.wallet-page-wrapperPr .days-value.warning {
   color: #d97706;
 }
 
-.wallet-page-wrapper .days-value.expired {
+.wallet-page-wrapperPr .days-value.expired {
   color: #dc2626;
 }
 
-.wallet-page-wrapper .eligibility-message {
+.wallet-page-wrapperPr .eligibility-message {
   margin-top: 10px;
   color: #ef4444;
   display: flex;
@@ -252,18 +254,18 @@
 /* =============================================
    Tab Navigation Styles
    ============================================= */
-.wallet-page-wrapper .wallet-tabs {
+.wallet-page-wrapperPr .wallet-tabs {
   margin-bottom: 1.5rem;
 }
 
-.wallet-page-wrapper .tab-buttons {
+.wallet-page-wrapperPr .tab-buttons {
   display: flex;
   gap: 0.5rem;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.5rem;
 }
 
-.wallet-page-wrapper .tab-button {
+.wallet-page-wrapperPr .tab-button {
   padding: 0.75rem 1.5rem;
   background-color: transparent;
   border: none;
@@ -274,12 +276,12 @@
   transition: all 0.2s ease;
 }
 
-.wallet-page-wrapper .tab-button:hover {
+.wallet-page-wrapperPr .tab-button:hover {
   color: #374151;
   background-color: #f9fafb;
 }
 
-.wallet-page-wrapper .tab-button.active {
+.wallet-page-wrapperPr .tab-button.active {
   color: #6c63ff;
   border-bottom: 2px solid #6c63ff;
   background-color: #f9fafb;
@@ -288,13 +290,13 @@
 /* =============================================
    Table Container
    ============================================= */
-.wallet-page-wrapper .table-container {
+.wallet-page-wrapperPr .table-container {
   padding: 1rem;
   overflow-x: auto;
   position: relative;
 }
 
-.wallet-page-wrapper .table-container::after {
+.wallet-page-wrapperPr .table-container::after {
   content: "← Scroll →";
   display: block;
   text-align: center;
@@ -312,7 +314,7 @@
 /* =============================================
    Data Attribute-Based Table Styling
    ============================================= */
-.wallet-page-wrapper .proposals-table {
+.wallet-page-wrapperPr .proposals-table {
   table-layout: fixed !important;
   width: 100% !important;
   min-width: 1200px !important;
@@ -321,8 +323,8 @@
 }
 
 /* Clear all previous styling to avoid conflicts */
-.wallet-page-wrapper .proposals-table th,
-.wallet-page-wrapper .proposals-table td {
+.wallet-page-wrapperPr .proposals-table th,
+.wallet-page-wrapperPr .proposals-table td {
   padding: 10px 8px !important;
   border-bottom: 1px solid #e5e7eb !important;
   vertical-align: middle !important;
@@ -333,9 +335,9 @@
 }
 
 /* All header styling */
-.wallet-page-wrapper .proposals-table th {
+.wallet-page-wrapperPr .proposals-table th {
   background-color: #f3f4f6 !important;
-  font-weight: 600 !important; 
+  font-weight: 600 !important;
   color: #374151 !important;
   font-size: 14px !important;
   padding: 12px 8px !important;
@@ -349,8 +351,8 @@
 
 /* Specific Column Width & Alignment - Using data attributes */
 /* Sr No column */
-.wallet-page-wrapper .proposals-table th[data-column="sr-no"],
-.wallet-page-wrapper .proposals-table td:first-child {
+.wallet-page-wrapperPr .proposals-table th[data-column="sr-no"],
+.wallet-page-wrapperPr .proposals-table td:first-child {
   width: 80px !important;
   min-width: 80px !important;
   max-width: 80px !important;
@@ -358,8 +360,8 @@
 }
 
 /* Select column (Pending tab only) */
-.wallet-page-wrapper .proposals-table th[data-column="select"],
-.wallet-page-wrapper .proposals-table td:nth-child(2):has(label.checkbox-container) {
+.wallet-page-wrapperPr .proposals-table th[data-column="select"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(2):has(label.checkbox-container) {
   width: 80px !important;
   min-width: 80px !important;
   max-width: 80px !important;
@@ -367,9 +369,9 @@
 }
 
 /* Member Name column */
-.wallet-page-wrapper .proposals-table th[data-column="member-name"],
-.wallet-page-wrapper .proposals-table td:nth-child(3):not(:has(~ td.status)),
-.wallet-page-wrapper .proposals-table td:nth-child(2):not(:has(label.checkbox-container)) {
+.wallet-page-wrapperPr .proposals-table th[data-column="member-name"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(3):not(:has(~ td.status)),
+.wallet-page-wrapperPr .proposals-table td:nth-child(2):not(:has(label.checkbox-container)) {
   width: 190px !important;
   min-width: 190px !important;
   max-width: 190px !important;
@@ -377,26 +379,26 @@
 }
 
 /* Policy No column */
-.wallet-page-wrapper .proposals-table th[data-column="policy-no"],
-.wallet-page-wrapper .proposals-table td:nth-child(4):not(:has(~ td.status)),
-.wallet-page-wrapper .proposals-table td:nth-child(3):has(~ td.status) {
-  width: 190px  !important;
-  min-width: 190px  !important;
-  max-width: 190px  !important;
-  text-align: left !important;
-}
-
-/* Payment Ref No column */
-.wallet-page-wrapper .proposals-table th[data-column="payment-ref-no"],
-.wallet-page-wrapper .proposals-table td:nth-child(4):has(~ td.status) {
+.wallet-page-wrapperPr .proposals-table th[data-column="policy-no"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(4):not(:has(~ td.status)),
+.wallet-page-wrapperPr .proposals-table td:nth-child(3):has(~ td.status) {
   width: 190px !important;
   min-width: 190px !important;
   max-width: 190px !important;
   text-align: left !important;
 }
 
-.wallet-page-wrapper .proposals-table td.status {
- text-align: center !important;
+/* Payment Ref No column */
+.wallet-page-wrapperPr .proposals-table th[data-column="payment-ref-no"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(4):has(~ td.status) {
+  width: 190px !important;
+  min-width: 190px !important;
+  max-width: 190px !important;
+  text-align: left !important;
+}
+
+.wallet-page-wrapperPr .proposals-table td.status {
+  text-align: center !important;
   vertical-align: middle !important;
   display: flex;
   justify-content: center;
@@ -404,9 +406,9 @@
 }
 
 /* Amount column */
-.wallet-page-wrapper .proposals-table th[data-column="amount"],
-.wallet-page-wrapper .proposals-table td:nth-child(5),
-.wallet-page-wrapper .proposals-table td:nth-child(6) {
+.wallet-page-wrapperPr .proposals-table th[data-column="amount"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(5),
+.wallet-page-wrapperPr .proposals-table td:nth-child(6) {
   width: 100px !important;
   min-width: 100px !important;
   max-width: 100px !important;
@@ -414,9 +416,9 @@
 }
 
 /* Mode column */
-.wallet-page-wrapper .proposals-table th[data-column="mode"],
-.wallet-page-wrapper .proposals-table td:nth-child(6):not(.status),
-.wallet-page-wrapper .proposals-table td:nth-child(7):not(.status) {
+.wallet-page-wrapperPr .proposals-table th[data-column="mode"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(6):not(.status),
+.wallet-page-wrapperPr .proposals-table td:nth-child(7):not(.status) {
   width: 110px !important;
   min-width: 110px !important;
   max-width: 110px !important;
@@ -424,9 +426,9 @@
 }
 
 /* Payment Date column */
-.wallet-page-wrapper .proposals-table th[data-column="payment-date"],
-.wallet-page-wrapper .proposals-table td:nth-child(7):not(.status),
-.wallet-page-wrapper .proposals-table td:nth-child(8):not(.status) {
+.wallet-page-wrapperPr .proposals-table th[data-column="payment-date"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(7):not(.status),
+.wallet-page-wrapperPr .proposals-table td:nth-child(8):not(.status) {
   width: 110px !important;
   min-width: 110px !important;
   max-width: 110px !important;
@@ -434,40 +436,43 @@
 }
 
 /* Status column */
-.wallet-page-wrapper .proposals-table th[data-column="status"],
-.wallet-page-wrapper .proposals-table td:nth-child(8) {
- text-align: center !important;
+.wallet-page-wrapperPr .proposals-table th[data-column="status"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(8) {
+  text-align: center !important;
   padding: 8px 4px !important;
   vertical-align: middle !important;
-  width: 140px  !important;
+  width: 140px !important;
   min-width: 120px !important;
   max-width: 120px !important;
-   display: flex !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 !important; /* Remove extra padding */
-  height: 50px !important; /* Add fixed height if needed */
+  padding: 0 !important;
+  /* Remove extra padding */
+  height: 50px !important;
+  /* Add fixed height if needed */
 }
 
 
 /* Actions column */
-.wallet-page-wrapper .proposals-table th[data-column="actions"],
-.wallet-page-wrapper .proposals-table td:nth-child(9) {
+.wallet-page-wrapperPr .proposals-table th[data-column="actions"],
+.wallet-page-wrapperPr .proposals-table td:nth-child(9) {
   width: 120px !important;
   min-width: 120px !important;
   max-width: 120px !important;
   padding: 10px 5px !important;
   text-align: center !important;
 }
+
 /* Row hover effect */
-.wallet-page-wrapper .proposals-table tbody tr:hover {
+.wallet-page-wrapperPr .proposals-table tbody tr:hover {
   background-color: #f9fafb !important;
 }
 
 /* =============================================
    Status Badge & Styling
    ============================================= */
-.wallet-page-wrapper .status {
+.wallet-page-wrapperPr .status {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -481,20 +486,20 @@
   height: 28px !important;
 }
 
-.wallet-page-wrapper .status.pending {
+.wallet-page-wrapperPr .status.pending {
   color: #f59e0b !important;
   background-color: #fffbeb !important;
 }
 
-.wallet-page-wrapper .status.inprocess,
-.wallet-page-wrapper .status.in-process {
+.wallet-page-wrapperPr .status.inprocess,
+.wallet-page-wrapperPr .status.in-process {
   color: #3b82f6 !important;
   background-color: #eff6ff !important;
- 
+
 }
 
-.wallet-page-wrapper .status.approved {
-   display: inline-flex !important;
+.wallet-page-wrapperPr .status.approved {
+  display: inline-flex !important;
   justify-content: center !important;
   align-items: center !important;
   width: auto !important;
@@ -509,28 +514,28 @@
   text-align: center !important;
 }
 
-.wallet-page-wrapper .status-icon {
+.wallet-page-wrapperPr .status-icon {
   display: inline-block !important;
   vertical-align: middle !important;
   margin-right: 4px !important;
   flex-shrink: 0 !important;
 }
 
-.wallet-page-wrapper .status-icon.approved {
+.wallet-page-wrapperPr .status-icon.approved {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin-right: 4px !important;
 }
 
-.wallet-page-wrapper .status-icon.in-process {
+.wallet-page-wrapperPr .status-icon.in-process {
   color: #3b82f6 !important;
 }
 
 /* =============================================
    Checkbox Styling
    ============================================= */
-.wallet-page-wrapper .checkbox-container {
+.wallet-page-wrapperPr .checkbox-container {
   display: block !important;
   position: relative !important;
   padding-left: 25px !important;
@@ -541,7 +546,7 @@
   width: 20px !important;
 }
 
-.wallet-page-wrapper .checkbox-container input {
+.wallet-page-wrapperPr .checkbox-container input {
   position: absolute !important;
   opacity: 0 !important;
   cursor: pointer !important;
@@ -549,7 +554,7 @@
   width: 0 !important;
 }
 
-.wallet-page-wrapper .checkmark {
+.wallet-page-wrapperPr .checkmark {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -560,36 +565,36 @@
   border-radius: 3px !important;
 }
 
-.wallet-page-wrapper .checkbox-container:hover input:not(:disabled) ~ .checkmark {
+.wallet-page-wrapperPr .checkbox-container:hover input:not(:disabled)~.checkmark {
   background-color: #ccc !important;
 }
 
-.wallet-page-wrapper .checkbox-container input:checked ~ .checkmark {
+.wallet-page-wrapperPr .checkbox-container input:checked~.checkmark {
   background-color: #6c63ff !important;
   border: 1px solid #6c63ff !important;
 }
 
-.wallet-page-wrapper .checkbox-container input:disabled ~ .checkmark {
+.wallet-page-wrapperPr .checkbox-container input:disabled~.checkmark {
   background-color: #e5e7eb !important;
   cursor: not-allowed !important;
 }
 
-.wallet-page-wrapper .checkbox-container input:checked:disabled ~ .checkmark {
+.wallet-page-wrapperPr .checkbox-container input:checked:disabled~.checkmark {
   background-color: #9ca3af !important;
   border: 1px solid #9ca3af !important;
 }
 
-.wallet-page-wrapper .checkmark:after {
+.wallet-page-wrapperPr .checkmark:after {
   content: "" !important;
   position: absolute !important;
   display: none !important;
 }
 
-.wallet-page-wrapper .checkbox-container input:checked ~ .checkmark:after {
+.wallet-page-wrapperPr .checkbox-container input:checked~.checkmark:after {
   display: block !important;
 }
 
-.wallet-page-wrapper .checkbox-container .checkmark:after {
+.wallet-page-wrapperPr .checkbox-container .checkmark:after {
   left: 6px !important;
   top: 2px !important;
   width: 5px !important;
@@ -602,8 +607,8 @@
 /* =============================================
    "No Invoice" Text Styling
    ============================================= */
-.wallet-page-wrapper .proposals-table td span.no-invoice,
-.wallet-page-wrapper .proposals-table td:last-child span {
+.wallet-page-wrapperPr .proposals-table td span.no-invoice,
+.wallet-page-wrapperPr .proposals-table td:last-child span {
   color: #9ca3af !important;
   font-size: 12px !important;
   display: block !important;
@@ -614,7 +619,7 @@
 /* =============================================
    Invoice Button Styling
    ============================================= */
-.wallet-page-wrapper .coi-button {
+.wallet-page-wrapperPr .coi-button {
   background-color: #22c55e !important;
   color: white !important;
   border: none !important;
@@ -632,16 +637,16 @@
   text-decoration: none !important;
 }
 
-.wallet-page-wrapper .coi-button:hover {
+.wallet-page-wrapperPr .coi-button:hover {
   background-color: #16a34a !important;
 }
 
-.wallet-page-wrapper .coi-button:disabled {
+.wallet-page-wrapperPr .coi-button:disabled {
   background-color: #9ca3af !important;
   cursor: not-allowed !important;
 }
 
-.wallet-page-wrapper .coi-button svg {
+.wallet-page-wrapperPr .coi-button svg {
   margin-right: 4px !important;
   flex-shrink: 0 !important;
 }
@@ -649,8 +654,8 @@
 /* =============================================
    Loading & No Data Messages
    ============================================= */
-.wallet-page-wrapper .loading-message,
-.wallet-page-wrapper .no-data-message {
+.wallet-page-wrapperPr .loading-message,
+.wallet-page-wrapperPr .no-data-message {
   padding: 2rem !important;
   text-align: center !important;
   color: #6b7280 !important;
@@ -660,7 +665,7 @@
 /* =============================================
    Action Container Styles 
    ============================================= */
-.wallet-page-wrapper .action-container {
+.wallet-page-wrapperPr .action-container {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
@@ -668,18 +673,18 @@
   border-top: 1px solid #e5e7eb !important;
 }
 
-.wallet-page-wrapper .selected-amount {
+.wallet-page-wrapperPr .selected-amount {
   display: flex !important;
   align-items: center !important;
   gap: 0.75rem !important;
 }
 
-.wallet-page-wrapper .selected-amount span {
+.wallet-page-wrapperPr .selected-amount span {
   font-weight: 500 !important;
   color: #374151 !important;
 }
 
-.wallet-page-wrapper .amount-box {
+.wallet-page-wrapperPr .amount-box {
   background-color: #f3f4f6 !important;
   padding: 0.5rem 1rem !important;
   border-radius: 0.375rem !important;
@@ -691,7 +696,7 @@
 /* =============================================
    Button Styling
    ============================================= */
-.wallet-page-wrapper .btn-danger {
+.wallet-page-wrapperPr .btn-danger {
   background-color: #dc2626 !important;
   color: white !important;
   display: flex !important;
@@ -705,11 +710,11 @@
   font-weight: 500 !important;
 }
 
-.wallet-page-wrapper .btn-danger:hover {
+.wallet-page-wrapperPr .btn-danger:hover {
   background-color: #b91c1c !important;
 }
 
-.wallet-page-wrapper .refresh-button {
+.wallet-page-wrapperPr .refresh-button {
   display: flex !important;
   align-items: center !important;
   padding: 0.5rem 1rem !important;
@@ -722,11 +727,11 @@
   margin-top: 15px !important;
 }
 
-.wallet-page-wrapper .refresh-button:hover {
+.wallet-page-wrapperPr .refresh-button:hover {
   background-color: #5a52d9 !important;
 }
 
-.wallet-page-wrapper .apply-btn {
+.wallet-page-wrapperPr .apply-btn {
   padding: 0.5rem 1.5rem !important;
   background-color: #059669 !important;
   color: white !important;
@@ -737,16 +742,16 @@
   font-weight: 500 !important;
 }
 
-.wallet-page-wrapper .apply-btn:hover:not(:disabled) {
+.wallet-page-wrapperPr .apply-btn:hover:not(:disabled) {
   background-color: #047857 !important;
 }
 
-.wallet-page-wrapper .apply-btn:disabled {
+.wallet-page-wrapperPr .apply-btn:disabled {
   background-color: #d1d5db !important;
   cursor: not-allowed !important;
 }
 
-.wallet-page-wrapper .back-btn {
+.wallet-page-wrapperPr .back-btn {
   display: flex !important;
   align-items: center !important;
   padding: 0.5rem 1.5rem !important;
@@ -759,11 +764,11 @@
   font-weight: 500 !important;
 }
 
-.wallet-page-wrapper .back-btn:hover:not(:disabled) {
+.wallet-page-wrapperPr .back-btn:hover:not(:disabled) {
   background-color: #4b5563 !important;
 }
 
-.wallet-page-wrapper .back-btn:disabled {
+.wallet-page-wrapperPr .back-btn:disabled {
   background-color: #d1d5db !important;
   cursor: not-allowed !important;
 }
@@ -771,7 +776,7 @@
 /* =============================================
    Message Styling
    ============================================= */
-.wallet-page-wrapper .success-message {
+.wallet-page-wrapperPr .success-message {
   background-color: #ecfdf5 !important;
   border-left: 4px solid #10b981 !important;
   color: #065f46 !important;
@@ -782,7 +787,7 @@
   border-radius: 0.375rem !important;
 }
 
-.wallet-page-wrapper .error-message {
+.wallet-page-wrapperPr .error-message {
   background-color: #fef2f2 !important;
   border-left: 4px solid #ef4444 !important;
   color: #b91c1c !important;
@@ -793,7 +798,7 @@
   border-radius: 0.375rem !important;
 }
 
-.wallet-page-wrapper .alert-message-container {
+.wallet-page-wrapperPr .alert-message-container {
   background-color: #fee2e2 !important;
   border-radius: 8px !important;
   padding: 15px !important;
@@ -803,19 +808,19 @@
   gap: 12px !important;
 }
 
-.wallet-page-wrapper .alert-icon {
+.wallet-page-wrapperPr .alert-icon {
   color: #dc2626 !important;
   flex-shrink: 0 !important;
   margin-top: 2px !important;
 }
 
-.wallet-page-wrapper .alert-title {
+.wallet-page-wrapperPr .alert-title {
   font-weight: 600 !important;
   color: #b91c1c !important;
   margin: 0 0 5px 0 !important;
 }
 
-.wallet-page-wrapper .alert-description {
+.wallet-page-wrapperPr .alert-description {
   color: #b91c1c !important;
   margin: 0 !important;
   font-size: 14px !important;
@@ -824,18 +829,18 @@
 /* =============================================
    Wallet Recharge Form
    ============================================= */
-.wallet-page-wrapper .wallet-recharge-form {
+.wallet-page-wrapperPr .wallet-recharge-form {
   padding: 25px !important;
 }
 
-.wallet-page-wrapper .wallet-recharge-form h3 {
+.wallet-page-wrapperPr .wallet-recharge-form h3 {
   font-size: 22px !important;
   font-weight: 600 !important;
   color: #333 !important;
   margin: 0 0 30px 0 !important;
 }
 
-.wallet-page-wrapper .wallet-amount-dropdown {
+.wallet-page-wrapperPr .wallet-amount-dropdown {
   padding: 8px 15px !important;
   border: 1px solid #d1d5db !important;
   border-radius: 6px !important;
@@ -845,7 +850,7 @@
   transition: border-color 0.2s !important;
 }
 
-.wallet-page-wrapper .wallet-amount-dropdown:focus {
+.wallet-page-wrapperPr .wallet-amount-dropdown:focus {
   outline: none !important;
   border-color: #6c63ff !important;
   box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1) !important;
@@ -855,72 +860,72 @@
    Responsive Styles
    ============================================= */
 @media (max-width: 1300px) {
-  .wallet-page-wrapper .proposals-table {
+  .wallet-page-wrapperPr .proposals-table {
     min-width: 1200px !important;
   }
 }
 
 @media (max-width: 1024px) {
-  .wallet-page-wrapper .eligibility-status-header {
+  .wallet-page-wrapperPr .eligibility-status-header {
     flex-direction: column !important;
     gap: 15px !important;
   }
-  
-  .wallet-page-wrapper .wallet-amount-group {
+
+  .wallet-page-wrapperPr .wallet-amount-group {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 15px !important;
   }
-  
-  .wallet-page-wrapper .update-wallet-btn {
+
+  .wallet-page-wrapperPr .update-wallet-btn {
     margin-top: 15px !important;
     width: 100% !important;
   }
 }
 
 @media (max-width: 768px) {
-  .wallet-page-wrapper .eligibility-status-item {
+  .wallet-page-wrapperPr .eligibility-status-item {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 5px !important;
   }
-  
-  .wallet-page-wrapper .wallet-input-group {
+
+  .wallet-page-wrapperPr .wallet-input-group {
     flex-direction: column !important;
     align-items: flex-start !important;
     width: 100% !important;
   }
-  
-  .wallet-page-wrapper .wallet-amount-dropdown {
+
+  .wallet-page-wrapperPr .wallet-amount-dropdown {
     width: 100% !important;
   }
-  
-  .wallet-page-wrapper .wallet-recharge-content {
+
+  .wallet-page-wrapperPr .wallet-recharge-content {
     flex-direction: column !important;
     align-items: stretch !important;
   }
-  
-  .wallet-page-wrapper .wallet-amount-select {
+
+  .wallet-page-wrapperPr .wallet-amount-select {
     flex-direction: column !important;
     align-items: flex-start !important;
   }
-  
-  .wallet-page-wrapper .wallet-recharge-button {
+
+  .wallet-page-wrapperPr .wallet-recharge-button {
     width: 100% !important;
     margin-top: 1rem !important;
   }
-  
-  .wallet-page-wrapper .action-container {
+
+  .wallet-page-wrapperPr .action-container {
     flex-direction: column !important;
     gap: 1rem !important;
   }
-  
-  .wallet-page-wrapper .apply-btn,
-  .wallet-page-wrapper .back-btn {
+
+  .wallet-page-wrapperPr .apply-btn,
+  .wallet-page-wrapperPr .back-btn {
     width: 100% !important;
   }
-  
-  .wallet-page-wrapper .selected-amount {
+
+  .wallet-page-wrapperPr .selected-amount {
     width: 100% !important;
     justify-content: space-between !important;
   }

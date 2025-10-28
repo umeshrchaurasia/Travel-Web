@@ -24,7 +24,8 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     EducationQualification: '',
     GST: '',
     Address: '',
-    PAN_No: ''
+    PAN_No: '',
+    State: ''
   };
 
   // Create refs for form elements
@@ -697,7 +698,8 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       'MobileNumber',
       'DOB',
       'PayoutPercentage',
-      'EducationQualification'
+      'EducationQualification',
+      'State'
     ];
 
     const emptyFields = requiredFields.filter(field => !formData[field]?.trim());
@@ -1279,6 +1281,74 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 <option value="25000">₹ 25,000</option>
               </select>
             </div>
+
+            <div className="form-group">
+              <label htmlFor="State" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>State</label>
+              <select
+                id="State"
+                name="State"
+                className={`form-control ${formErrors.State ? 'error' : ''}`}
+                value={formData.State}
+                onChange={handleChange} // Use the existing handleChange function
+                required
+                style={{
+                  backgroundColor: '#fff',
+                  paddingLeft: '15px',
+                  paddingRight: '40px',
+                  appearance: 'revert',
+                  height: '44px'
+                }}
+              >
+                <option value="">Select State</option>
+                <option value="ANDAMAN AND NICOBAR ISLANDS">Andaman and Nicobar Islands</option>
+                <option value="ANDHRA PRADESH">Andhra Pradesh</option>
+                <option value="ARUNACHAL PRADESH">Arunachal Pradesh</option>
+                <option value="ASSAM">Assam</option>
+                <option value="BIHAR">Bihar</option>
+                <option value="CHANDIGARH U.T.">Chandigarh U.T.</option>
+                <option value="CHHATTISGARH">Chhattisgarh</option>
+                <option value="DADRA AND NAGAR HAVELI">Dadra and Nagar Haveli</option>
+                <option value="DAMAN AND DIU">Daman and Diu</option>
+                <option value="DELHI">Delhi</option>
+                <option value="GOA">Goa</option>
+                <option value="GUJARAT">Gujarat</option>
+                <option value="HARYANA">Haryana</option>
+                <option value="HIMACHAL PRADESH">Himachal Pradesh</option>
+                <option value="JAMMU AND KASHMIR">Jammu and Kashmir</option>
+                <option value="JHARKHAND">Jharkhand</option>
+                <option value="KARNATAKA">Karnataka</option>
+                <option value="KERALA">Kerala</option>
+                <option value="LAKSHADWEEP U.T.">Lakshadweep U.T.</option>
+                <option value="MADHYA PRADESH">Madhya Pradesh</option>
+                <option value="MAHARASHTRA">Maharashtra</option>
+                <option value="MANIPUR">Manipur</option>
+                <option value="MEGHALAYA">Meghalaya</option>
+                <option value="MIZORAM">Mizoram</option>
+                <option value="NAGALAND">Nagaland</option>
+                <option value="ODISHA">Odisha</option>
+                <option value="PUDUCHERRY U T">Puducherry U.T.</option>
+                <option value="PUNJAB">Punjab</option>
+                <option value="RAJASTHAN">Rajasthan</option>
+                <option value="SIKKIM">Sikkim</option>
+                <option value="TAMIL NADU">Tamil Nadu</option>
+                <option value="TELANGANA">Telangana</option>
+                <option value="TRIPURA">Tripura</option>
+                <option value="UTTAR PRADESH">Uttar Pradesh</option>
+                <option value="UTTARAKHAND">Uttarakhand</option>
+                <option value="WEST BENGAL">West Bengal</option>
+              </select>
+              {formErrors.State && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.State}
+                </div>
+              )}
+            </div>
+
+
           </div>
 
           {error && <div className="alert alert-error" style={{ color: 'red', backgroundColor: '#fee', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>{error}</div>}
