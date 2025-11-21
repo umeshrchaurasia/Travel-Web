@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-//export const BASE_URL = 'http://localhost:3000/api';
-//export const PDF_BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3000/api';
+export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
- export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
- export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+ //export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+ //export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -57,11 +57,11 @@ export const signupUser = async (userData) => {
 
 export const fetchAgentsList = async (uId) => {
   try {
-    console.log(uId);
+  //  console.log(uId);
     const response = await api.get('/agents_listByEmp', {
       params: { UId: uId }
     });
-    console.log(response.data);
+//    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -71,11 +71,11 @@ export const fetchAgentsList = async (uId) => {
 
 export const GetAgentSummary = async (uId) => {
   try {
-    console.log(uId);
+  //  console.log(uId);
     const response = await api.get('/GetAgentSummary', {
       params: { UId: uId }
     });
-    console.log(response.data);
+  //  console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -87,6 +87,17 @@ export const GetAgentSummary = async (uId) => {
 export const addAgent = async (agentData) => {
   try {
     const response = await api.post('/addagent', agentData);
+    return response.data;
+  } catch (error) {
+    console.error('Add agent error:', error);
+    throw error;
+  }
+};
+
+
+export const addAgent_nonkyc = async (agentData) => {
+  try {
+    const response = await api.post('/addAgent_nonkyc', agentData);
     return response.data;
   } catch (error) {
     console.error('Add agent error:', error);
@@ -334,12 +345,12 @@ export const getProposalDetailsByAgent = async (agentId, paymentStatus) => {
 // New function to apply wallet payment
 export const applyWalletPayment = async (paymentData) => {
   try {
-    console.log('Sending payment data to API:', paymentData);
+ //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment', paymentData);
 
-    console.log('API response received:', response.data);
+ //   console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -495,11 +506,11 @@ export const updateProposal_policy = async (paymentData) => {
 export const addRazorpayData = async (paymentData) => {
   try {
     // Log the request data for debugging
-    console.log("Sending to Razorpay API:", paymentData);
+  //  console.log("Sending to Razorpay API:", paymentData);
 
     try {
       const response = await api.post('/Addtorazorpaydata', paymentData);
-      console.log("API Response:", response);
+  //    console.log("API Response:", response);
       return response;
     } catch (localApiError) {
       console.error("Error in addRazorpayData:", localApiError);
@@ -553,7 +564,7 @@ export const sendOtp = async (data) => {
       agentId: data.agentId
     });
 
-    console.log('OTP send response:', response.data);
+   // console.log('OTP send response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error sending OTP:', error);
@@ -667,12 +678,12 @@ export const verifyPanpro = async (panNumber, fullName) => {
 
 export const generatePolicybyPolicyno = async (data) => {
   try {
-    console.log("Generating policy with data:", data);
+  //  console.log("Generating policy with data:", data);
     // Changed from GET to POST to match your backend route
     const response = await api.post('/generatePolicybyPolicyno', {
       Policyno: data.Policyno
     });
-    console.log("Policy generation response:", response.data);
+  //  console.log("Policy generation response:", response.data);
     return response.data;
   } catch (error) {
     console.error('Policy generation error:', error);
@@ -792,12 +803,12 @@ export const getProposalDetailsByAgent_Practo = async (agentId, paymentStatus) =
 // New function to apply wallet payment
 export const applyWalletPayment_Practo = async (paymentData) => {
   try {
-    console.log('Sending payment data to API:', paymentData);
+ //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment_Practo', paymentData);
 
-    console.log('API response received:', response.data);
+//    console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -854,5 +865,57 @@ export const getProposalTDS_Practo = async (startdate, enddate, empId, agentId) 
 };
 
 
+export const fetchSubAgentsList = async (agentId) => {
+  try {
+  
+    const response = await api.get('/subagents_listByagent', {
+      params: { agentId: agentId }
+    });
+  //  console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Signup error:', error);
+    throw error;
+  }
+};
+
+
+export const getProposalMIS_SubAgent = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalMIS_SubAgent', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalTDS_SubAgent = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalTDS_SubAgent', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+
+
+export const getSub_Main_AgentMIS_byAdmin = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getSub_Main_AgentMIS_byAdmin', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
 
 export default api;

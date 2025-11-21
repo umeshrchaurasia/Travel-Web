@@ -47,7 +47,7 @@ const WelcomeLetterForm = () => {
             // Step 1: Generate the welcome letter
             setLoadingState('Generating welcome letter...');
             const response = await generateWelcomeLetter(formData);
-            console.log('API Response:', response);
+       //     console.log('API Response:', response);
             
             // Handle the response
             if (response && response.data && response.data.Data) {

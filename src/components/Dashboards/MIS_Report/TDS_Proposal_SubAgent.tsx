@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, LogOut, Home, Download } from "lucide-react";
 import { logout } from '../../../services/auth';
-import { getSub_Main_AgentMIS_byAdmin, PDF_BASE_URL } from "../../../services/api";
+import { getProposalTDS_SubAgent, PDF_BASE_URL } from "../../../services/api";
 
 import logo from '../../../../src/assets/img/TravelAssist.webp';
 import '../UpdatePolicy/generatecoi.css';
@@ -21,7 +21,8 @@ interface Proposal {
     Assiatance_charges_PreTaxAmount?: string | number;
     Assiatance_charges_PostTaxAmount?: string | number;
     AgentId?: number;
-    UserID_Mobileno?: string;   
+    UserID_Mobileno?: string;
+    AgentName?: string
     Selected_Payment_Mode?: string;
     PaymentType?: string;
     Discount?: string;
@@ -29,12 +30,8 @@ interface Proposal {
     Paymentreceived?: string;
     UId?: string;
     Payment_Status?: string;
-    assistancepremium_Inc_gst?: string;
-    Reliance_Premium__Inc_gst?: string;
     Main_Agent?: string;
-    SubAgentName?: string
     MainAgentPayout?: string;
-    SubAgentPayout?: string;
     commissionamount?: string;
     commissionamountpercentage?: string;
 }
@@ -46,9 +43,7 @@ interface ApiResponse {
     }
 }
 
-const ITEMS_PER_PAGE = 10;
-
-const MIS_Proposal_Admin: React.FC = () => {
+const TDS_Proposal_SubAgent: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state || {};
@@ -66,15 +61,20 @@ const MIS_Proposal_Admin: React.FC = () => {
     const [proposal, setProposals] = useState<Proposal[]>([]);
 
     const [paymentFilter, setPaymentFilter] = useState<'Discount' | 'Upfront'>('Discount');
-    const [currentPage, setCurrentPage] = useState<number>(1);
 
     useEffect(() => {
+        // Set dates: 7 days ago to today
         const today = new Date();
+        //  const sevenDaysAgo = new Date(today);
+        // sevenDaysAgo.setDate(today.getDate() - 14);
+        //   const start = sevenDaysAgo.toISOString().split('T')[0];
+        //   const end = today.toISOString().split('T')[0];
+
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
         const formatDate1 = (date: Date) => {
             return date.toLocaleDateString("en-CA", {
-                timeZone: "Asia/Kolkata"
+                timeZone: "Asia/Kolkata" // Use IST
             });
         };
         const start = formatDate1(startOfMonth);
@@ -83,10 +83,13 @@ const MIS_Proposal_Admin: React.FC = () => {
         setStartDate(start);
         setEndDate(end);
 
-        if (userType === 'Admin') {
+        // Auto search based on user type
+        if (userType === 'Agent' && agentId) {
+            searchData(start, end, '', agentId);
+        } else if (userType === 'Admin') {
             searchData(start, end, '', '');
         }
-    }, [userType]);
+    }, [empId, agentId, userType]);
 
     const formatDate = (dateStr?: string): string => {
         if (!dateStr) return 'N/A';
@@ -94,24 +97,22 @@ const MIS_Proposal_Admin: React.FC = () => {
         return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-GB');
     };
 
-    const calculateUpfrontAmount = (proposal: Proposal): number => {
+    const calculateUpfrontAmounts = (proposal: Proposal) => {
         const preTax = parseFloat(String(proposal.Assiatance_charges_PreTaxAmount)) || 0;
         const postTax = parseFloat(String(proposal.Assiatance_charges_PostTaxAmount)) || 0;
         const discountComm = parseFloat(String(proposal.Discount)) || 0;
         const amountPaid = parseFloat(String(proposal.Fullpay_Discount_amount_to_be_paid)) || 0;
 
-        const upfront_amt_filter = postTax * (discountComm / 100);
-        const upfrontAmount = amountPaid + (upfront_amt_filter * 0.02);
+        const upfrontCommAmount = postTax * (discountComm / 100);
 
-        return Math.round(amountPaid);
-    };
+        // Applying the formula provided by the user
+        const tdsAmount = Math.round(upfrontCommAmount * 0.02);
 
-    const calculate_commision_amount = (proposal: Proposal): number => {
-        const postTax = parseFloat(String(proposal.Assiatance_charges_PostTaxAmount)) || 0;
-        const discountComm = parseFloat(String(proposal.Discount)) || 0;
-        const upfront_amt_filter = postTax * (discountComm / 100);
-
-        return Math.round(upfront_amt_filter);
+        return {
+            upfrontCommAmount,
+            tdsAmount,
+            amountToBePaid: amountPaid
+        };
     };
 
     const formatCurrency = (amount?: string | number): string => {
@@ -120,8 +121,11 @@ const MIS_Proposal_Admin: React.FC = () => {
     };
 
     const handleSearch = (): void => {
-        setCurrentPage(1);
-        searchData(startDate, endDate, '', '');
+        if (userType === 'Agent') {
+            searchData(startDate, endDate, '', agentId);
+        } else {
+            searchData(startDate, endDate, '', '');
+        }
     };
 
     const searchData = async (fromDate: string, toDate: string, employeeId: string, agentId: string): Promise<void> => {
@@ -130,14 +134,41 @@ const MIS_Proposal_Admin: React.FC = () => {
             return;
         }
 
+
+
+        if (userType === 'Agent' && !agentId) {
+            setError('Agent ID is required');
+            return;
+        }
+
         setLoading(true);
         setError('');
 
         try {
-            const response: ApiResponse = await getSub_Main_AgentMIS_byAdmin(fromDate, toDate, '', '');
+            let response: ApiResponse;
+
+            if (userType === 'Agent') {
+                response = await getProposalTDS_SubAgent(fromDate, toDate, '', agentId);
+            } else {
+                // Admin or other user types - fetch all data
+                response = await getProposalTDS_SubAgent(fromDate, toDate, '', '');
+            }
 
             if (response.Status === 'Success' && response.MasterData?.proposals && response.MasterData.proposals.length > 0) {
                 setProposals(response.MasterData.proposals);
+
+                const firstProposal = response.MasterData.proposals[0];
+                const paymentModeFromAPI = firstProposal.Selected_Payment_Mode;
+                if (paymentModeFromAPI === 'Upfront' || paymentModeFromAPI === 'Discount') {
+                    // If it's valid, set it
+                    setPaymentFilter(paymentModeFromAPI);
+                } else {
+                    // Otherwise, fall back to a default value to ensure type safety
+                    setPaymentFilter('Discount');
+                }
+
+
+
                 setError('');
             } else {
                 setProposals([]);
@@ -159,30 +190,18 @@ const MIS_Proposal_Admin: React.FC = () => {
         if (paymentFilter === 'Upfront') {
             return proposal.Selected_Payment_Mode === 'Upfront';
         }
-        return true;
+        return true; // Fallback
     });
 
-    // Pagination logic
-    const totalPages = Math.ceil(filteredProposals.length / ITEMS_PER_PAGE);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    const currentPageData = filteredProposals.slice(startIndex, endIndex);
 
-    const handlePreviousPage = (): void => {
-        setCurrentPage(prev => Math.max(prev - 1, 1));
-    };
-
-    const handleNextPage = (): void => {
-        setCurrentPage(prev => Math.min(prev + 1, totalPages));
-    };
-
-    // CSV Download Function - Downloads ALL data
+    // CSV Download Function
     const downloadCSV = (): void => {
         if (filteredProposals.length === 0) {
             alert('No data available to download');
             return;
         }
 
+        // Define CSV headers
         const headers = [
             'Sr.No',
             'Assistance No',
@@ -195,31 +214,27 @@ const MIS_Proposal_Admin: React.FC = () => {
             'Policy End Date',
             'Assistance Charges Pre Tax Amount',
             'Assistance Charges Post Tax Amount',
-            'User ID-Mobile No',          
+            'User ID-Mobile No',
+            'Sub Agent Name',
             'Selected Payment Mode',
             'Payment Type',
-            'Discount/Comm%',
-            'Commission/Discount Amount',
-            paymentFilter === 'Upfront' ? 'Upfront Amount to be Paid' : 'Full Pay/Discount Amount Paid',
-            'Assistance Premium Inclusive GST',
-            'Reliance Premium Inclusive GST',
-            'Payment Received',
-            'Main Agent',
-            'Sub Agent Name',
-            'Main Agent Payout',
-            'Commission Amount',
-            'Commission Amount %',
-            'Sub Agent Payout'
+            'Discount/Comm%'
         ];
+        if (paymentFilter === 'Upfront') {
+            headers.push('Upfront comm amount', 'TDS@2%', 'Upfront Amount to be Paid');
+        } else {
+            headers.push('Full Pay/Discount Amount Paid');
+        }
+        headers.push('Payment Received');
+        headers.push('Main Agent');
 
-        // Convert ALL filtered data to CSV format
+        headers.push('Main Agent Payout');
+        headers.push('Commission Amount');
+        headers.push('Commission Amount %');
+
+        // Convert data to CSV format
         const csvData = filteredProposals.map((item, index) => {
-            const amountCell = paymentFilter === 'Upfront'
-                ? calculateUpfrontAmount(item).toFixed(2)
-                : item.Fullpay_Discount_amount_to_be_paid || '';
-            const Comm_amountCell = calculate_commision_amount(item);
-
-            return [
+            const row = [
                 index + 1,
                 item.AssitanceNo || '',
                 `\t${item.Certificate_no || ''}`,
@@ -231,28 +246,38 @@ const MIS_Proposal_Admin: React.FC = () => {
                 formatDate(item.PolicyEndDate),
                 item.Assiatance_charges_PostTaxAmount || '',
                 item.Assiatance_charges_PreTaxAmount || '',
-                item.UserID_Mobileno || '',              
+
+                item.UserID_Mobileno || '',
+                item.AgentName || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
-                item.Discount || '',
-                Comm_amountCell,
-                amountCell,
-                item.assistancepremium_Inc_gst || '',
-                item.Reliance_Premium__Inc_gst || '',
-                item.Paymentreceived || '',
-                item.Main_Agent || '',
-                item.SubAgentName || '',
-                item.MainAgentPayout || '',
-                item.commissionamount || '',
-                item.commissionamountpercentage || '',
-                item.SubAgentPayout || ''
+                item.Discount || ''
             ];
+            if (paymentFilter === 'Upfront') {
+                const { upfrontCommAmount, tdsAmount, amountToBePaid } = calculateUpfrontAmounts(item);
+                row.push(
+                    upfrontCommAmount.toFixed(2),
+                    tdsAmount.toFixed(2),
+                    amountToBePaid.toFixed(2)
+                );
+            } else {
+                row.push(item.Fullpay_Discount_amount_to_be_paid || '');
+            }
+            row.push(item.Paymentreceived || '');
+            row.push(item.Main_Agent || '');
+            row.push(item.MainAgentPayout || '');
+            row.push(item.commissionamount || '');
+            row.push(item.commissionamountpercentage || '');
+            return row;
         });
 
+        // Combine headers and data
         const allData = [headers, ...csvData];
 
+        // Convert to CSV string
         const csvContent = allData.map(row =>
             row.map(field => {
+                // Handle fields that might contain commas or quotes
                 const stringField = String(field);
                 if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
                     return `"${stringField.replace(/"/g, '""')}"`;
@@ -261,11 +286,13 @@ const MIS_Proposal_Admin: React.FC = () => {
             }).join(',')
         ).join('\n');
 
+        // Create and download file
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
 
+        // Generate filename with current date
         const currentDate = new Date().toISOString().split('T')[0];
         const filename = `MIS_Proposal_Report_${userType}_${empId || agentId || 'All'}_${currentDate}.csv`;
         link.setAttribute('download', filename);
@@ -289,9 +316,15 @@ const MIS_Proposal_Admin: React.FC = () => {
     };
 
     const goBack = () => {
-        navigate('/dashboard');
+        navigate('/AgentDashboard');
     };
 
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
+        (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
+
+    // Determine which field to show based on user type
+    const showEmployeeField = userType === 'Employee';
+    const showAgentField = userType === 'Agent';
     const showAdminField = userType === 'Admin';
 
     return (
@@ -315,7 +348,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                         </button>
                         <button
                             onClick={handleLogout}
-                            className="coi-button coi-logout-button"
+                            className="coi-button"
                         >
                             <LogOut size={18} />
                             Logout
@@ -327,6 +360,16 @@ const MIS_Proposal_Admin: React.FC = () => {
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} MIS Reports Details</h2>
+                        {empId && userType === 'Employee' && (
+                            <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
+                                Employee ID: <strong>{empId}</strong>
+                            </p>
+                        )}
+                        {agentId && userType === 'Agent' && (
+                            <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
+                                Agent ID: <strong>{agentId}</strong>
+                            </p>
+                        )}
                         {adminId && userType === 'Admin' && (
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Admin ID: <strong>{adminId}</strong>
@@ -348,6 +391,45 @@ const MIS_Proposal_Admin: React.FC = () => {
                             marginRight: '5px',
                             border: '1px solid #e2e8f0'
                         }}>
+                            {showEmployeeField && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                    <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+                                        Employee ID: {userType === 'Employee' && <span style={{ color: '#ef4444' }}>*</span>}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={empId}
+                                        onChange={(e) => setEmpId(e.target.value)}
+                                        placeholder="Enter Employee ID"
+                                        className="coi-filter-input"
+                                        style={{
+                                            width: '150px',
+                                            backgroundColor: (location.state?.empid && userType === 'Employee') ? '#f3f4f6' : 'white'
+                                        }}
+                                        readOnly={location.state?.empid && userType === 'Employee'}
+                                    />
+                                </div>
+                            )}
+
+                            {showAgentField && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                    <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+                                        Agent ID: {userType === 'Agent' && <span style={{ color: '#ef4444' }}>*</span>}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={agentId}
+                                        onChange={(e) => setAgentId(e.target.value)}
+                                        placeholder="Enter Agent ID"
+                                        className="coi-filter-input"
+                                        style={{
+                                            width: '150px',
+                                            backgroundColor: (location.state?.agent && userType === 'Agent') ? '#f3f4f6' : 'white'
+                                        }}
+                                        readOnly={location.state?.agent && userType === 'Agent'}
+                                    />
+                                </div>
+                            )}
 
                             {showAdminField && (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -361,7 +443,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                                         placeholder="Enter Admin ID"
                                         className="coi-filter-input"
                                         style={{
-                                            width: '110px',
+                                            width: '150px',
                                             backgroundColor: (location.state?.adminId && userType === 'Admin') ? '#f3f4f6' : 'white'
                                         }}
                                         readOnly={location.state?.adminId && userType === 'Admin'}
@@ -378,11 +460,11 @@ const MIS_Proposal_Admin: React.FC = () => {
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     className="coi-filter-input"
-                                    style={{ width: '110px' }}
+                                    style={{ width: '150px' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginLeft: '15px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                 <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
                                     To Date: <span style={{ color: '#ef4444' }}>*</span>
                                 </label>
@@ -391,43 +473,11 @@ const MIS_Proposal_Admin: React.FC = () => {
                                     value={endDate}
                                     onChange={(e) => setEndDate(e.target.value)}
                                     className="coi-filter-input"
-                                    style={{ width: '110px' }}
+                                    style={{ width: '150px' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '15px' }}>
-                                <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Payment Type</label>
-                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', height: '40px', padding: '0 5px' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
-                                        <input
-                                            type="radio"
-                                            name="paymentFilter"
-                                            value="Discount"
-                                            checked={paymentFilter === 'Discount'}
-                                            onChange={() => {
-                                                setPaymentFilter('Discount');
-                                                setCurrentPage(1);
-                                            }}
-                                        />
-                                        Discount / Full Pay
-                                    </label>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
-                                        <input
-                                            type="radio"
-                                            name="paymentFilter"
-                                            value="Upfront Commission"
-                                            checked={paymentFilter === 'Upfront'}
-                                            onChange={() => {
-                                                setPaymentFilter('Upfront');
-                                                setCurrentPage(1);
-                                            }}
-                                        />
-                                        Upfront Commission
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}>
+                            <div style={{ display: 'flex', alignItems: 'end' }}>
                                 <button
                                     onClick={handleSearch}
                                     disabled={loading}
@@ -457,7 +507,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                                     }}
                                 >
                                     <Download size={16} />
-                                    Download CSV (All Data)
+                                    Download CSV
                                 </button>
                             </div>
                         </div>
@@ -466,7 +516,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                     {/* Results */}
                     {loading && <p>Loading...</p>}
 
-                    {error && !loading && <p style={{ color: 'red' }}>{error}</p>}
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
 
                     {!loading && filteredProposals.length > 0 && (
                         <div>
@@ -487,32 +537,41 @@ const MIS_Proposal_Admin: React.FC = () => {
                                             <th className="coi-table-header">Policy End Date</th>
                                             <th className="coi-table-header">Assistance Charges Pre Tax Amount</th>
                                             <th className="coi-table-header">Assistance Charges Post Tax Amount</th>
-                                            <th className="coi-table-header">User ID-Mobile No</th>                                          
+                                            <th className="coi-table-header">User ID-Mobile No</th>
+                                            <th className="coi-table-header">Agent Name</th>
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
-                                            <th className="coi-table-header">Commission/Discount Amount </th>
+
+                                            {/* Conditionally add new headers for Upfront */}
+                                            {paymentFilter === 'Upfront' && (
+                                                <>
+                                                    <th className="coi-table-header">Upfront comm amount</th>
+                                                    <th className="coi-table-header">TDS@2%</th>
+                                                </>
+                                            )}
+
                                             <th className="coi-table-header">
                                                 {paymentFilter === 'Upfront' ? 'Upfront Amount Paid' : 'Full Pay/Discount Amount Paid'}
                                             </th>
 
-                                            <th className="coi-table-header">Assistance Premium Inclusive GST</th>
-                                            <th className="coi-table-header">Reliance Premium Inclusive GST</th>
                                             <th className="coi-table-header">Payment Received</th>
                                             <th className="coi-table-header">Main Agent</th>
-                                            <th className="coi-table-header">Sub Agent Name</th>
                                             <th className="coi-table-header">Main Agent Payout</th>
                                             <th className="coi-table-header">Commission Amount</th>
                                             <th className="coi-table-header">Commission Amount %</th>
-                                            <th className="coi-table-header">Sub Agent Payout</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {currentPageData.map((proposal: Proposal, index: number) => {
-                                            const globalIndex = startIndex + index;
+                                        {filteredProposals.map((proposal: Proposal, index: number) => {
+                                            // When filter is Upfront, calculate all amounts once for the row
+                                            const upfrontAmounts = paymentFilter === 'Upfront'
+                                                ? calculateUpfrontAmounts(proposal)
+                                                : null;
+
                                             return (
-                                                <tr key={proposal.proposal_id || index} style={{ backgroundColor: globalIndex % 2 === 0 ? '#fff' : '#f8f9fa' }}>
-                                                    <td className="coi-table-cell">{globalIndex + 1}</td>
+                                                <tr key={proposal.proposal_id || index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f8f9fa' }}>
+                                                    <td className="coi-table-cell">{index + 1}</td>
                                                     <td className="coi-table-cell">{proposal.AssitanceNo || ''}</td>
                                                     <td className="coi-table-cell">{proposal.Certificate_no || ''}</td>
                                                     <td className="coi-table-cell">{proposal.Planname || ''}</td>
@@ -525,23 +584,26 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
 
                                                     <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
-                                                  
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Selected_Payment_Mode || ''}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.PaymentType || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.AgentName || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
+                                                    <td className="coi-table-cell">{proposal.PaymentType || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
-                                                        {calculate_commision_amount(proposal)}
-                                                    </td>
+
+                                                    {/* Conditionally add new data cells for Upfront */}
+                                                    {paymentFilter === 'Upfront' && upfrontAmounts && (
+                                                        <>
+                                                            <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{upfrontAmounts.upfrontCommAmount.toFixed(2)}</td>
+                                                            <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{upfrontAmounts.tdsAmount.toFixed(2)}</td>
+                                                        </>
+                                                    )}
 
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
-                                                        {paymentFilter === 'Upfront'
-                                                            ? calculateUpfrontAmount(proposal)
+                                                        {paymentFilter === 'Upfront' && upfrontAmounts
+                                                            ? upfrontAmounts.amountToBePaid.toFixed(2) // <-- THE FIX IS HERE
                                                             : proposal.Fullpay_Discount_amount_to_be_paid
                                                         }
                                                     </td>
 
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.assistancepremium_Inc_gst}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Reliance_Premium__Inc_gst}</td>
                                                     <td className="coi-table-cell">
                                                         <span style={{
                                                             padding: '2px 6px',
@@ -553,102 +615,20 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                         </span>
                                                     </td>
                                                     <td className="coi-table-cell">{proposal.Main_Agent || ''}</td>
-                                                    <td className="coi-table-cell">{proposal.SubAgentName || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.MainAgentPayout || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.commissionamount || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.commissionamountpercentage || ''}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.SubAgentPayout || ''}</td>
+
+
                                                 </tr>
                                             );
                                         })}
                                     </tbody>
                                 </table>
                             </div>
-
-                            {/* Pagination Controls */}
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginTop: '20px',
-                                padding: '15px',
-                                backgroundColor: '#f8fafc',
-                                borderRadius: '8px',
-                                border: '1px solid #e2e8f0'
-                            }}>
-                                <div style={{ fontSize: '14px', color: '#6b7280' }}>
-                                    Showing {startIndex + 1} to {Math.min(endIndex, filteredProposals.length)} of {filteredProposals.length} entries
-                                </div>
-
-                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                    <button
-                                        onClick={handlePreviousPage}
-                                        disabled={currentPage === 1}
-                                        style={{
-                                            padding: '8px 12px',
-                                            backgroundColor: currentPage === 1 ? '#e5e7eb' : '#3b82f6',
-                                            color: currentPage === 1 ? '#9ca3af' : 'white',
-                                            border: 'none',
-                                            borderRadius: '5px',
-                                            cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '5px',
-                                            fontSize: '14px'
-                                        }}
-                                    >
-                                        <ChevronLeft size={16} />
-                                        Previous
-                                    </button>
-
-                                    <div style={{
-                                        display: 'flex',
-                                        gap: '8px',
-                                        alignItems: 'center'
-                                    }}>
-                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                            <button
-                                                key={page}
-                                                onClick={() => setCurrentPage(page)}
-                                                style={{
-                                                    padding: '6px 10px',
-                                                    backgroundColor: currentPage === page ? '#3b82f6' : '#e5e7eb',
-                                                    color: currentPage === page ? 'white' : '#374151',
-                                                    border: 'none',
-                                                    borderRadius: '4px',
-                                                    cursor: 'pointer',
-                                                    fontSize: '13px',
-                                                    fontWeight: currentPage === page ? 'bold' : 'normal'
-                                                }}
-                                            >
-                                                {page}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <button
-                                        onClick={handleNextPage}
-                                        disabled={currentPage === totalPages}
-                                        style={{
-                                            padding: '8px 12px',
-                                            backgroundColor: currentPage === totalPages ? '#e5e7eb' : '#3b82f6',
-                                            color: currentPage === totalPages ? '#9ca3af' : 'white',
-                                            border: 'none',
-                                            borderRadius: '5px',
-                                            cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '5px',
-                                            fontSize: '14px'
-                                        }}
-                                    >
-                                        Next
-                                        <ChevronRight size={16} />
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     )}
+
                     {!loading && filteredProposals.length === 0 && proposal.length > 0 && (
                         <p style={{ textAlign: 'center', marginTop: '20px' }}>No proposals found for the selected payment type.</p>
                     )}
@@ -661,4 +641,6 @@ const MIS_Proposal_Admin: React.FC = () => {
     );
 };
 
-export default MIS_Proposal_Admin;
+
+
+export default TDS_Proposal_SubAgent

@@ -7,7 +7,7 @@ import {
 import { logout } from '../../../services/auth';
 import {
   getBatchPaymentsByStatus_Practo,
-  updateBatchPayment_Practo 
+  updateBatchPayment_Practo
 
 } from '../../../services/api';
 import './ReplenishWallet.css';
@@ -123,7 +123,7 @@ const ReplenishWallet_Practo = () => {
     fetchBatchPayments();
 
     // Fetch wallet applications with a small delay to ensure proper state update
-    
+
   }, [fetchBatchPayments]);
 
   useEffect(() => {
@@ -167,7 +167,7 @@ const ReplenishWallet_Practo = () => {
     refreshData();
   };
 
-  const handleBackToDashboard = () => {
+  const goBack = () => {
     navigate('/dashboard');
   };
 
@@ -226,25 +226,33 @@ const ReplenishWallet_Practo = () => {
 
   return (
     <div className="replenish-wallet-wrapper">
-      <header className="top-header">
-        <div className="header-content">
+      <header className="coi-header">
+        <div className="coi-header-content">
           <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
           <div className="d-flex justify-content-center py-4">
             <div className="logo d-flex align-items-center w-auto">
-              <span className="page-title">Practo Subscription</span>
+              <span className="page-title">Travel Assistance Service</span>
             </div>
           </div>
-          <nav className="nav-links">
-            <a href="#" onClick={handleBackToDashboard}>Home</a>
-            <a href="#">Contact Us</a>
-            <a href="#">About Us</a>
-            <button autoFocus onClick={handleLogout} className="btn btn-danger">
-              <LogOut className="w-4 h-4 mr-2" />
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <button
+              onClick={goBack}
+              className="coi-button"
+            >
+              <Home size={18} />
+              Dashboard
+            </button>
+            <button
+              onClick={handleLogout}
+              className="coi-button coi-logout-button"
+            >
+              <LogOut size={18} />
               Logout
             </button>
-          </nav>
+          </div>
         </div>
       </header>
+
 
       <main className="main-content">
         <h1 className="wallet-title">Replenish Wallet</h1>
@@ -365,13 +373,13 @@ const ReplenishWallet_Practo = () => {
             )}
           </div>
 
-         
-         
 
-         
+
+
+
 
           <div className="action-container">
-            <button className="back-btn" onClick={handleBackToDashboard}>
+            <button className="back-btn" onClick={goBack}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To Dashboard
             </button>

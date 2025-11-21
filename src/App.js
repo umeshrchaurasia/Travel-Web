@@ -53,6 +53,13 @@ import MIS_Proposal_Practo from './components/Dashboards/MIS_Report/MIS_Proposal
 import TDS_Proposal_Practo from './components/Dashboards/MIS_Report/TDS_Proposal_Practo';
 import MIS_Proposal_Admin_Practo from './components/Dashboards/MIS_Report/MIS_Proposal_Admin_Practo';
 
+import Add_subAgent from './components/Dashboards/SubAgent/Add_subAgent';
+import SubAgentlistview from './components/Dashboards/SubAgent/SubAgentlistview';
+
+import MIS_Proposal_SubAgent__ByAgent from './components/Dashboards/MIS_Report/MIS_Proposal_SubAgent__ByAgent';
+import MIS_Proposal_SubAgent_ByAdmin from './components/Dashboards/MIS_Report/MIS_Proposal_SubAgent_ByAdmin';
+import TDS_Proposal_SubAgent from './components/Dashboards/MIS_Report/TDS_Proposal_SubAgent';
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -248,7 +255,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-        
+
 
 
           <Route path="/Practo" element={
@@ -281,15 +288,48 @@ function App() {
             </ProtectedRoute>
           } />
 
-            <Route path="/TDS_Proposal_Practo" element={
+          <Route path="/TDS_Proposal_Practo" element={
             <ProtectedRoute>
               <TDS_Proposal_Practo userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
-           <Route path="/MIS_Proposal_Admin_Practo" element={
+          <Route path="/MIS_Proposal_Admin_Practo" element={
             <ProtectedRoute>
               <MIS_Proposal_Admin_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Add_subAgent" element={
+            <ProtectedRoute>
+              <Add_subAgent userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/SubAgentlistview" element={
+            <ProtectedRoute>
+              <SubAgentlistview userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          
+          <Route path="/MIS_Proposal_SubAgent__ByAgent" element={
+            <ProtectedRoute>
+              <MIS_Proposal_SubAgent__ByAgent userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          
+          <Route path="/MIS_Proposal_SubAgent_ByAdmin" element={
+            <ProtectedRoute>
+              <MIS_Proposal_SubAgent_ByAdmin userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+     
+          <Route path="/TDS_Proposal_SubAgent" element={
+            <ProtectedRoute>
+              <TDS_Proposal_SubAgent userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 

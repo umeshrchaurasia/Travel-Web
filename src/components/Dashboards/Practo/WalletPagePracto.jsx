@@ -185,11 +185,11 @@ const WalletPagePracto = () => {
         return;
       }
 
-      console.log("Fetching proposals for agent:", agentId, "with status:", paymentStatus);
+    //  console.log("Fetching proposals for agent:", agentId, "with status:", paymentStatus);
       // Change in Practo
 
       const response = await getProposalDetailsByAgent_Practo(agentId, paymentStatus);
-      console.log("API Response:", response);
+   //   console.log("API Response:", response);
 
       // Handle the response according to the structure from your API
       if (response && response.Status === 'Success' && response.MasterData) {
@@ -339,11 +339,11 @@ const WalletPagePracto = () => {
         proposal_id: proposalIdsString// Optional reference number
       };
 
-      console.log("Applying payment:", paymentData);
+     // console.log("Applying payment:", paymentData);
 
       // Call the API to apply payment
       const response = await applyWalletPayment_Practo(paymentData);
-      console.log("Payment response:", response);
+    //  console.log("Payment response:", response);
 
       if (response && response.Status === 'Success') {
         // Set success message including the number of policies processed

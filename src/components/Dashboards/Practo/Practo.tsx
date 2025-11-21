@@ -685,7 +685,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 {(selectedOption === 'full' || selectedOption === 'discount') && agentcollected !== null && (
                   <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#fef2f2', border: '2px solid #ef4444', transition: 'all 0.3s ease' }}>
                     <span style={{ fontSize: '18px', fontWeight: '600', color: '#b91c1c' }}>
-                      Agent to be collected<br />
+                      To be collected from Agent<br />
                       <b>₹{agentcollected?.toFixed(0)}</b>
                     </span>
                   </div>
@@ -693,7 +693,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 {selectedOption === 'Upfront' && agentcollected !== null && (
                   <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#f5f3ff', border: '2px solid #7c3aed', transition: 'all 0.3s ease' }}>
                     <span style={{ fontSize: '18px', fontWeight: '600', color: '#6d28d9' }}>
-                      Agent to be collected<br />
+                       To be collected from Agent<br />
                       <b>₹{agentcollected?.toFixed(0)}</b>
                     </span>
                   </div>

@@ -94,7 +94,7 @@ const AddApprovalAgentdocModal = ({ isOpen, onClose, onSuccess, agentId, userId,
             const response = await getAgentListByUId(userId, agentId);
             if (response.Status === 'Success' && response.MasterData) {
                 setDocuments(response.MasterData);
-                console.log('Loaded documents:', response.MasterData);
+              //  console.log('Loaded documents:', response.MasterData);
             }
         } catch (error) {
             console.error('Error loading documents:', error);

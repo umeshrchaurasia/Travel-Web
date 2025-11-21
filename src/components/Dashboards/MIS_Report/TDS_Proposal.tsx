@@ -30,6 +30,7 @@ interface Proposal {
     Paymentreceived?: string;
     UId?: string;
     Payment_Status?: string;
+    Main_Agent?: string;
 }
 
 interface ApiResponse {
@@ -46,6 +47,7 @@ const TDS_Proposal: React.FC = () => {
 
     const [empId, setEmpId] = useState<string>(state.empid || '');
     const [agentId, setAgentId] = useState<string>(state.agent || state.agentData?.AgentId || '');
+   const [Main_Agent, setMain_Agent] = useState<string>(state.agentData?.Main_Agent || '');
 
     const [adminId, setAdminId] = useState<string>(state.adminId || '');
     const [userType, setUserType] = useState<string>(state.userType || '');
@@ -222,6 +224,8 @@ const TDS_Proposal: React.FC = () => {
             headers.push('Full Pay/Discount Amount Paid');
         }
         headers.push('Payment Received');
+        headers.push('Main Agent');
+
 
         // Convert data to CSV format
         const csvData = filteredProposals.map((item, index) => {
@@ -235,8 +239,9 @@ const TDS_Proposal: React.FC = () => {
                 formatDate(item.Policy_Generation_Date),
                 formatDate(item.PolicyStartDate),
                 formatDate(item.PolicyEndDate),
-                item.Assiatance_charges_PreTaxAmount || '',
                 item.Assiatance_charges_PostTaxAmount || '',
+                item.Assiatance_charges_PreTaxAmount || '',
+
                 item.UserID_Mobileno || '',
                 item.AgentName || '',
                 item.Selected_Payment_Mode || '',
@@ -254,6 +259,7 @@ const TDS_Proposal: React.FC = () => {
                 row.push(item.Fullpay_Discount_amount_to_be_paid || '');
             }
             row.push(item.Paymentreceived || '');
+            row.push(item.Main_Agent || '');
             return row;
         });
 
@@ -304,6 +310,25 @@ const TDS_Proposal: React.FC = () => {
     const goBack = () => {
         navigate('/AgentDashboard');
     };
+
+      const gotoMIS = () => {
+        const agentData = location.state?.agentData;
+
+        if (!agentData) {
+            console.error('Agent data not available');
+            return;
+        }
+
+        navigate('/TDS_Proposal_SubAgent', {
+            state: {
+                empid: '',
+                agentData: agentData,
+                userType: 'Agent',
+                adminId: ''
+            }
+        });
+
+    }
 
     const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
@@ -360,6 +385,11 @@ const TDS_Proposal: React.FC = () => {
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Admin ID: <strong>{adminId}</strong>
                             </p>
+                        )}
+                        {agentId && userType === 'Agent' && Main_Agent === '' && (
+                            <button onClick={gotoMIS} className="apply-btn">
+                                Sub Agent MIS Reports Details
+                            </button>
                         )}
                     </div>
 
@@ -542,6 +572,7 @@ const TDS_Proposal: React.FC = () => {
                                             </th>
 
                                             <th className="coi-table-header">Payment Received</th>
+                                            <th className="coi-table-header">Main Agent</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -562,8 +593,9 @@ const TDS_Proposal: React.FC = () => {
                                                     <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
                                                     <td className="coi-table-cell">{formatDate(proposal.PolicyStartDate)}</td>
                                                     <td className="coi-table-cell">{formatDate(proposal.PolicyEndDate)}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
+
                                                     <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
                                                     <td className="coi-table-cell">{proposal.AgentName || ''}</td>
                                                     <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
@@ -595,6 +627,8 @@ const TDS_Proposal: React.FC = () => {
                                                             {proposal.Paymentreceived || ''}
                                                         </span>
                                                     </td>
+                                                    <td className="coi-table-cell">{proposal.Main_Agent || ''}</td>
+
                                                 </tr>
                                             );
                                         })}

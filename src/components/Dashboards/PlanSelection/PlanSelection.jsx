@@ -22,7 +22,11 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [view, setView] = useState('selection'); // 'selection' or 'travel'
 
-  const navigate = useNavigate();
+    const [MainAgent, setMainAgent] = useState('');
+
+  
+
+const navigate = useNavigate();
   // --- CORRECTED useEffect HOOK ---
   useEffect(() => {
     const initializeAndFetch = async () => {
@@ -33,7 +37,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
       if (currentUserData) {
         // Use the common pattern to get AgentId, accommodating different casings/sources
         const agentId = currentUserData.AgentId || currentUserData.agentId;
-        
+
         // Only fetch if we have an ID AND the AgentId in localStorage is not a string "28", "23", or "12"
         // This makes sure we fetch the full details for the required fields like FullName, Agent_Code, and EmailID.
         if (agentId) {
@@ -44,22 +48,24 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
               // Merge new data with existing data, update state, and save to localStorage
               const finalData = { ...currentUserData, ...fullAgentData };
               setDisplayData_sel(finalData);
+              setMainAgent(String(fullAgentData.Main_Agent || ''));
+
               localStorage.setItem('userProfile', JSON.stringify(finalData));
             } else {
-                 // Even if fetch fails, use existing data
-                setDisplayData_sel(currentUserData);
+              // Even if fetch fails, use existing data
+              setDisplayData_sel(currentUserData);
             }
           } catch (error) {
             console.error('Error fetching full agent details:', error);
-             // Even if fetch fails, use existing data
+            // Even if fetch fails, use existing data
             setDisplayData_sel(currentUserData);
           }
         } else {
-             // If no agentId is found, just use the current data.
-             setDisplayData_sel(currentUserData);
-             localStorage.setItem('userProfile', JSON.stringify(currentUserData));
+          // If no agentId is found, just use the current data.
+          setDisplayData_sel(currentUserData);
+          localStorage.setItem('userProfile', JSON.stringify(currentUserData));
         }
-      } 
+      }
       setLoading(false);
     };
 
@@ -67,7 +73,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
   }, [userData]); // Dependency is on the initial userData prop to run once.
 
 
-   const handleLogout = () => {
+  const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     logout();
@@ -81,16 +87,21 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
     navigate('/practo', { state: { agentData: displayData_sel } });
   };
 
- 
+
   const handleAgentDashboardClick = () => {
     navigate('/AgentDashboard', { state: { agentData: displayData_sel } });
   };
+
+  const handleAddAgent = () => {
+  navigate('/Add_subAgent', { state: { agentData: displayData_sel } });
+  };
+
 
   if (loading) {
     return <div className="loading-container"><p>Loading...</p></div>;
   }
 
- if (!displayData_sel) {
+  if (!displayData_sel) {
     return <div className="loading-container"><p>No agent data found. Please login again.</p></div>;
   }
 
@@ -99,7 +110,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
   const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
   const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
   // --- END NEW LOGIC ---
-
+    const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0'|| MainAgent === 'null' || MainAgent === 'undefined';;
 
   return (
     <>
@@ -147,6 +158,19 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
               {/* Enhanced Wallet Button with yellow highlight */}
 
+              
+               {isAddSubAgentButtonVisible && (
+              <div className="wallet-button-container">
+
+
+                <button onClick={handleAddAgent} className="apply-btn flex items-center gap-2">
+                  <UserPlus className="w-4 h-4 mr-2 pr-2" />
+                   Add Sub Agent
+
+                </button>
+
+              </div>
+               )}
             </div>
           </div>
         </div>
@@ -158,7 +182,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             <h3>Travel Assist</h3>
             <p>Proceed to calculate premium and execute travel assistance & services.</p>
           </div>
-          
+
           {/* --- CONDITIONAL RENDERING OF PRACTO CARD --- */}
           {showPractoCard && (
             <div className="selection-card" onClick={handlePractoClick}>

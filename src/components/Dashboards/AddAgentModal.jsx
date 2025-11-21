@@ -155,7 +155,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
     try {
       const result = await verifyPanpro(formData.PAN_No, formData.FullName);
-      console.log('PAN Verification Result:', result);
+   //   console.log('PAN Verification Result:', result);
 
       // FIXED: Check the actual API response structure
       if (result.Status === 'Success' && result.MasterData) {
@@ -743,7 +743,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       };
 
       const response = await addAgent(submissionData);
-      console.log("Agent creation response:", response);
+    //  console.log("Agent creation response:", response);
 
       if (response.Status === 'Error') {
         setError(response.Message || 'Failed to add agent');

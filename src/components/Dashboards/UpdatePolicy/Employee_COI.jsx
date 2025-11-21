@@ -77,7 +77,7 @@ const Employee_COI = () => {
             setSearching(true);
             setError('');
 
-            console.log('Auto-fetching proposals with:', { empId: employeeId, startDate: fromDate, endDate: toDate });
+        //    console.log('Auto-fetching proposals with:', { empId: employeeId, startDate: fromDate, endDate: toDate });
 
             const response = await getProposalDetailsByEmployee(employeeId, fromDate, toDate);
 
@@ -162,12 +162,12 @@ const Employee_COI = () => {
             setSearching(true);
             setError('');
 
-            console.log('Fetching proposals with:', { empId, startDate, endDate });
+        //    console.log('Fetching proposals with:', { empId, startDate, endDate });
 
             // Call the API with employee ID and date range
             const response = await getProposalDetailsByEmployee(empId, startDate, endDate);
 
-            console.log('API Response:', response);
+       //     console.log('API Response:', response);
 
             if (response.Status === 'Success' && response.MasterData?.proposals?.length > 0) {
                 setProposals(response.MasterData.proposals);

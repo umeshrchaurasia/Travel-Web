@@ -579,7 +579,7 @@ if (formData.traveller.PassportNo?.trim()) {
         ]
       };
   
-      console.log('Calling Reliance API with data:', JSON.stringify(relianceData));
+   //   console.log('Calling Reliance API with data:', JSON.stringify(relianceData));
   
       // Set a flag to proceed without Reliance validation if needed
       let bypassRelianceValidation = false;
@@ -592,7 +592,7 @@ if (formData.traveller.PassportNo?.trim()) {
       try {
         // Call Reliance API for validation
         relianceResponse = await validatePolicyWithReliance(relianceData);
-        console.log('Reliance API Response:', relianceResponse);
+//        console.log('Reliance API Response:', relianceResponse);
   
         // Check for Reliance API validation errors
         if (relianceResponse && relianceResponse.CustomerDetails) {
@@ -699,7 +699,7 @@ if (formData.traveller.PassportNo?.trim()) {
         AddressOfTheHome: formData.AddressLine1 + (formData.AddressLine2 ? ", " + formData.AddressLine2 : "") + ", " + formData.CityName + ", " + formData.State + ", " + formData.PinCode
       };
   
-      console.log('Calling our API with data:', JSON.stringify(submitData));
+ //     console.log('Calling our API with data:', JSON.stringify(submitData));
   
       const response = await createProposal(submitData);
       if (response.Status === "Success") {

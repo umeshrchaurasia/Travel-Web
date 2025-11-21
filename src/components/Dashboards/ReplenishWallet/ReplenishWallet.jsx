@@ -86,7 +86,7 @@ const ReplenishWallet = () => {
 
       console.log("Fetching batch payments with status: InProcess");
       const response = await getBatchPaymentsByStatus('InProcess');
-      console.log("API Response:", response);
+      //    console.log("API Response:", response);
 
       if (response && response.Status === 'Success' && response.MasterData) {
         const payments = response.MasterData.payments || [];
@@ -118,7 +118,7 @@ const ReplenishWallet = () => {
 
       console.log("Fetching wallet applications");
       const response = await getWalletApplications();
-      console.log("Wallet Applications API Response:", response);
+      //    console.log("Wallet Applications API Response:", response);
 
       if (response && response.Status === 'Success' && response.MasterData) {
         // Set applications with a small delay to ensure proper rendering
@@ -195,7 +195,7 @@ const ReplenishWallet = () => {
     refreshData();
   };
 
-  const handleBackToDashboard = () => {
+  const goBack = () => {
     navigate('/dashboard');
   };
 
@@ -228,11 +228,11 @@ const ReplenishWallet = () => {
         agentCode: payment.Agent_Code
       };
 
-      console.log('Approving payment:', paymentData);
+      //   console.log('Approving payment:', paymentData);
 
       // Call API to update status
       const response = await updateBatchPayment(paymentData);
-      console.log('Approval response:', response);
+      //    console.log('Approval response:', response);
 
       if (response && response.Status === 'Success') {
         setSuccessMessage(`Payment ${payment.Payment_Ref_No} approved successfully`);
@@ -344,23 +344,30 @@ const ReplenishWallet = () => {
 
   return (
     <div className="replenish-wallet-wrapper">
-      <header className="top-header">
-        <div className="header-content">
+      <header className="coi-header">
+        <div className="coi-header-content">
           <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
           <div className="d-flex justify-content-center py-4">
             <div className="logo d-flex align-items-center w-auto">
               <span className="page-title">Travel Assistance Service</span>
             </div>
           </div>
-          <nav className="nav-links">
-            <a href="#" onClick={handleBackToDashboard}>Home</a>
-            <a href="#">Contact Us</a>
-            <a href="#">About Us</a>
-            <button autoFocus onClick={handleLogout} className="btn btn-danger">
-              <LogOut className="w-4 h-4 mr-2" />
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <button
+              onClick={goBack}
+              className="coi-button"
+            >
+              <Home size={18} />
+              Dashboard
+            </button>
+            <button
+              onClick={handleLogout}
+              className="coi-button coi-logout-button"
+            >
+              <LogOut size={18} />
               Logout
             </button>
-          </nav>
+          </div>
         </div>
       </header>
 
@@ -546,7 +553,7 @@ const ReplenishWallet = () => {
           </div>
 
           <div className="action-container">
-            <button className="back-btn" onClick={handleBackToDashboard}>
+            <button className="back-btn" onClick={goBack}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To Dashboard
             </button>

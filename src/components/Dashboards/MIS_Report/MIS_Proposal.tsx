@@ -30,6 +30,7 @@ interface Proposal {
     Paymentreceived?: string;
     UId?: string;
     Payment_Status?: string;
+    Main_Agent?: string;
 }
 
 interface ApiResponse {
@@ -46,6 +47,7 @@ const MIS_Proposal: React.FC = () => {
 
     const [empId, setEmpId] = useState<string>(state.empid || '');
     const [agentId, setAgentId] = useState<string>(state.agent || state.agentData?.AgentId || '');
+    const [Main_Agent, setMain_Agent] = useState<string>(state.agentData?.Main_Agent || '');
 
     const [adminId, setAdminId] = useState<string>(state.adminId || '');
     const [userType, setUserType] = useState<string>(state.userType || '');
@@ -109,6 +111,15 @@ const MIS_Proposal: React.FC = () => {
         return Math.round(upfrontAmount);
     };
 
+    const calculate_commision_amount = (proposal: Proposal): number => {
+
+        const postTax = parseFloat(String(proposal.Assiatance_charges_PostTaxAmount)) || 0;
+        const discountComm = parseFloat(String(proposal.Discount)) || 0;
+        const upfront_amt_filter = postTax * (discountComm / 100);
+
+        return Math.round(upfront_amt_filter);
+    };
+
     const formatCurrency = (amount?: string | number): string => {
         const num = typeof amount === 'string' ? parseFloat(amount) : amount ?? 0;
         return `₹${num.toLocaleString()}`;
@@ -158,18 +169,18 @@ const MIS_Proposal: React.FC = () => {
 
             if (response.Status === 'Success' && response.MasterData?.proposals && response.MasterData.proposals.length > 0) {
                 setProposals(response.MasterData.proposals);
-              
-                 const firstProposal = response.MasterData.proposals[0];
-                 const paymentModeFromAPI = firstProposal.Selected_Payment_Mode;
-                  if (paymentModeFromAPI === 'Upfront' || paymentModeFromAPI === 'Discount') {
+
+                const firstProposal = response.MasterData.proposals[0];
+                const paymentModeFromAPI = firstProposal.Selected_Payment_Mode;
+                if (paymentModeFromAPI === 'Upfront' || paymentModeFromAPI === 'Discount') {
                     // If it's valid, set it
                     setPaymentFilter(paymentModeFromAPI);
                 } else {
                     // Otherwise, fall back to a default value to ensure type safety
                     setPaymentFilter('Discount');
                 }
-              
-              
+
+
                 setError('');
             } else {
                 setProposals([]);
@@ -219,8 +230,10 @@ const MIS_Proposal: React.FC = () => {
             'Selected Payment Mode',
             'Payment Type',
             'Discount/Comm%',
+            'Commission/Discount Amount',
             paymentFilter === 'Upfront' ? 'Upfront Amount to be Paid' : 'Full Pay/Discount Amount Paid',
-            'Payment Received'
+            'Payment Received',
+            'Main Agent'
         ];
 
         // Convert data to CSV format
@@ -228,6 +241,8 @@ const MIS_Proposal: React.FC = () => {
             const amountCell = paymentFilter === 'Upfront'
                 ? calculateUpfrontAmount(item).toFixed(2)
                 : item.Fullpay_Discount_amount_to_be_paid || '';
+            const Comm_amountCell = calculate_commision_amount(item);
+
             return [
                 index + 1,
                 item.AssitanceNo || '',
@@ -238,15 +253,18 @@ const MIS_Proposal: React.FC = () => {
                 formatDate(item.Policy_Generation_Date),
                 formatDate(item.PolicyStartDate),
                 formatDate(item.PolicyEndDate),
-                item.Assiatance_charges_PreTaxAmount || '',
                 item.Assiatance_charges_PostTaxAmount || '',
+                item.Assiatance_charges_PreTaxAmount || '',
+
                 item.UserID_Mobileno || '',
                 item.AgentName || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
                 item.Discount || '',
+                Comm_amountCell,
                 amountCell,
-                item.Paymentreceived || ''
+                item.Paymentreceived || '',
+                item.Main_Agent || ''
             ]
         });
 
@@ -295,8 +313,26 @@ const MIS_Proposal: React.FC = () => {
     };
 
     const goBack = () => {
-        navigate('/dashboard');
+        navigate('/AgentDashboard');
     };
+    const gotoMIS = () => {
+        const agentData = location.state?.agentData;
+
+        if (!agentData) {
+            console.error('Agent data not available');
+            return;
+        }
+
+        navigate('/MIS_Proposal_SubAgent__ByAgent', {
+            state: {
+                empid: '',
+                agentData: agentData,
+                userType: 'Agent',
+                adminId: ''
+            }
+        });
+
+    }
 
     const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
@@ -347,12 +383,19 @@ const MIS_Proposal: React.FC = () => {
                         {agentId && userType === 'Agent' && (
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Agent ID: <strong>{agentId}</strong>
+
                             </p>
+
                         )}
                         {adminId && userType === 'Admin' && (
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Admin ID: <strong>{adminId}</strong>
                             </p>
+                        )}
+                        {agentId && userType === 'Agent' && Main_Agent === '' && (
+                            <button onClick={gotoMIS} className="apply-btn">
+                                Sub Agent MIS Reports Details
+                            </button>
                         )}
                     </div>
 
@@ -521,10 +564,12 @@ const MIS_Proposal: React.FC = () => {
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
+                                            <th className="coi-table-header">Commission/Discount Amount </th>
                                             <th className="coi-table-header">
                                                 {paymentFilter === 'Upfront' ? 'Upfront Amount Paid' : 'Full Pay/Discount Amount Paid'}
                                             </th>
                                             <th className="coi-table-header">Payment Received</th>
+                                            <th className="coi-table-header">Main Agent</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -539,13 +584,23 @@ const MIS_Proposal: React.FC = () => {
                                                 <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
                                                 <td className="coi-table-cell">{formatDate(proposal.PolicyStartDate)}</td>
                                                 <td className="coi-table-cell">{formatDate(proposal.PolicyEndDate)}</td>
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
+                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
+
                                                 <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
                                                 <td className="coi-table-cell">{proposal.AgentName || ''}</td>
                                                 <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
                                                 <td className="coi-table-cell">{proposal.PaymentType || ''}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
+
+                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
+                                                    {
+                                                        calculate_commision_amount(proposal)
+
+                                                    }
+                                                </td>
+
+
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
                                                     {paymentFilter === 'Upfront'
                                                         ? calculateUpfrontAmount(proposal)
@@ -562,6 +617,7 @@ const MIS_Proposal: React.FC = () => {
                                                         {proposal.Paymentreceived || ''}
                                                     </span>
                                                 </td>
+                                                <td className="coi-table-cell">{proposal.Main_Agent || ''}</td>
                                             </tr>
                                         ))}
                                     </tbody>

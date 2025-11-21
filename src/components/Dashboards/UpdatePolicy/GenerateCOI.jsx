@@ -213,7 +213,7 @@ const GenerateCOI = () => {
         [policyNo]: true
       }));
 
-      console.log(`Generating policy for: ${policyNo}`);
+   //   console.log(`Generating policy for: ${policyNo}`);
 
       // Call the generatePolicybyPolicyno API
       const response = await generatePolicybyPolicyno({

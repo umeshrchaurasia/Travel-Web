@@ -187,7 +187,7 @@ const WalletPage = () => {
 
       console.log("Fetching proposals for agent:", agentId, "with status:", paymentStatus);
       const response = await getProposalDetailsByAgent(agentId, paymentStatus);
-      console.log("API Response:", response);
+  //    console.log("API Response:", response);
 
       // Handle the response according to the structure from your API
       if (response && response.Status === 'Success' && response.MasterData) {
@@ -330,11 +330,11 @@ const WalletPage = () => {
         utr: '' // Optional reference number
       };
 
-      console.log("Applying payment:", paymentData);
+  //    console.log("Applying payment:", paymentData);
 
       // Call the API to apply payment
       const response = await applyWalletPayment(paymentData);
-      console.log("Payment response:", response);
+ //     console.log("Payment response:", response);
 
       if (response && response.Status === 'Success') {
         // Set success message including the number of policies processed
@@ -410,7 +410,7 @@ const WalletPage = () => {
         // The current date will be handled by the server
       };
 
-      console.log("Submitting wallet update request:", walletData);
+ //     console.log("Submitting wallet update request:", walletData);
 
       // Call the API to update wallet balance
       const response = await ApplyWalletBalance(walletData);
