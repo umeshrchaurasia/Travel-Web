@@ -238,8 +238,8 @@ const MIS_Proposal_SubAgent__ByAgent: React.FC = () => {
       'Payment Received',
       'Main Agent',
       'Main Agent Payout',
-      'Commission Amount',
-      'Commission Amount %'
+      'Main Agent Commission Amount',
+      'Main Agent Commission Amount %'
     ];
 
     // Convert data to CSV format
@@ -586,8 +586,8 @@ const MIS_Proposal_SubAgent__ByAgent: React.FC = () => {
                       <th className="coi-table-header">Payment Received</th>
                       <th className="coi-table-header">Main Agent</th>
                       <th className="coi-table-header">Main Agent Payout</th>
-                      <th className="coi-table-header">Commission Amount</th>
-                      <th className="coi-table-header">Commission Amount %</th>
+                      <th className="coi-table-header">Main Agent Commission Amount</th>
+                      <th className="coi-table-header">Main Agent Commission Amount %</th>
 
 
                     </tr>

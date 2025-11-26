@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-export const BASE_URL = 'http://localhost:3000/api';
-export const PDF_BASE_URL = 'http://localhost:3000';
+//export const BASE_URL = 'http://localhost:3000/api';
+//export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
- //export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
- //export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+ export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+ export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 

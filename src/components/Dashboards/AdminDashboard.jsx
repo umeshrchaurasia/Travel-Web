@@ -272,7 +272,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             </div>
           </div>
           <nav className="nav-links">
-            <a href="#" onClick={handleRefresh}>Home</a>
+            <a href="#" onClick={resetView}>Home</a>
             <a href="#">Contact Us</a>
             <a href="#">About Us</a>
             <button autoFocus onClick={handleLogout} className="btn btn-danger">

@@ -162,6 +162,9 @@ const AgentDashboard = ({ userData = null, onLogout = () => { } }) => {
   const handleRefresh = () => {
     fetchAgentDetails();
   };
+    const handleHome= () => {
+    handleGoToPlanSelection();
+  };
 
   const handleWalletClick = () => {
     // Store the enriched display data in localStorage
@@ -272,7 +275,7 @@ const handleGoToPlanSelection = () => {
             </div>
           </div>
           <nav className="nav-link">
-            <a href="#" className="nav-link" onClick={handleRefresh}>Home</a>
+            <a href="#" className="nav-link" onClick={handleHome}>Home</a>
             <a href="#" className="nav-link">Contact Us</a>
             <a href="#" className="nav-link">About Us</a>
             <button autoFocus onClick={handleLogout} className="btn btn-danger">

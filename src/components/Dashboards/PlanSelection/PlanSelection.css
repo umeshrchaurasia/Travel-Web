@@ -586,25 +586,38 @@ color: white !important;
 }
 /* --- END UPDATED SELECTION CARD STYLES --- */
 
-.selection-icon {
-  color: #6c63ff; /* Matching the theme color */
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
 .selection-card h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 1rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .selection-card p {
-  font-size: 1rem;
-  color: #4b5563;
-  line-height: 1.5;
+    color: #6b7280;
+    font-size: 0.95rem;
 }
 
+/* 3. Colorful Icon Styling: Target the existing selection-icon */
+.selection-icon {
+    width: 60px;
+    height: 60px;
+    color: white !important; /* Icon itself is white */
+    padding: 12px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.selection-card:nth-child(1) .selection-icon {
+    background: linear-gradient(135deg, #6c63ff, #4a1ddc); 
+}
+
+/* Practo Subscription Card (2nd Child - Teal/Blue Gradient) */
+.selection-card:nth-child(2) .selection-icon {
+    background: linear-gradient(135deg, #00c9a7, #007bff); 
+}
 /* Ensure main content takes up space */
 .main-content {
   flex-grow: 1;
@@ -832,3 +845,5 @@ color: white !important;
 .action-button.secondary:hover {
   background-color: #d1d5db;
 }
+
+

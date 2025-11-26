@@ -22,11 +22,11 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [view, setView] = useState('selection'); // 'selection' or 'travel'
 
-    const [MainAgent, setMainAgent] = useState('');
+  const [MainAgent, setMainAgent] = useState('');
 
-  
 
-const navigate = useNavigate();
+
+  const navigate = useNavigate();
   // --- CORRECTED useEffect HOOK ---
   useEffect(() => {
     const initializeAndFetch = async () => {
@@ -93,7 +93,7 @@ const navigate = useNavigate();
   };
 
   const handleAddAgent = () => {
-  navigate('/Add_subAgent', { state: { agentData: displayData_sel } });
+    navigate('/Add_subAgent', { state: { agentData: displayData_sel } });
   };
 
 
@@ -110,29 +110,34 @@ const navigate = useNavigate();
   const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
   const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
   // --- END NEW LOGIC ---
-    const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0'|| MainAgent === 'null' || MainAgent === 'undefined';;
+  const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0' || MainAgent === 'null' || MainAgent === 'undefined';;
 
   return (
-    <>
-      <header className="top-header">
-        <div className="header-content">
+    <div style={commonStyles.container}>
+      <header style={commonStyles.header}>
+        <div style={commonStyles.headerContent}>
           <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
-          <div className="d-flex justify-content-center py-4">
-            <div className="logo d-flex align-items-center w-auto">
-              <span className="d-none d-lg-block">Travel Assistance Service</span>
-            </div>
+          <div className="logo d-flex align-items-center w-auto">
+            <span className="d-none d-lg-block">Travel Assistance Service</span>
           </div>
-          <nav className="nav-link">
+          <div style={{ display: 'flex', gap: '20px' }}>
 
-            <button autoFocus onClick={handleLogout} className="btn btn-danger">
-              <LogOut className="w-4 h-4 mr-2" />
+           
+            <button
+              onClick={handleLogout}
+              style={{
+                ...commonStyles.button,
+                backgroundColor: '#ef4444'
+              }}
+            >
+              <LogOut size={18} />
               Logout
             </button>
-          </nav>
+          </div>
         </div>
       </header>
 
-      <main className="main-content">
+      <main style={commonStyles.mainContent1}>
 
         {/* Agent Info Card */}
         <div className="card">
@@ -158,19 +163,19 @@ const navigate = useNavigate();
 
               {/* Enhanced Wallet Button with yellow highlight */}
 
-              
-               {isAddSubAgentButtonVisible && (
-              <div className="wallet-button-container">
+
+              {isAddSubAgentButtonVisible && (
+                <div className="wallet-button-container">
 
 
-                <button onClick={handleAddAgent} className="apply-btn flex items-center gap-2">
-                  <UserPlus className="w-4 h-4 mr-2 pr-2" />
-                   Add Sub Agent
+                  <button onClick={handleAddAgent} className="apply-btn flex items-center gap-2">
+                    <UserPlus className="w-4 h-4 mr-2 pr-2" />
+                    Add Sub Agent
 
-                </button>
+                  </button>
 
-              </div>
-               )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -198,8 +203,48 @@ const navigate = useNavigate();
       <footer className="footer">
         <p>© {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All rights reserved</p>
       </footer>
-    </>
+    </div>
   );
 };
-
+const commonStyles = {
+  container: {
+    backgroundColor: '#f3f4f6',
+    minHeight: '100vh'
+  },
+  header: {
+    backgroundColor: '#6c63ff',
+    padding: '1rem',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+    color: 'white'
+  },
+  headerContent: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  logo: {
+    height: '40px'
+  },
+   button: {
+    backgroundColor: '#dc2626',
+    color: 'white',
+    padding: '8px 16px',
+    borderRadius: '4px',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+    mainContent1: {
+    maxWidth: '1200px',
+    margin: '20px auto',
+    padding: '0 20px',
+    flex: '1 0 auto'
+  },
+};
 export default PlanSelection;

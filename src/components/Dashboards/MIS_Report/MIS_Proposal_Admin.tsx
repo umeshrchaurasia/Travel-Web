@@ -21,7 +21,7 @@ interface Proposal {
     Assiatance_charges_PreTaxAmount?: string | number;
     Assiatance_charges_PostTaxAmount?: string | number;
     AgentId?: number;
-    UserID_Mobileno?: string;   
+    UserID_Mobileno?: string;
     Selected_Payment_Mode?: string;
     PaymentType?: string;
     Discount?: string;
@@ -195,7 +195,7 @@ const MIS_Proposal_Admin: React.FC = () => {
             'Policy End Date',
             'Assistance Charges Pre Tax Amount',
             'Assistance Charges Post Tax Amount',
-            'User ID-Mobile No',          
+            'User ID-Mobile No',
             'Selected Payment Mode',
             'Payment Type',
             'Discount/Comm%',
@@ -207,9 +207,10 @@ const MIS_Proposal_Admin: React.FC = () => {
             'Main Agent',
             'Sub Agent Name',
             'Main Agent Payout',
-            'Commission Amount',
-            'Commission Amount %',
-            'Sub Agent Payout'
+            'Sub Agent Payout',
+            'Main Agent Commission Amount',
+            'Main Agent Commission Amount %'
+
         ];
 
         // Convert ALL filtered data to CSV format
@@ -231,7 +232,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                 formatDate(item.PolicyEndDate),
                 item.Assiatance_charges_PostTaxAmount || '',
                 item.Assiatance_charges_PreTaxAmount || '',
-                item.UserID_Mobileno || '',              
+                item.UserID_Mobileno || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
                 item.Discount || '',
@@ -243,9 +244,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                 item.Main_Agent || '',
                 item.SubAgentName || '',
                 item.MainAgentPayout || '',
+                item.SubAgentPayout || '',
                 item.commissionamount || '',
-                item.commissionamountpercentage || '',
-                item.SubAgentPayout || ''
+                item.commissionamountpercentage || ''
+
             ];
         });
 
@@ -487,7 +489,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                                             <th className="coi-table-header">Policy End Date</th>
                                             <th className="coi-table-header">Assistance Charges Pre Tax Amount</th>
                                             <th className="coi-table-header">Assistance Charges Post Tax Amount</th>
-                                            <th className="coi-table-header">User ID-Mobile No</th>                                          
+                                            <th className="coi-table-header">User ID-Mobile No</th>
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
@@ -502,9 +504,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                                             <th className="coi-table-header">Main Agent</th>
                                             <th className="coi-table-header">Sub Agent Name</th>
                                             <th className="coi-table-header">Main Agent Payout</th>
-                                            <th className="coi-table-header">Commission Amount</th>
-                                            <th className="coi-table-header">Commission Amount %</th>
                                             <th className="coi-table-header">Sub Agent Payout</th>
+                                            <th className="coi-table-header">Main Agent Commission Amount</th>
+                                            <th className="coi-table-header">Main Agent Commission Amount %</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -525,7 +528,7 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
 
                                                     <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
-                                                  
+
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Selected_Payment_Mode || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.PaymentType || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
@@ -555,9 +558,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                     <td className="coi-table-cell">{proposal.Main_Agent || ''}</td>
                                                     <td className="coi-table-cell">{proposal.SubAgentName || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.MainAgentPayout || ''}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.SubAgentPayout || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.commissionamount || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.commissionamountpercentage || ''}</td>
-                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.SubAgentPayout || ''}</td>
+
                                                 </tr>
                                             );
                                         })}
