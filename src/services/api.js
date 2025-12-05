@@ -16,8 +16,8 @@ import axios from 'axios';
 
 //Live Server
 
- export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
- export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -69,6 +69,21 @@ export const fetchAgentsList = async (uId) => {
   }
 };
 
+export const fetchAgentsList_Agent = async (agentId) => {
+  try {
+  //  console.log(agentid);
+    const response = await api.get('/agents_listBy_Agent', {
+      params: { agentId: agentId }
+    });
+//    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Signup error:', error);
+    throw error;
+  }
+};
+
+
 export const GetAgentSummary = async (uId) => {
   try {
   //  console.log(uId);
@@ -98,6 +113,16 @@ export const addAgent = async (agentData) => {
 export const addAgent_nonkyc = async (agentData) => {
   try {
     const response = await api.post('/addAgent_nonkyc', agentData);
+    return response.data;
+  } catch (error) {
+    console.error('Add agent error:', error);
+    throw error;
+  }
+};
+
+export const addAgent_kyc = async (agentData) => {
+  try {
+    const response = await api.post('/addAgent_kyc', agentData);
     return response.data;
   } catch (error) {
     console.error('Add agent error:', error);

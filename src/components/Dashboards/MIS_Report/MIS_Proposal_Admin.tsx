@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, LogOut, Home, Download, ChevronLeft, ChevronRight, ArrowLeftCircle } from "lucide-react";
 import { logout } from '../../../services/auth';
 import { getSub_Main_AgentMIS_byAdmin, PDF_BASE_URL } from "../../../services/api";
 
@@ -293,6 +293,14 @@ const MIS_Proposal_Admin: React.FC = () => {
     const goBack = () => {
         navigate('/dashboard');
     };
+    const handleGoToPlanSelection = () => {
+        navigate('/dashboard', {
+            state: {
+                view: 'approvals',
+                product: 'travelAssist'
+            }
+        });
+    };
 
     const showAdminField = userType === 'Admin';
 
@@ -334,6 +342,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                                 Admin ID: <strong>{adminId}</strong>
                             </p>
                         )}
+                        <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
+                            <ArrowLeftCircle size={18} />
+                            <span>Back To Previous Page</span>
+                        </button>
                     </div>
 
                     {/* Search Form */}

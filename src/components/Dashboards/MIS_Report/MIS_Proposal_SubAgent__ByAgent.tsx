@@ -322,7 +322,11 @@ const MIS_Proposal_SubAgent__ByAgent: React.FC = () => {
   };
 
   const goBack = () => {
-    navigate('/dashboard');
+     if (userType === 'Employee') {
+               
+            } else if (userType === 'Agent') {
+                navigate('/AgentDashboard');
+            } 
   };
 
   const gotoMIS = () => {
@@ -394,7 +398,7 @@ const MIS_Proposal_SubAgent__ByAgent: React.FC = () => {
         <div className="coi-card">
           <div className="coi-card-header">
             <h2 className="coi-card-title">Sub Agent MIS Reports Details</h2>
-            {empId && userType === 'Employee' && (
+            {/* {empId && userType === 'Employee' && (
               <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                 Employee ID: <strong>{empId}</strong>
               </p>
@@ -410,7 +414,7 @@ const MIS_Proposal_SubAgent__ByAgent: React.FC = () => {
               <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                 Admin ID: <strong>{adminId}</strong>
               </p>
-            )}
+            )} */}
 
           </div>
 

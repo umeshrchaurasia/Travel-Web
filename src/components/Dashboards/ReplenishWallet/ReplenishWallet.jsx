@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   UserCircle, Mail, BadgeCheck, LogOut, RefreshCw, Home, CreditCard, ArrowLeft,
-  Check, X, Download, Upload, DollarSign, Clock, CheckCircle, XCircle, Wallet, Calendar
+  Check, X, Download, Upload, DollarSign, Clock, ArrowLeftCircle,
+  CheckCircle, XCircle, Wallet, Calendar
 } from 'lucide-react';
 import { logout } from '../../../services/auth';
 import {
@@ -199,6 +200,14 @@ const ReplenishWallet = () => {
     navigate('/dashboard');
   };
 
+  const handleGoToPlanSelection = () => {
+    navigate('/dashboard', { 
+        state: { 
+            view: 'approvals', 
+            product: 'travelAssist' 
+        } 
+    });
+  };
   const handleUtrChange = (paymentRefNo, value) => {
     setUtrInputs(prev => ({
       ...prev,
@@ -372,7 +381,7 @@ const ReplenishWallet = () => {
       </header>
 
       <main className="main-content">
-        <h1 className="wallet-title">Replenish Wallet</h1>
+        <h2 className="wallet-title">Replenish Wallet</h2>
 
         {/* Admin Info Card */}
         <div className="card">
@@ -380,11 +389,16 @@ const ReplenishWallet = () => {
             <div className="wallet-balance">
               <div className="agent-info-card">
                 <h2>Admin Information</h2>
+                 <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
+                    <ArrowLeftCircle size={18} />
+                    <span>Back To Previous Page</span>
+                  </button>
                 <div>
                   <p>
                     <strong>Admin ID:</strong> {adminProfile.UId || adminProfile.adminId}
                     <strong style={{ marginLeft: '20px' }}>Email:</strong> {adminProfile.email || adminProfile.EmailID}
                   </p>
+                 
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download } from "lucide-react";
+import { Search, LogOut, Home, Download, ArrowLeftCircle } from "lucide-react";
 import { logout } from '../../../services/auth';
 import { get_agentlist_admin, PDF_BASE_URL } from "../../../services/api";
 
@@ -154,7 +154,7 @@ const MIS_Agentdetail_Admin: React.FC = () => {
         }
     };
 
-     // Filter agents based on the selected payment mode radio button
+    // Filter agents based on the selected payment mode radio button
     const filteredAgents = agents.filter(agent => {
         if (paymentFilter === 'Discount') {
             return agent.Paymentmode !== 'Upfront Commission';
@@ -266,6 +266,14 @@ const MIS_Agentdetail_Admin: React.FC = () => {
         navigate('/dashboard');
     };
 
+    const handleGoToPlanSelection = () => {
+        navigate('/dashboard', {
+            state: {
+                view: 'approvals',
+                product: 'travelAssist'
+            }
+        });
+    };
     const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
 
@@ -311,6 +319,10 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                 Admin ID: <strong>{adminId}</strong>
                             </p>
                         )}
+                        <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
+                            <ArrowLeftCircle size={18} />
+                            <span>Back To Previous Page</span>
+                        </button>
                     </div>
 
                     {/* Search Form */}
@@ -369,9 +381,9 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                 />
                             </div>
 
-                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px',marginLeft: '15px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '15px' }}>
                                 <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Payment Type</label>
-                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', height: '40px', padding: '0 5px'  }}>
+                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', height: '40px', padding: '0 5px' }}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
                                         <input
                                             type="radio"
@@ -395,12 +407,12 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                 </div>
                             </div>
 
-                          <div style={{ marginLeft: '10px' }}>
+                            <div style={{ marginLeft: '10px' }}>
                                 <button
                                     onClick={handleSearch}
                                     disabled={loading}
                                     className="coi-search-button"
-                                   
+
                                 >
                                     <Search size={16} style={{ marginRight: '5px' }} />
                                     {loading ? 'Searching...' : 'Search'}
@@ -415,10 +427,10 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                     style={{
                                         opacity: filteredAgents.length === 0 ? 0.5 : 1,
                                         cursor: filteredAgents.length === 0 ? 'not-allowed' : 'pointer',
-                                     
+
                                     }}
                                 >
-                                     <Download size={16} style={{ marginRight: '5px' }}/>
+                                    <Download size={16} style={{ marginRight: '5px' }} />
                                     Download CSV
                                 </button>
                             </div>
@@ -476,7 +488,7 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                                 <td className="coi-table-cell">{agent.FullName || ''}</td>
                                                 <td className="coi-table-cell">{agent.EmailID || ''}</td>
                                                 <td className="coi-table-cell">{agent.MobileNumber || ''}</td>
-                                                 <td className="coi-table-cell">{agent.EmpName || ''}</td>
+                                                <td className="coi-table-cell">{agent.EmpName || ''}</td>
                                                 <td className="coi-table-cell">{agent.EmpMobileNumber || ''}</td>
                                                 <td className="coi-table-cell">{agent.Gender || ''}</td>
                                                 <td className="coi-table-cell">{formatDate(agent.DOB)}</td>
@@ -507,8 +519,8 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                         </div>
                     )}
                     {!loading && filteredAgents.length === 0 && agents.length > 0 && (
-                        <p style={{textAlign: 'center', marginTop: '20px'}}>No agents found for the selected payment type.</p>
-                     )}
+                        <p style={{ textAlign: 'center', marginTop: '20px' }}>No agents found for the selected payment type.</p>
+                    )}
                 </div>
             </main>
             {selectedAgent && (

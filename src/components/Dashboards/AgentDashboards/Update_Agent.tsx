@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, X, Filter, Edit } from "lucide-react";
+import { Search, LogOut, Home, X, Filter, Edit,ArrowLeftCircle } from "lucide-react";
 import { logout } from '../../../services/auth';
 import { get_agentnamelist_admin } from "../../../services/api";
 
@@ -184,6 +184,15 @@ const Update_Agent: React.FC = () => {
         navigate('/dashboard');
     };
 
+      const handleGoToPlanSelection = () => {
+        navigate('/dashboard', {
+            state: {
+                view: 'approvals',
+                product: 'travelAssist'
+            }
+        });
+    };
+
     return (
         <div className="coi-container">
             <header className="coi-header">
@@ -209,6 +218,10 @@ const Update_Agent: React.FC = () => {
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} -Update Agent Details</h2>
+                         <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
+                            <ArrowLeftCircle size={18} />
+                            <span>Back To Previous Page</span>
+                        </button>
                     </div>
 
                     <div className="coi-filter-container">

@@ -22,7 +22,7 @@ import {
   getPendingApprovals,
   getAgentListByUId
 } from '../../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../../services/auth';
 import './AdminDashboard.css';
 import logo from '../../../src/assets/img/TravelAssist.webp';
@@ -41,8 +41,11 @@ const VIEW_APPROVALS = 'approvals';
 
 const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   const navigate = useNavigate();
+  const location = useLocation(); // Initialize location hook
+
   const [agents, setAgents] = useState(defaultData.agents);
   const [loading, setLoading] = useState(defaultData.loading);
+
   const [userProfile, setUserProfile] = useState(() => {
     const savedProfile = localStorage.getItem('userProfile');
     return savedProfile ? JSON.parse(savedProfile) : userData;
@@ -52,10 +55,15 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [documentStatuses, setDocumentStatuses] = useState({});
 
-  // NEW STATE: To control which product is selected (Travel Assist or Practo)
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  // NEW STATE: To control if we show the main selection cards or the agent approvals list
-  const [currentView, setCurrentView] = useState(VIEW_SELECTION);
+
+  const [selectedProduct, setSelectedProduct] = useState(() => {
+    return location.state?.product === 'travelAssist' ? PRODUCT_TRAVEL_ASSIST : 
+           location.state?.product === 'practo' ? PRODUCT_PRACTO : null;
+  });
+
+  const [currentView, setCurrentView] = useState(() => {
+    return location.state?.view === 'approvals' ? VIEW_APPROVALS : VIEW_SELECTION;
+  });
 
   const handleProductSelection = (product) => {
     setSelectedProduct(product);
@@ -309,12 +317,12 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             {/* --- ACTION BUTTONS AND AGENT TABLE (After Selection) --- */}
             {currentView === VIEW_APPROVALS && (
               <>
-              <div >
-                <button onClick={resetView} className="back-to-selection-btn-admin">
-                  <ArrowLeftCircle size={18} />
-                  <span>Back To  Selection</span>
-                </button>
-              </div>
+                <div >
+                  <button onClick={resetView} className="back-to-selection-btn-admin">
+                    <ArrowLeftCircle size={18} />
+                    <span>Back To  Selection</span>
+                  </button>
+                </div>
                 <div className="action-group">
                   {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
                     <>

@@ -13,6 +13,8 @@ import logo from '../../../assets/img/TravelAssist.webp';
 
 import './Add_subAgent.css';
 
+// 1. Import the KYC component
+import Add_Kyc_subAgent from './Add_Kyc_subAgent';
 
 // Type definitions for clarity
 interface AgentFormData {
@@ -145,19 +147,10 @@ const Add_subAgent: React.FC = () => {
     const parentAgentData = state.agentData || {};
     const userId = parentAgentData.UId;
 
-    // --- State for KYC/NON-KYC selection ---
-
-    const Main_Agent_type = parentAgentData.Agent_type;
     const Main_Agent_Payout = String(parentAgentData.Payout);
 
-    const isParentKYC = Main_Agent_type === 'KYC';
-    const isParentNonKYC = Main_Agent_type === 'NonKYC' || Main_Agent_type === 'NON-KYC';
-
-    const isParentTypeUnspecified = !Main_Agent_type || Main_Agent_type.trim() === '';
-
-    const [selectedView, setSelectedView] = useState<'NON-KYC' | 'KYC'>(
-        isParentKYC ? 'KYC' : 'NON-KYC'
-    );
+    // Default to NON-KYC, but allow switching freely
+    const [selectedView, setSelectedView] = useState<'NON-KYC' | 'KYC'>('NON-KYC');
 
     const initialFormData: AgentFormData = {
         UId: userId || '',
@@ -511,6 +504,55 @@ const Add_subAgent: React.FC = () => {
                     font-size: 12px; 
                     margin-top: 0px; 
                 }
+
+                 .card {
+                    background: white;
+                    border-radius: 0.5rem;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    margin-bottom: 2rem;
+                }
+                .card-header {
+                    padding: 1.5rem;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                    .welcome-title {
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    color: #1f2937;
+                    margin: 0;
+                }
+                .employee-info {
+                    padding: 1.5rem;
+                }
+                .info-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    padding-left: 10px !important;
+                    padding-right: 10px !important;
+                }
+                .info-item {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                }
+                .info-label {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .font-weight {
+                    font-weight: 600;
+                    color: #374151;
+                }
+                .info-value {
+                    color: #6b7280;
+                }
+                .spaced5 { margin-right: 5px; }
+                .spaced10 { margin-right: 10px;}
                 .modal-content { border: 1px solid #ddd; border-radius: 8px; background: white; transition: none; }
                 .modal-header { display: flex; justify-content: space-between; align-items: center; }
                 @media (max-width: 768px) {
@@ -526,7 +568,7 @@ const Add_subAgent: React.FC = () => {
                     <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
                     <div className="d-flex justify-content-center py-4">
                         <div className="logo d-flex align-items-center w-auto">
-                            <span className="page-title">Add Sub-Agent</span>
+                            <span className="page-title">Travel Assistance Service</span>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '20px' }}>
@@ -540,7 +582,7 @@ const Add_subAgent: React.FC = () => {
                 </div>
             </header>
 
-            <main >
+            <main   style={{ padding: '2rem'}}>
                 <div className="card">
                     <div style={{
                         padding: '6px',
@@ -557,32 +599,26 @@ const Add_subAgent: React.FC = () => {
                             View Sub-Agents
                         </button>
 
-
-
-
                     </div>
                 </div>
 
-                {/* Selection Buttons */}
+                {/* Selection Buttons - Always Visible */}
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', padding: '5px', flexWrap: 'wrap', textAlign: 'center' }}>
-                    {(isParentKYC || isParentTypeUnspecified) && (
-                        <div
-                            onClick={() => handleSelectView('KYC')}
-                            className={`selection-card-base selection-kyc ${selectedView === 'KYC' ? 'active' : ''}`}
-                        >
-                            <FileText size={20} style={{ marginRight: '8px' }} />
-                            <b style={{ color: selectedView === 'KYC' ? '#047857' : '#333' }}>KYC SubAgent</b>
-                        </div>
-                    )}
-                    {(isParentNonKYC || isParentTypeUnspecified) && (
-                        <div
-                            onClick={() => handleSelectView('NON-KYC')}
-                            className={`selection-card-base selection-nonkyc ${selectedView === 'NON-KYC' ? 'active' : ''}`}
-                        >
-                            <CreditCard size={20} style={{ marginRight: '8px' }} />
-                            <b style={{ color: selectedView === 'NON-KYC' ? '#b91c1c' : '#333' }}>NON-KYC SubAgent</b>
-                        </div>
-                    )}
+                    <div
+                        onClick={() => handleSelectView('KYC')}
+                        className={`selection-card-base selection-kyc ${selectedView === 'KYC' ? 'active' : ''}`}
+                    >
+                        <FileText size={20} style={{ marginRight: '8px' }} />
+                        <b style={{ color: selectedView === 'KYC' ? '#047857' : '#333' }}>KYC SubAgent</b>
+                    </div>
+
+                    <div
+                        onClick={() => handleSelectView('NON-KYC')}
+                        className={`selection-card-base selection-nonkyc ${selectedView === 'NON-KYC' ? 'active' : ''}`}
+                    >
+                        <CreditCard size={20} style={{ marginRight: '8px' }} />
+                        <b style={{ color: selectedView === 'NON-KYC' ? '#b91c1c' : '#333' }}>NON-KYC SubAgent</b>
+                    </div>
                 </div>
 
                 <div style={{ transition: 'none' }}>
@@ -635,8 +671,21 @@ const Add_subAgent: React.FC = () => {
                                                 type="button"
                                                 className="password-toggle-button"
                                                 onClick={togglePasswordVisibility}
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '10px',
+                                                    top: '50%',
+                                                    transform: 'translateY(-50%)',
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    cursor: 'pointer'
+                                                }}
                                             >
-                                                {showPassword ? <EyeOff className="w-5 h-5 text-gray-500" /> : <Eye className="w-5 h-5 text-gray-500" />}
+                                                {showPassword ? (
+                                                    <EyeOff className="w-5 h-5 text-gray-500" />
+                                                ) : (
+                                                    <Eye className="w-5 h-5 text-gray-500" />
+                                                )}
                                             </button>
                                         </div>
                                         {/* FIX: Wrapped error message in container to stabilize layout */}
@@ -973,7 +1022,8 @@ const Add_subAgent: React.FC = () => {
                         </div>
                     </div>
                     <div style={{ display: selectedView === 'KYC' ? 'block' : 'none' }}>
-
+                        {/* 2. Render the KYC component passing parent props */}
+                        <Add_Kyc_subAgent userData={parentAgentData} onLogout={handleLogout} />
                     </div>
                 </div>
             </main>

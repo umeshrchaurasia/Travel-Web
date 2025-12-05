@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     UserCircle, Mail, BadgeCheck, LogOut, UserPlus, RefreshCw,
-    Home, Upload, CheckCircle, X, FileText
+    Home, Upload, CheckCircle, X, FileText, ArrowLeftCircle
 } from 'lucide-react';
 import { fetchSubAgentsList } from '../../../services/api';
 
@@ -41,7 +41,7 @@ const SubAgentlistview: React.FC = () => {
     const userId = parentAgentData.UId;
     const AgentId = parentAgentData.AgentId;
 
-    const Main_Agent_type= parentAgentData.Agent_type;
+    const Main_Agent_type = parentAgentData.Agent_type;
     const [agents, setAgents] = useState(defaultData.agents);
     const [loading, setLoading] = useState(defaultData.loading);
 
@@ -116,7 +116,7 @@ const SubAgentlistview: React.FC = () => {
             localStorage.clear();
             sessionStorage.clear();
             logout();
-           
+
             window.location.href = '/login';
         } catch (error) {
             console.error('Error during logout:', error);
@@ -128,13 +128,17 @@ const SubAgentlistview: React.FC = () => {
         setCurrentPage(1); // Reset to first page on refresh
     };
 
-     const goBack = () => {
+    const handleGoToPlanSelection = () => {
+        navigate('/Add_subAgent');
+    };
+
+    const goBack = () => {
         navigate('/dashboard');
     };
 
     const agentDisplayName = displayData_sel;
 
-      return (
+    return (
         <div className="EmployeeDashboard">
             <header className="top-header">
                 <div className="header-content">
@@ -144,14 +148,14 @@ const SubAgentlistview: React.FC = () => {
                             <span className="d-none d-lg-block">Travel Assistance Service</span>
                         </div>
                     </div>
-                     <div style={{ display: 'flex', gap: '20px' }}>
-                                            <button onClick={goBack} className="coi-button">
-                                                <Home size={18} /> Dashboard
-                                            </button>
-                                            <button onClick={handleLogout} className="coi-button coi-logout-button">
-                                                <LogOut size={18} /> Logout
-                                            </button>
-                                        </div>
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                        <button onClick={goBack} className="coi-button">
+                            <Home size={18} /> Dashboard
+                        </button>
+                        <button onClick={handleLogout} className="coi-button coi-logout-button">
+                            <LogOut size={18} /> Logout
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -160,6 +164,10 @@ const SubAgentlistview: React.FC = () => {
                 <div className="card">
                     <div className="card-header">
                         <h2 className="welcome-title">Welcome, {agentDisplayName}</h2>
+                        <button onClick={handleGoToPlanSelection}  className="back-to-selection-btn_subagent">
+                            <ArrowLeftCircle size={18} />
+                            <span>Back To Previous Page</span>
+                        </button>
                     </div>
                     <div className="card-body">
                         <div className="table-container">
@@ -203,7 +211,7 @@ const SubAgentlistview: React.FC = () => {
                                                         <td>{agent.Password}</td>
 
                                                         <td>
-                                                           {agent.Agent_type}
+                                                            {agent.Agent_type}
                                                         </td>
                                                         <td>
                                                             <span className="status-badge status-cell">

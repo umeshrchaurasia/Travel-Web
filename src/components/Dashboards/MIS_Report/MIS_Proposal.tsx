@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download } from "lucide-react";
+import { Search, LogOut, Home, Download ,ArrowLeftCircle} from "lucide-react";
 import { logout } from '../../../services/auth';
 import { getProposalMIS, PDF_BASE_URL } from "../../../services/api";
 
@@ -313,7 +313,12 @@ const MIS_Proposal: React.FC = () => {
     };
 
     const goBack = () => {
-        navigate('/AgentDashboard');
+         if (userType === 'Employee') {
+               navigate('/dashboard');
+            } else if (userType === 'Agent') {
+                navigate('/AgentDashboard');
+            } 
+       
     };
     const gotoMIS = () => {
         const agentData = location.state?.agentData;
@@ -375,7 +380,8 @@ const MIS_Proposal: React.FC = () => {
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} MIS Reports Details</h2>
-                        {empId && userType === 'Employee' && (
+                    
+                        {/* {empId && userType === 'Employee' && (
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Employee ID: <strong>{empId}</strong>
                             </p>
@@ -391,12 +397,16 @@ const MIS_Proposal: React.FC = () => {
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Admin ID: <strong>{adminId}</strong>
                             </p>
-                        )}
+                        )} */}
+
+                   
                         {agentId && userType === 'Agent' && Main_Agent === '' && (
                             <button onClick={gotoMIS} className="apply-btn">
                                 Sub Agent MIS Reports Details
                             </button>
                         )}
+
+                      
                     </div>
 
                     {/* Search Form */}
