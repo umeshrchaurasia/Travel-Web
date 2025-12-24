@@ -106,9 +106,9 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
   }
 
   // --- NEW LOGIC FOR CONDITIONAL RENDERING ---
-  const allowedAgentIds = [28, 23, 12];
-  const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
-  const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
+  //const allowedAgentIds = [28, 23, 12];
+  //const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
+ // const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
   // --- END NEW LOGIC ---
   const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0' || MainAgent === 'null' || MainAgent === 'undefined';;
 
@@ -188,15 +188,17 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             <p>Proceed to calculate premium and execute travel assistance & services.</p>
           </div>
 
-          {/* --- CONDITIONAL RENDERING OF PRACTO CARD --- */}
-          {showPractoCard && (
+          {/* --- CONDITIONAL RENDERING OF PRACTO CARD ---
+          {showPractoCard && ( */}
+        
             <div className="selection-card" onClick={handlePractoClick}>
               <FileText size={48} className="selection-icon" />
               <h3>Practo Subscription</h3>
               <p>Navigate to the Practo section for health services.</p>
             </div>
-          )}
-          {/* --- END CONDITIONAL RENDERING --- */}
+
+       {/*   )}
+           --- END CONDITIONAL RENDERING --- */}
         </div>
       </main>
 

@@ -117,7 +117,7 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
     StateVisit: "",
     City_Of_visit: "",
     IsRegGST: "Yes",
-    Cust_GSTINNO: "",
+    Cust_GSTINNO: "24AADCI7698J1Z0",
     premiumAmount: "",
     selectedOption: "",
     radiobtn_selectedOption: "",
@@ -150,7 +150,7 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
     setProposalData(parsedData);
 
     // Pre-fill form with available data
-     setFormData(prev => ({
+    setFormData(prev => ({
       ...prev,
       AgentId: parsedData.agentDetails.AgentId,
       AgentCode_BASCode: parsedData.agentDetails.Agent_Code,
@@ -206,13 +206,13 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
   };
 
   const isOtherDiseaseSelected = () => {
-    return formData.traveller.SufferingFromAnyPreExistingDisease && 
-           formData.traveller.NameOfDiseases !== "" && 
-           formData.traveller.NameOfDiseases !== "AnyOther";
+    return formData.traveller.SufferingFromAnyPreExistingDisease &&
+      formData.traveller.NameOfDiseases !== "" &&
+      formData.traveller.NameOfDiseases !== "AnyOther";
   };
   const isAnyOtherDiseaseSelected = () => {
-    return formData.traveller.SufferingFromAnyPreExistingDisease && 
-           formData.traveller.NameOfDiseases === "AnyOther";
+    return formData.traveller.SufferingFromAnyPreExistingDisease &&
+      formData.traveller.NameOfDiseases === "AnyOther";
   };
   const validateForm = () => {
     let errors = {};
@@ -294,12 +294,12 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
       errors.State = 'Please select a state';
     }
 
-if (formData.traveller.PassportNo?.trim()) {
-  const passportRegex = /^[A-Z]{1,2}[0-9]{6,7}$/;
-  if (!passportRegex.test(formData.traveller.PassportNo.trim())) {
-    errors.PassportNo = 'Invalid passport number format (e.g., A1234567, V1317095, AA202808)';
-  }
-}
+    if (formData.traveller.PassportNo?.trim()) {
+      const passportRegex = /^[A-Z]{1,2}[0-9]{6,7}$/;
+      if (!passportRegex.test(formData.traveller.PassportNo.trim())) {
+        errors.PassportNo = 'Invalid passport number format (e.g., A1234567, V1317095, AA202808)';
+      }
+    }
 
     // Date of birth validation
     if (formData.traveller.DateOfBirth) {
@@ -307,8 +307,8 @@ if (formData.traveller.PassportNo?.trim()) {
       const today = new Date();
 
       const diffInMonths =
-      (today.getFullYear() - dob.getFullYear()) * 12 +
-      (today.getMonth() - dob.getMonth());
+        (today.getFullYear() - dob.getFullYear()) * 12 +
+        (today.getMonth() - dob.getMonth());
 
       if (diffInMonths < 3 || (diffInMonths === 3 && today.getDate() < dob.getDate())) {
         errors.DateOfBirth = 'Age must be at least 3 months';
@@ -318,7 +318,7 @@ if (formData.traveller.PassportNo?.trim()) {
         errors.DateOfBirth = 'Date of birth cannot be in future';
       }
 
-    
+
     }
 
     // GST validation
@@ -357,43 +357,43 @@ if (formData.traveller.PassportNo?.trim()) {
       setSearchError('Please enter a passport number');
       return;
     }
-  
+
     setSearching(true);
     setSearchError('');
-  
+
     try {
       const response = await getProposalByPassport(searchPassport);
-  
+
       if (response.Status === 'Success' && response.MasterData?.length > 0) {
         const proposalData = response.MasterData[0];
-  
+
         // Format dates properly
         const formatAPIDate = (dateString) => {
           if (!dateString) return '';
           const date = new Date(dateString);
           return date.toISOString().split('T')[0];
         };
-  
+
         // Update form data with retrieved data
         // But preserve the original PolicyStartDate and PolicyEndDate
         const originalStartDate = formData.PolicyStartDate;
         const originalEndDate = formData.PolicyEndDate;
-  
+
         // Check if the disease in proposal data is in our dropdown list
         const diseaseName = proposalData.NameOfDiseases || '';
         let isStandardDisease = false;
-        
+
         // Check if the disease is in our standard dropdown options
         if (diseaseName) {
-          isStandardDisease = diseaseOptions.some(option => 
+          isStandardDisease = diseaseOptions.some(option =>
             option.value === diseaseName && diseaseName !== "AnyOther"
           );
         }
-        
+
         // If it's not a standard disease but exists, treat it as a custom disease
         if (diseaseName && !isStandardDisease) {
           setCustomDiseaseName(diseaseName);
-          
+
           // Set the form data with AnyOther for the dropdown
           setFormData(prev => ({
             ...prev,
@@ -443,8 +443,8 @@ if (formData.traveller.PassportNo?.trim()) {
             CountryVisiting: proposalData.CountryVisiting || '',
             StateVisit: proposalData.StateVisit || '',
             City_Of_visit: proposalData.City_Of_visit || '',
-            IsRegGST: proposalData.IsRegGST || 'Yes',
-            Cust_GSTINNO: proposalData.Cust_GSTINNO || '',
+            IsRegGST: 'Yes',
+            Cust_GSTINNO: "24AADCI7698J1Z0",
             // Keep the original dates, don't overwrite them
             PolicyStartDate: originalStartDate,
             PolicyEndDate: originalEndDate,
@@ -463,11 +463,11 @@ if (formData.traveller.PassportNo?.trim()) {
               NameOfDiseases: proposalData.NameOfDiseases || ''
             }
           }));
-          
+
           // Clear the custom disease name if not needed
           setCustomDiseaseName('');
         }
-  
+
         setSuccessMessage('Proposal data loaded successfully');
         setTimeout(() => {
           setSuccessMessage('');
@@ -484,11 +484,11 @@ if (formData.traveller.PassportNo?.trim()) {
   };
 
   const handleConfirmSubmit = () => {
-  // Check for AnyOther disease first
-  if (isOtherDiseaseSelected()) {
-    setErrorMessage("Sorry, we cannot process applications with specific disease types. Please select 'AnyOther' or contact customer support for assistance.");
-    return;
-  }
+    // Check for AnyOther disease first
+    if (isOtherDiseaseSelected()) {
+      setErrorMessage("Sorry, we cannot process applications with specific disease types. Please select 'AnyOther' or contact customer support for assistance.");
+      return;
+    }
 
     if (validateForm()) {
       setShowConfirmation(true);
@@ -518,25 +518,25 @@ if (formData.traveller.PassportNo?.trim()) {
 
   const handleSubmit = async () => {
     setShowConfirmation(false);
-  
+
     // Clear previous messages
     setSuccessMessage('');
     setErrorMessage('');
-  
+
     try {
       setSubmitting(true);
-  
+
       const paxId = generatePaxId();
       const PSONumber = "PSO-" + generatePaxId();
-  
+
       // Prepare data for Reliance API
       const relianceData = {
         Product_Code: "2822",
-        AgentCode_BASCode: "17BRG116",  
+        AgentCode_BASCode: "17BRG116",
         UserName: "17BRG116-725288-11031",
         EncryptedPassword: "MBn1Y3/oGIs1g4lwg420s3XjNac599ReQV/nxAMt1fT1jM4sbgl3pKrvUCHtD1bsfV4fYqKJeojp9ZilK5JB8vbfTxCO7nOb7nymGyivPpE=",
-        IntermediatoryBranchCode: "17BRG116-725288-11031",    
-     
+        IntermediatoryBranchCode: "17BRG116-725288-11031",
+
         IntermediatoryDepartmentName: "TRAVEL",
         AddressLine1: formData.AddressLine1,
         AddressLine2: formData.AddressLine2 || null,
@@ -571,16 +571,16 @@ if (formData.traveller.PassportNo?.trim()) {
             DateOfBirth: formatDateForApi(formData.traveller.DateOfBirth),
             AgeGroup: "00-81",
             SufferingFromAnyPreExistingDisease: formData.traveller.SufferingFromAnyPreExistingDisease,
-            NameOfDiseases: formData.traveller.SufferingFromAnyPreExistingDisease ? 
-            (formData.traveller.NameOfDiseases === "AnyOther" ? customDiseaseName : formData.traveller.NameOfDiseases) : 
-            null,
+            NameOfDiseases: formData.traveller.SufferingFromAnyPreExistingDisease ?
+              (formData.traveller.NameOfDiseases === "AnyOther" ? customDiseaseName : formData.traveller.NameOfDiseases) :
+              null,
             AddressOfTheHomeToBeCoveredUnderHomeBurglaryPlan: formData.AddressLine1 + (formData.AddressLine2 ? ", " + formData.AddressLine2 : "") + ", " + formData.CityName + ", " + formData.State + ", " + formData.PinCode
           }
         ]
       };
-  
-   //   console.log('Calling Reliance API with data:', JSON.stringify(relianceData));
-  
+
+      //   console.log('Calling Reliance API with data:', JSON.stringify(relianceData));
+
       // Set a flag to proceed without Reliance validation if needed
       let bypassRelianceValidation = false;
       let relianceResponse;
@@ -588,16 +588,16 @@ if (formData.traveller.PassportNo?.trim()) {
       let downloadFilePath = '';
       let reliancePaxId = '';
       let reliancePSONumber = PSONumber;  // Use our generated PSONumber as fallback
-  
+
       try {
         // Call Reliance API for validation
         relianceResponse = await validatePolicyWithReliance(relianceData);
-//        console.log('Reliance API Response:', relianceResponse);
-  
+        //        console.log('Reliance API Response:', relianceResponse);
+
         // Check for Reliance API validation errors
         if (relianceResponse && relianceResponse.CustomerDetails) {
           const customer = relianceResponse.CustomerDetails[0];
-  
+
           if (customer.WebServiceReturnStatus === 'Error') {
             // Handle specific error codes if needed
             setErrorMessage(`Reliance validation failed: ${customer.Error_Message} (Code: ${customer.ErrorCode})`);
@@ -608,7 +608,7 @@ if (formData.traveller.PassportNo?.trim()) {
             setErrorMessage(`Reliance validation failed: ${customer.Error_Message} (Code: ${customer.ErrorCode})`);
             return;
           }
-          
+
           if (customer.WebServiceReturnStatus === 'Successful') {
             certificateNumber = customer.CertificateNumber;
             downloadFilePath = customer.DownloadFilePath;
@@ -622,26 +622,26 @@ if (formData.traveller.PassportNo?.trim()) {
         }
       } catch (error) {
         console.error('Reliance API Error:', error);
-        
+
         // For demo/development purposes, set bypass to true to continue the flow
         // You may want to adjust this logic in production
         bypassRelianceValidation = window.confirm(
           "Reliance API validation failed. Do you want to continue without validation? (For testing purposes only)"
         );
-        
+
         if (!bypassRelianceValidation) {
           setErrorMessage('Reliance API validation failed. Please try again later.');
           setSubmitting(false);
           return;
         }
-  
+
         // Use generated values since Reliance API failed
         reliancePaxId = "PaxId-" + paxId;
         reliancePSONumber = PSONumber;
         certificateNumber = "TEST-" + Date.now();
         downloadFilePath = "";
       }
-  
+
       // If Reliance validation passes or we're bypassing, proceed with our API
       const submitData = {
         AgentId: formData.AgentId,
@@ -672,11 +672,11 @@ if (formData.traveller.PassportNo?.trim()) {
         Cust_GSTINNO: formData.Cust_GSTINNO,
         Certificate_Number: certificateNumber,
         Download_Insurance: downloadFilePath,
-        
+
         // IMPORTANT: Match these parameter names with the stored procedure
         Selected_Payment_Mode: formatOptionName(proposalData.insuranceDetails.radiobtn_selectedOption),
         Selected_PremiumAmount: proposalData.insuranceDetails.radiobtn_selectedAmount || "",
-        
+
         PlanAmount: proposalData.insuranceDetails.planAmount,
         ReliancePremiumAmount: proposalData.insuranceDetails.reliance_premium_amount,
         Actual_PremiumAmount: proposalData.insuranceDetails.premium,
@@ -693,18 +693,18 @@ if (formData.traveller.PassportNo?.trim()) {
         DateOfBirth: formData.traveller.DateOfBirth,
         AgeGroup: "00-81",
         SufferingFromAnyPreExistingDisease: formData.traveller.SufferingFromAnyPreExistingDisease,
-        NameOfDiseases: formData.traveller.SufferingFromAnyPreExistingDisease ? 
-        (formData.traveller.NameOfDiseases === "AnyOther" ? customDiseaseName : formData.traveller.NameOfDiseases) : 
-        null,
+        NameOfDiseases: formData.traveller.SufferingFromAnyPreExistingDisease ?
+          (formData.traveller.NameOfDiseases === "AnyOther" ? customDiseaseName : formData.traveller.NameOfDiseases) :
+          null,
         AddressOfTheHome: formData.AddressLine1 + (formData.AddressLine2 ? ", " + formData.AddressLine2 : "") + ", " + formData.CityName + ", " + formData.State + ", " + formData.PinCode
       };
-  
- //     console.log('Calling our API with data:', JSON.stringify(submitData));
-  
+
+      //     console.log('Calling our API with data:', JSON.stringify(submitData));
+
       const response = await createProposal(submitData);
       if (response.Status === "Success") {
         setSuccessMessage(`Proposal submitted successfully! Reference ID: ${reliancePSONumber}`);
-  
+
         // Store the insurance data in sessionStorage for the payment page
         const insuranceData = {
           fullName: `${formData.traveller.InsuredFirstName} ${formData.traveller.InsuredLastName}`,
@@ -714,13 +714,13 @@ if (formData.traveller.PassportNo?.trim()) {
           downloadFilePath: downloadFilePath,
           AgentId: proposalData.agentDetails.AgentId,
           AgentCode_BASCode: proposalData.agentDetails.Agent_Code,
-  
+
           premiumAmount: proposalData.insuranceDetails.premium,
           selectedOption: proposalData.insuranceDetails.selectedOption || "Full Pay",
-  
+
           selectedPremiumAmount: proposalData.insuranceDetails.selectedPremiumAmount,
           selectedAgentCollectionAmount: proposalData.insuranceDetails.selectedAgentCollectionAmount,
-        
+
           radiobtn_selectedOption: proposalData.insuranceDetails.radiobtn_selectedOption || "",
           radiobtn_selectedAmount: proposalData.insuranceDetails.radiobtn_selectedAmount || "",
         };
@@ -890,13 +890,13 @@ if (formData.traveller.PassportNo?.trim()) {
       {/* Header */}
       <header style={commonStyles.header}>
         <div style={commonStyles.headerContent}>
-         <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
-           <div className="logo d-flex align-items-center w-auto">
-              <span className="d-none d-lg-block">Travel Assistance Service</span>
-            </div>
-         <div style={{ display: 'flex', gap: '20px' }}>
-         
-          <button
+          <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
+          <div className="logo d-flex align-items-center w-auto">
+            <span className="d-none d-lg-block">Travel Assistance Service</span>
+          </div>
+          <div style={{ display: 'flex', gap: '20px' }}>
+
+            <button
               onClick={() => navigate('/dashboard')}
               style={commonStyles.button}
             >
@@ -1199,23 +1199,19 @@ if (formData.traveller.PassportNo?.trim()) {
               <InputField
                 label="GST Registration"
                 name="IsRegGST"
-                value={formData.IsRegGST}
-                onChange={handleInputChange}
-                type="select"
-                options={[
-                  { value: "", label: "Select GST Status" },
-                  { value: 'Yes', label: 'Yes' },
-                  { value: 'No', label: 'No' }
-                ]}
+                value="Yes"
+                onChange={() => { }}
+                disabled={true}
               />
               {formData.IsRegGST === 'Yes' && (
                 <InputField
                   label="GSTIN Number"
                   name="Cust_GSTINNO"
-                  value={formData.Cust_GSTINNO}
-                  onChange={handleInputChange}
+                  value="24AADCI7698J1Z0"
+                  onChange={() => { }}
                   required
-                  error={formErrors.Cust_GSTINNO}
+                  disabled={true}
+
                 />
               )}
             </div>
@@ -1360,7 +1356,7 @@ if (formData.traveller.PassportNo?.trim()) {
                   required
                   error={formErrors.NameOfDiseases}
                 />
-            
+
                 {isAnyOtherDiseaseSelected() && (
                   <InputField
                     label="Name of Disease Type"
@@ -1371,7 +1367,7 @@ if (formData.traveller.PassportNo?.trim()) {
                     error={formErrors.CustomDiseaseName}
                   />
                 )}
-            
+
                 {isOtherDiseaseSelected() && (
                   <div style={{
                     marginTop: '10px',
@@ -1386,7 +1382,7 @@ if (formData.traveller.PassportNo?.trim()) {
                   }}>
                     <AlertTriangle size={18} />
                     <span>
-                      <strong>Not allowed:</strong> Applications with specific disease types cannot be processed online. 
+                      <strong>Not allowed:</strong> Applications with specific disease types cannot be processed online.
                       Please select 'AnyOther' or contact customer support for assistance.
                     </span>
                   </div>

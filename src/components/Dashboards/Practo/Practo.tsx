@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 
 import {
-  createPractoProposal, updatePractoProposalWallet, getPractoPremium, generateInvoicePractoPdf
+  createPractoProposal, updatePractoProposalWallet, getPractoPremium,
+  generateInvoicePractoPdf, getPractoPlan
 } from '../../../services/api';
 import { logout } from '../../../services/auth';
 import logo from '../../../../src/assets/img/TravelAssist_practo.webp';
@@ -25,18 +26,9 @@ interface AgentData {
   paymentmode?: string;
 }
 
-interface PremiumData {
-  agent_collected: number;
-  commission_agent: number;
-  discount_agent_collection: number;
-  full_agent_collection: number;
-  gst_amount: number;
-  payment_mode: string;
-  payout_percentage: number;
-  premium_amount: number;
-  tds_amount: number;
-  upfront_agent_commission: number;
-  Wallet_Amount: number;
+interface PlanData {
+  Practo_PlanId: string | number;
+  Practo_PlanName: string;
 }
 
 interface PractoProps {
@@ -53,15 +45,20 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
   const [formData, setFormData] = useState({
     FullName: '',
     MobileNumber: '',
-    EmailID: ''
+    EmailID: '',
+    plan_id: '',
+    Practo_PlanName: ''
   });
 
   const [formErrors, setFormErrors] = useState({
     FullName: '',
     MobileNumber: '',
-    EmailID: ''
+    EmailID: '',
+    plan_id: '',
+    Practo_PlanName: ''
   });
-  
+
+  const [planOptions, setPlanOptions] = useState<PlanData[]>([]);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
@@ -75,7 +72,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [availableOptions, setAvailableOptions] = useState(new Set());
 
-  const [proposalResponse, setProposalResponse] = useState<any>(null); 
+  const [proposalResponse, setProposalResponse] = useState<any>(null);
   const [premiumResponse, setPremiumResponse] = useState<any>(null);
 
   const radioStyles = {
@@ -121,7 +118,10 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
       handleCalculatorPremium();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agentData?.AgentId]); 
+  }, [agentData?.AgentId]);
+
+
+
 
   // Secondary useEffect: Sets payment state whenever new premium data is fetched
   useEffect(() => {
@@ -164,6 +164,23 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
     }
   }, [lastApiResponse]);
 
+
+  useEffect(() => {
+    const fectPlans = async () => {
+      try {
+
+        const response = await getPractoPlan();
+        if (response && response.Status === 'Success' && response.MasterData) {
+          setPlanOptions(response.MasterData);
+
+        }
+      }
+      catch (error) {
+        console.error('Error fetching plans:', error);
+      }
+    };
+    fectPlans();
+  }, []);
 
   const handleGoToPlanSelection = () => {
     navigate('/dashboard');
@@ -209,11 +226,31 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
     }
   };
 
+  // Specific handler for Plan Select
+  const handlePlanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value;
+
+    // Find the full plan object to get the name
+    const selectedPlan = planOptions.find(p => String(p.Practo_PlanId) === selectedId);
+    setFormData(prev => ({
+      ...prev,
+      plan_id: selectedId,
+      Practo_PlanName: selectedPlan ? selectedPlan.Practo_PlanName : ''
+    }));
+    // Clear error if exists
+    if (formErrors.plan_id) {
+      setFormErrors(prev => ({ ...prev, plan_id: '' }));
+    }
+  };
+
+
   const validateForm = (): boolean => {
     const errors = {
       FullName: '',
       MobileNumber: '',
-      EmailID: ''
+      EmailID: '',
+      plan_id: '',
+      Practo_PlanName: ''
     };
 
     let isValid = true;
@@ -242,6 +279,11 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
       isValid = false;
     }
 
+    if (!formData.plan_id) {
+      errors.plan_id = 'Please select a plan';
+      isValid = false;
+    }
+
     setFormErrors(errors);
     return isValid;
   };
@@ -264,7 +306,8 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
       FullName: formData.FullName,
       EmailID: formData.EmailID,
       MobileNumber: formData.MobileNumber,
-      plan_id: "87e6002d-b99c-4dba-a171-f164f583ee2c"
+      plan_id: formData.plan_id, //87e6002d-b99c-4dba-a171-f164f583ee2c
+      Practo_PlanName: formData.Practo_PlanName
     };
 
     try {
@@ -272,15 +315,15 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
 
       if (result.Status === 'Success') {
         const newProposalResponse = result.MasterData;
-        
+
         if (newProposalResponse && newProposalResponse.status === 'Success' && newProposalResponse.Practo_proposal_id) {
-            setProposalResponse(newProposalResponse);
-            setIsSubscribed(true); // Lock the form
-            setMessage({ text: 'Proposal submitted successfully! Ready for payment.', type: 'success' });
-            return newProposalResponse;
+          setProposalResponse(newProposalResponse);
+          setIsSubscribed(true); // Lock the form
+          setMessage({ text: 'Proposal submitted successfully! Ready for payment.', type: 'success' });
+          return newProposalResponse;
         } else {
-            setMessage({ text: newProposalResponse.message || 'Proposal failed or ID is missing.', type: 'error' });
-            return null;
+          setMessage({ text: newProposalResponse.message || 'Proposal failed or ID is missing.', type: 'error' });
+          return null;
         }
       } else {
         setMessage({ text: result.Message || 'Proposal submission failed.', type: 'error' });
@@ -300,9 +343,9 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
     if (!agentData) return;
 
     if (!lastApiResponse) {
-        setIsLoading(true);
+      setIsLoading(true);
     }
-    
+
     setPremium(null);
     setagentcollected(null);
     setError('');
@@ -313,8 +356,8 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
       const response = await getPractoPremium(agentId);
 
       if (response?.Status === 'Success' && response?.MasterData) {
-        setLastApiResponse(response); 
-        
+        setLastApiResponse(response);
+
       } else {
         setError(response?.Message || 'Failed to load premium options');
         setMessage({ text: response?.Message || 'Failed to load premium options', type: 'error' });
@@ -358,13 +401,15 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
     setAvailableOptions(new Set());
     setPremiumResponse(null);
     setMessage(null);
-    setProposalResponse(null); 
-    setIsSubscribed(false); 
-    handleCalculatorPremium(); 
+    setProposalResponse(null);
+    setIsSubscribed(false);
+    handleCalculatorPremium();
     setFormData({
       FullName: '',
       MobileNumber: '',
-      EmailID: ''
+      EmailID: '',
+      plan_id: '',
+      Practo_PlanName: ''
     });
   };
 
@@ -376,15 +421,15 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
 
     // 1. Submit proposal if not already submitted
     if (!isSubscribed) {
-        setMessage({ text: 'Submitting proposal and processing payment...', type: 'success' });
-        
-        currentProposalResponse = await handleSubmitProposal();
-        if (!currentProposalResponse) {
-          //  setMessage({ text: 'Please fix the errors in the Practo Subscription form. Cannot proceed to payment.', type: 'error' });
-            return;
-        }
+      setMessage({ text: 'Submitting proposal and processing payment...', type: 'success' });
+
+      currentProposalResponse = await handleSubmitProposal();
+      if (!currentProposalResponse) {
+        //  setMessage({ text: 'Please fix the errors in the Practo Subscription form. Cannot proceed to payment.', type: 'error' });
+        return;
+      }
     }
-    
+
     // 2. Pre-payment checks
     if (!agentData || !premiumResponse || agentcollected === null || !paymentmode) {
       setMessage({ text: 'Payment details are incomplete. Please select a payment option and ensure premium is loaded.', type: 'error' });
@@ -402,11 +447,11 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
 
     setIsLoading(true);
     setMessage(null);
-  
+
     // 3. Construct payload for wallet payment
     const payload_wallet = {
       AgentId: agentData.AgentId,
-      Practo_proposal_id: currentProposalResponse.Practo_proposal_id, 
+      Practo_proposal_id: currentProposalResponse.Practo_proposal_id,
       premium_amount: premiumResponse.premium_amount,
       Selected_PremiumAmount: agentcollected,
       Selected_Payment_Mode: paymentmode,
@@ -468,7 +513,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
 
 
   // Initial loading state while premium options are fetched
-  if (isLoading && !lastApiResponse) {
+  if (isLoading && !lastApiResponse && planOptions.length === 0) {
     return (
       <div className="practo-page-container">
         <div className="practo-card">
@@ -493,7 +538,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
       </div>
     );
   }
-  
+
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
@@ -599,6 +644,32 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                   )}
                 </div>
               </div>
+
+              <div className="form-item">
+                <label htmlFor="plan_id">Plan Name</label>
+                <div style={{ flex: 1 }}>
+                  <select name="plan_id"
+                    value={formData.plan_id}
+                    onChange={handlePlanChange}
+                     style={{ width: '101%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
+                     required
+                     disabled={isFormDisabled}
+                     >
+                      <option value="">Select a Plan</option>
+                    {
+                      planOptions.map((plan) =>(
+                        <option key={plan.Practo_PlanId} value = {plan.Practo_PlanId}>{plan.Practo_PlanName}</option>
+                      ))
+                    }
+                     </select>
+                    {formErrors.plan_id && (
+                    <span style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {formErrors.plan_id}
+                    </span>
+                  )}
+               
+                </div>
+              </div>
             </div>
 
             {message && (
@@ -634,7 +705,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
 
 
             <div style={{ padding: '20px', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '20px' }}>
-              <div className="info-item" style={{paddingBottom: '10px'}}>
+              <div className="info-item" style={{ paddingBottom: '10px' }}>
                 <strong>Wallet Amount:</strong>
                 <span>₹{parseFloat(agentData.Wallet_Amount || '0').toFixed(2)}</span>
               </div>
@@ -693,26 +764,26 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 {selectedOption === 'Upfront' && agentcollected !== null && (
                   <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#f5f3ff', border: '2px solid #7c3aed', transition: 'all 0.3s ease' }}>
                     <span style={{ fontSize: '18px', fontWeight: '600', color: '#6d28d9' }}>
-                       To be collected from Agent<br />
+                      To be collected from Agent<br />
                       <b>₹{agentcollected?.toFixed(0)}</b>
                     </span>
                   </div>
                 )}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center',gap: '15px',  marginTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '20px' }}>
                 <button className='Premium-btn' type="button" onClick={handleWalletPayment} disabled={isPaymentDisabled}>
                   {isLoading ? <Loader className="spinner" size={20} /> : 'Submit Practo Subscription'}
                 </button>
-              
+
 
                 <button className='apply-btn-emp' type="button" onClick={handleCancel}>
                   Cancel
                 </button>
 
-                </div>
+              </div>
 
-            
+
             </div>
 
           </div>

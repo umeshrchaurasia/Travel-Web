@@ -800,6 +800,17 @@ export const getPractoPremium = async (agentId) => {
 };
 
 
+export const getPractoPlan = async () => {
+  try {
+    const response = await api.post('/getPractoPlan');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching Practo premium details:', error);
+    throw error;
+  }
+};
+
+
 export const generateInvoicePractoPdf = async (Practo_proposal_id) => {
   try {
     const response = await api.post('/generateInvoicePractoPdf', {

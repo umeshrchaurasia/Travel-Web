@@ -365,8 +365,8 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
-  
-   const goPlateOCR = () => {
+
+  const goPlateOCR = () => {
     const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
 
@@ -452,9 +452,9 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
                 MIS Report
               </button>
 
-              
 
-              
+
+
             </div>
           </div>
         </div>
@@ -490,8 +490,9 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
           <div className="card-body">
             <div className="table-container">
               {loading ? (
-                <div className="flex justify-center items-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <div className="loader-container">
+                  <div className="custom-loader"></div>
+                  <span className="loading-text">Loading Agent Data...</span>
                 </div>
               ) : (
                 <>
@@ -555,8 +556,8 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
                             <td>{agent.Paymentmode || agent.paymentmode}</td>
                             <td>{agent.Payout}</td>
                             <td className="admin-comment-cell">
-                               {agent.Admin_comment || '-'}
-                            
+                              {agent.Admin_comment || '-'}
+
                             </td>
                           </tr>
                         );

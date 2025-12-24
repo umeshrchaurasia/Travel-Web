@@ -1115,3 +1115,22 @@ select.form-control:focus {
 .password-input-container:hover .password-requirements {
   display: block;
 }
+
+/* Add this to Modal.css */
+
+.mini-loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #6c63ff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+.upload-button.uploading {
+  background-color: #f0f4ff;
+  border-color: #6c63ff;
+  cursor: wait;
+  color: #6c63ff;
+}

@@ -57,8 +57,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
 
 
   const [selectedProduct, setSelectedProduct] = useState(() => {
-    return location.state?.product === 'travelAssist' ? PRODUCT_TRAVEL_ASSIST : 
-           location.state?.product === 'practo' ? PRODUCT_PRACTO : null;
+    return location.state?.product === 'travelAssist' ? PRODUCT_TRAVEL_ASSIST :
+      location.state?.product === 'practo' ? PRODUCT_PRACTO : null;
   });
 
   const [currentView, setCurrentView] = useState(() => {
@@ -355,10 +355,14 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                   )}
                 </div>
 
-                <div className="mt-8">
-                  <h2 className="text-xl font-semibold mb-3">Pending Agent Document Approvals</h2>
-                  {/* ... Agent approval table goes here ... */}
-                </div>
+                {selectedProduct !== PRODUCT_PRACTO && (
+
+                  <div className="mt-8">
+                    <h2 className="text-xl font-semibold mb-3">Pending Agent Document Approvals</h2>
+                    {/* ... Agent approval table goes here ... */}
+                  </div>
+                )}
+
               </>
             )}
 
@@ -392,120 +396,124 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
         </div>
 
         {/* Agents List Card */}
-        <div className="card">
-          <div className="card-header">
-            <div className="flex justify-between items-center">
-              <h2 className="card-title">PENDING APPROVALS</h2>
-              <div className="header-actions">
-                <button onClick={handleRefresh} className="btn btn-primary">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refresh List
-                </button>
+
+        {selectedProduct !== PRODUCT_PRACTO && (
+          <div className="card">
+            <div className="card-header">
+              <div className="flex justify-between items-center">
+                <h2 className="card-title">PENDING APPROVALS</h2>
+                <div className="header-actions">
+                  <button onClick={handleRefresh} className="btn btn-primary">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Refresh List
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="table-container">
+                {loading ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : (
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Sr No.</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Document Status</th>
+                        <th>Admin Approval</th>
+                        <th>Agent Approval</th>
+                        <th>PanCard Status</th>
+                        <th>Wallet Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {agents.map((agent) => (
+                        <tr key={agent.AgentId}>
+                          <td>{agent.AgentId}</td>
+                          <td>{agent.FullName}</td>
+                          <td>{agent.EmailID}</td>
+                          <td>{agent.MobileNumber}</td>
+                          <td>
+                            <button
+                              onClick={() => handleViewDocuments(agent)}
+                              className={`btn ${agent.Agent_Otp_Approved?.toLowerCase() === "approved"
+                                ? getDocumentStatus(agent.AgentId) === 'completed'
+                                  ? 'btn-success'
+                                  : 'btn-primary'
+                                : 'btn-secondary'
+                                }`}
+                              style={{
+                                opacity: agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? 1 : 0.6,
+                                cursor: agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? 'pointer' : 'not-allowed'
+                              }}
+                            >
+                              {agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? (
+                                getDocumentStatus(agent.AgentId) === 'completed' ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    View Documents
+                                  </>
+                                ) : (
+                                  <>
+                                    <CircleOff className="w-4 h-4 mr-2" />
+                                    Incomplete Documents
+                                  </>
+                                )
+                              ) : (
+                                <>
+                                  <X className="w-4 h-4 mr-2" />
+                                  Agent Approval Required
+                                </>
+                              )}
+                            </button>
+                          </td>
+                          <td>
+                            <span className="status-badge status-cell">
+                              <span className={agent.Admin_Approved === "1" ? 'status-active' : 'status-pending'}>
+                                {agent.Admin_Approved === "1" ? 'Approved' : 'Pending'}
+                              </span>
+                            </span>
+                          </td>
+                          <td>
+                            <span className="status-badge status-cell">
+                              <span className={
+                                agent.Agent_Otp_Approved?.toLowerCase() === "approved"
+                                  ? 'status-active'
+                                  : agent.Agent_Otp_Approved?.toLowerCase() === "rejected"
+                                    ? 'status-inactive'
+                                    : 'status-pending'
+                              }>
+                                {agent.Agent_Otp_Approved || "Pending"}
+                              </span>
+                            </span>
+                          </td>
+
+                          <td>
+                            <span className="status-badge status-cell">
+                              <span className="status-active">
+                                Valid
+                              </span>
+                            </span>
+                          </td>
+                          <td>{agent.Wallet_Amount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+                {!loading && agents.length === 0 && (
+                  <p className="text-center py-4">No pending approvals found</p>
+                )}
               </div>
             </div>
           </div>
-          <div className="card-body">
-            <div className="table-container">
-              {loading ? (
-                <div className="flex justify-center items-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                </div>
-              ) : (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Sr No.</th>
-                      <th>Full Name</th>
-                      <th>Email</th>
-                      <th>Mobile</th>
-                      <th>Document Status</th>
-                      <th>Admin Approval</th>
-                      <th>Agent Approval</th>
-                      <th>PanCard Status</th>
-                      <th>Wallet Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {agents.map((agent) => (
-                      <tr key={agent.AgentId}>
-                        <td>{agent.AgentId}</td>
-                        <td>{agent.FullName}</td>
-                        <td>{agent.EmailID}</td>
-                        <td>{agent.MobileNumber}</td>
-                        <td>
-                          <button
-                            onClick={() => handleViewDocuments(agent)}
-                            className={`btn ${agent.Agent_Otp_Approved?.toLowerCase() === "approved"
-                              ? getDocumentStatus(agent.AgentId) === 'completed'
-                                ? 'btn-success'
-                                : 'btn-primary'
-                              : 'btn-secondary'
-                              }`}
-                            style={{
-                              opacity: agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? 1 : 0.6,
-                              cursor: agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? 'pointer' : 'not-allowed'
-                            }}
-                          >
-                            {agent.Agent_Otp_Approved?.toLowerCase() === "approved" ? (
-                              getDocumentStatus(agent.AgentId) === 'completed' ? (
-                                <>
-                                  <CheckCircle className="w-4 h-4 mr-2" />
-                                  View Documents
-                                </>
-                              ) : (
-                                <>
-                                  <CircleOff className="w-4 h-4 mr-2" />
-                                  Incomplete Documents
-                                </>
-                              )
-                            ) : (
-                              <>
-                                <X className="w-4 h-4 mr-2" />
-                                Agent Approval Required
-                              </>
-                            )}
-                          </button>
-                        </td>
-                        <td>
-                          <span className="status-badge status-cell">
-                            <span className={agent.Admin_Approved === "1" ? 'status-active' : 'status-pending'}>
-                              {agent.Admin_Approved === "1" ? 'Approved' : 'Pending'}
-                            </span>
-                          </span>
-                        </td>
-                        <td>
-                          <span className="status-badge status-cell">
-                            <span className={
-                              agent.Agent_Otp_Approved?.toLowerCase() === "approved"
-                                ? 'status-active'
-                                : agent.Agent_Otp_Approved?.toLowerCase() === "rejected"
-                                  ? 'status-inactive'
-                                  : 'status-pending'
-                            }>
-                              {agent.Agent_Otp_Approved || "Pending"}
-                            </span>
-                          </span>
-                        </td>
 
-                        <td>
-                          <span className="status-badge status-cell">
-                            <span className="status-active">
-                              Valid
-                            </span>
-                          </span>
-                        </td>
-                        <td>{agent.Wallet_Amount}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {!loading && agents.length === 0 && (
-                <p className="text-center py-4">No pending approvals found</p>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
       </main>
 
       {/* Document Review Modal */}
