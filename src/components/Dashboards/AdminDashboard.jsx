@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  UserCircle,
-  Mail,
-  BadgeCheck,
-  LogOut,
-  RefreshCw,
-  Home,
-  Upload,
-  CheckCircle,
-  CircleOff,
-  X, Wallet,
-  HardDrive, // Travel Assist Icon
-  FileText, // Practo Card Icon
-  UserPlus, // Add Agent
-  CreditCard, // Replenish Wallet
-  FileBarChart, // MIS Reports
-  UserCog, // Update Agent
-  ArrowLeftCircle, // Back button
+  UserCircle, Mail, BadgeCheck, LogOut, RefreshCw, Home,
+  Upload, CheckCircle, CircleOff, X, Wallet, HardDrive,
+  FileText,
+  UserPlus,
+  CreditCard,
+  FileBarChart,
+  UserCog,
+  ArrowLeftCircle,
 } from 'lucide-react';
 import {
   getPendingApprovals,
@@ -35,13 +26,16 @@ const defaultData = {
 
 // Define constants for product selection
 const PRODUCT_TRAVEL_ASSIST = 'travelAssist';
+const PRODUCT_ZEXTRA_WELLNESS = 'zextraWellness';
 const PRODUCT_PRACTO = 'practo';
+const PRODUCT_AYUSHPAY = 'ayushpay';
 const VIEW_SELECTION = 'selection';
+const VIEW_ZEXTRA_SELECTION = 'zextraSelection';
 const VIEW_APPROVALS = 'approvals';
 
 const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   const navigate = useNavigate();
-  const location = useLocation(); // Initialize location hook
+  const location = useLocation();
 
   const [agents, setAgents] = useState(defaultData.agents);
   const [loading, setLoading] = useState(defaultData.loading);
@@ -55,10 +49,12 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [documentStatuses, setDocumentStatuses] = useState({});
 
-
   const [selectedProduct, setSelectedProduct] = useState(() => {
-    return location.state?.product === 'travelAssist' ? PRODUCT_TRAVEL_ASSIST :
-      location.state?.product === 'practo' ? PRODUCT_PRACTO : null;
+    if (location.state?.product === 'travelAssist') return PRODUCT_TRAVEL_ASSIST;
+    if (location.state?.product === 'zextraWellness') return PRODUCT_ZEXTRA_WELLNESS;
+    if (location.state?.product === 'practo') return PRODUCT_PRACTO;
+    if (location.state?.product === 'ayushpay') return PRODUCT_AYUSHPAY;
+    return null;
   });
 
   const [currentView, setCurrentView] = useState(() => {
@@ -66,11 +62,26 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   });
 
   const handleProductSelection = (product) => {
+    if (product === PRODUCT_ZEXTRA_WELLNESS) {
+      setSelectedProduct(product);
+      setCurrentView(VIEW_ZEXTRA_SELECTION);
+    } else {
+      setSelectedProduct(product);
+      setCurrentView(VIEW_APPROVALS);
+    }
+  };
+
+  const handleZextraProductSelection = (product) => {
     setSelectedProduct(product);
-    setCurrentView(VIEW_APPROVALS); // Switch to the view showing agent approvals/actions
+    setCurrentView(VIEW_APPROVALS);
   };
 
   const resetView = () => {
+    setSelectedProduct(null);
+    setCurrentView(VIEW_SELECTION);
+  };
+
+  const goBackFromZextra = () => {
     setSelectedProduct(null);
     setCurrentView(VIEW_SELECTION);
   };
@@ -83,7 +94,6 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
 
       if (result.Status === 'Success') {
         setAgents(result.MasterData || []);
-        // Load document statuses for each agent
         await Promise.all(
           result.MasterData.map(async (agent) => {
             await loadAgentDocuments(agent.AgentId);
@@ -168,9 +178,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   };
 
   const gotoMIS = () => {
-    //const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
     navigate('/MIS_Proposal_Admin', {
       state: {
         empid: '',
@@ -182,9 +190,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   }
 
   const gotoMISPracto = () => {
-    //const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
     navigate('/MIS_Proposal_Admin_Practo', {
       state: {
         empid: '',
@@ -195,10 +201,20 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-  const gotoMISAgent = () => {
-    //const empId = displayData.id || displayData.UId;
+  const gotoMISAyushpay = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/MIS_Proposal_AyushPay', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
 
+  const gotoMISAgent = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/MIS_Agentdetail_Admin', {
       state: {
         empid: '',
@@ -210,9 +226,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   }
 
   const gotoUpdateAgent = () => {
-    //const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
     navigate('/Update_Agent', {
       state: {
         empid: '',
@@ -223,23 +237,22 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-
   const handleWalletClick = () => {
-    // Store the display data in localStorage to pass it to the wallet page
     localStorage.setItem('walletData', JSON.stringify(displayData));
-    // Navigate to the wallet page
     navigate('/ReplenishWallet', { state: { agentData: displayData } });
   };
 
   const handleWallet_PractoClick = () => {
-    // Store the display data in localStorage to pass it to the wallet page
     localStorage.setItem('walletData', JSON.stringify(displayData));
-    // Navigate to the wallet page
     navigate('/ReplenishWallet_Practo', { state: { agentData: displayData } });
   };
 
-  const handleViewDocuments = (agent) => {
+  const handleWallet_AyushpayClick = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/ReplenishWallet_Ayush', { state: { agentData: displayData } });
+  };
 
+  const handleViewDocuments = (agent) => {
     if (agent.Agent_Otp_Approved?.toLowerCase() !== "approved") {
       alert("Document review is not allowed. Agent agreement approval is required first.");
       return;
@@ -249,7 +262,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   };
 
   const handleDocumentSuccess = async () => {
-    await loadAgents(); // Refresh the entire list after approval
+    await loadAgents();
     setIsModalOpendoc(false);
   };
 
@@ -298,7 +311,9 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             <h2 className="welcome-title">Welcome, {displayData.FullName}</h2>
           </div>
           <div className="employee-info">
-            <div className="info-row">
+            
+            {/* --- NEW LAYOUT: Info + Back Button in one row --- */}
+            <div className="info-header-row">
               <div className="info-item">
                 <span className="info-label spaced5">
                   <UserCircle className="w-4 h-4 inline-block mr-2 spaced5" />
@@ -312,21 +327,77 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                 </span>
                 <span className="info-value">{displayData.EmailID}</span>
               </div>
+
+              {/* Back Button positioned here */}
+              {currentView === VIEW_ZEXTRA_SELECTION && (
+                <button onClick={goBackFromZextra} className="back-to-selection-btn-admin">
+                  <ArrowLeftCircle size={18} />
+                  <span>Back To Selection</span>
+                </button>
+              )}
+              {currentView === VIEW_APPROVALS && (
+                <button onClick={resetView} className="back-to-selection-btn-admin">
+                  <ArrowLeftCircle size={18} />
+                  <span>Back To Selection</span>
+                </button>
+              )}
             </div>
+            {/* -------------------------------------------------- */}
+
+            {/* --- HOME VIEW: INITIAL PRODUCT SELECTION --- */}
+            {currentView === VIEW_SELECTION && (
+              <div className="product-selection-grid">
+                <div
+                  className="product-card card-travel"
+                  onClick={() => handleProductSelection(PRODUCT_TRAVEL_ASSIST)}
+                >
+                  <HardDrive size={48} className="card-icon" />
+                  <h3>Travel Assist</h3>
+                  <p>Manage Travel Assist Agents, Wallet, and Reports.</p>
+                </div>
+
+                <div
+                  className="product-card card-zextra"
+                  onClick={() => handleProductSelection(PRODUCT_ZEXTRA_WELLNESS)}
+                >
+                  <FileText size={48} className="card-icon" />
+                  <h3>Zextra Wellness</h3>
+                  <p>Access wellness plans, Practo subscriptions, and health services.</p>
+                </div>
+              </div>
+            )}
+
+            {/* --- ZEXTRA SELECTION VIEW: PRACTO & AYUSHPAY --- */}
+            {currentView === VIEW_ZEXTRA_SELECTION && (
+              <>
+                <div className="product-selection-grid">
+                  <div
+                    className="product-card card-practo"
+                    onClick={() => handleZextraProductSelection(PRODUCT_PRACTO)}
+                  >
+                    <FileText size={48} className="card-icon" />
+                    <h3>Practo Subscription</h3>
+                    <p>Manage Practo Agents, Wallet, and Reports.</p>
+                  </div>
+
+                  <div
+                    className="product-card card-ayushpay"
+                    onClick={() => handleZextraProductSelection(PRODUCT_AYUSHPAY)}
+                  >
+                    <UserPlus size={48} className="card-icon" />
+                    <h3>Ayushpay</h3>
+                    <p>Navigate to the Ayushpay section for subscription plans.</p>
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* --- ACTION BUTTONS AND AGENT TABLE (After Selection) --- */}
             {currentView === VIEW_APPROVALS && (
               <>
-                <div >
-                  <button onClick={resetView} className="back-to-selection-btn-admin">
-                    <ArrowLeftCircle size={18} />
-                    <span>Back To  Selection</span>
-                  </button>
-                </div>
                 <div className="action-group">
                   {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
                     <>
-
                       <button onClick={gotoMIS} className="action-button button-mis">
                         <FileBarChart size={18} /> MIS Reports
                       </button>
@@ -344,7 +415,6 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
 
                   {selectedProduct === PRODUCT_PRACTO && (
                     <>
-
                       <button onClick={gotoMISPracto} className="action-button button-mis">
                         <FileBarChart size={18} /> MIS Reports Practo
                       </button>
@@ -353,54 +423,36 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       </button>
                     </>
                   )}
+
+                  {selectedProduct === PRODUCT_AYUSHPAY && (
+                    <>
+                      <button onClick={gotoMISAyushpay} className="action-button button-mis-ayushpay">
+                        <FileBarChart size={18} /> MIS AyushPay
+                      </button>
+                      <button onClick={handleWallet_AyushpayClick} className="action-button button-replenish-ayushpay">
+                        <Wallet size={18} /> Replenish Wallet AyushPay
+                      </button>
+                    </>
+                  )}
                 </div>
 
-                {selectedProduct !== PRODUCT_PRACTO && (
-
+                {/* Only show "Pending Agent Document Approvals" title for Travel Assist */}
+                {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
                   <div className="mt-8">
                     <h2 className="text-xl font-semibold mb-3">Pending Agent Document Approvals</h2>
-                    {/* ... Agent approval table goes here ... */}
                   </div>
                 )}
-
               </>
             )}
-
-            {/* --- PRODUCT SELECTION CARDS (Initial View) --- */}
-            {currentView === VIEW_SELECTION && (
-              // New class: product-selection-grid
-              <div className="product-selection-grid">
-
-                <div
-                  className="product-card card-travel" // New classes for styling
-                  onClick={() => handleProductSelection(PRODUCT_TRAVEL_ASSIST)}
-                >
-                  <HardDrive size={48} className="card-icon" />
-                  <h3>Travel Assist</h3>
-                  <p>Manage Travel Assist Agents, Wallet, and Reports.</p>
-                </div>
-
-                <div
-                  className="product-card card-practo" // New classes for styling
-                  onClick={() => handleProductSelection(PRODUCT_PRACTO)}
-                >
-                  <FileText size={48} className="card-icon" />
-                  <h3>Practo Subscription</h3>
-                  <p>Manage Practo Agents, Wallet, and Reports.</p>
-                </div>
-              </div>
-            )}
-
-
           </div>
         </div>
 
-        {/* Agents List Card */}
-
-        {selectedProduct !== PRODUCT_PRACTO && (
+        {/* Agents List Card - VISIBLE ONLY FOR TRAVEL ASSIST */}
+        {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
           <div className="card">
             <div className="card-header">
-              <div className="flex justify-between items-center">
+              {/* Added class for header layout and padding */}
+              <div className="approval-header-content">
                 <h2 className="card-title">PENDING APPROVALS</h2>
                 <div className="header-actions">
                   <button onClick={handleRefresh} className="btn btn-primary">
@@ -512,7 +564,6 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
               </div>
             </div>
           </div>
-
         )}
       </main>
 

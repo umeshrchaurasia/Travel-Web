@@ -19,6 +19,8 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     Gender: 'Male',
     DOB: '',
     PayoutPercentage: '',
+    PayoutPracto: '',
+    PayoutAyush: '',
     PaymentMode: 'Full Pay',
     Wallet_Amount: '0',
     EducationQualification: '',
@@ -155,7 +157,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
     try {
       const result = await verifyPanpro(formData.PAN_No, formData.FullName);
-   //   console.log('PAN Verification Result:', result);
+      //   console.log('PAN Verification Result:', result);
 
       // FIXED: Check the actual API response structure
       if (result.Status === 'Success' && result.MasterData) {
@@ -743,7 +745,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       };
 
       const response = await addAgent(submissionData);
-    //  console.log("Agent creation response:", response);
+      //  console.log("Agent creation response:", response);
 
       if (response.Status === 'Error') {
         setError(response.Message || 'Failed to add agent');
@@ -1205,7 +1207,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 fontWeight: '500',
                 color: '#333',
                 fontSize: '16px'
-              }}>Payout Percentage</label>
+              }}>Payout TravelAssist (%)</label>
               <input
                 type="text"
                 id="PayoutPercentage"
@@ -1214,7 +1216,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 value={formData.PayoutPercentage}
                 onChange={handleChange}
                 autoComplete="off"
-                placeholder="Enter Payout Percentage (0-60)"
+                placeholder="Enter Payout TravelAssist Percentage (0-60)"
                 required
               />
               {formErrors.PayoutPercentage && (
@@ -1249,6 +1251,58 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 <option value="Discount">Discount</option>
               </select>
             </div>
+          </div>
+          <div className="form-row">
+
+            <div className="form-group">
+              <label htmlFor="PayoutPracto" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>Payout Practo (%)</label>
+              <input
+                type="text"
+                id="PayoutPracto"
+                name="PayoutPracto"
+                className={`form-control ${formErrors.PayoutPracto ? 'error' : ''}`}
+                value={formData.PayoutPracto}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout Practo Percentage (0-60)"
+                required
+              />
+              {formErrors.PayoutPracto && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutPracto}
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="PayoutAyush" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>Payout AyushPay (%)</label>
+              <input
+                type="text"
+                id="PayoutAyush"
+                name="PayoutAyush"
+                className={`form-control ${formErrors.PayoutAyush ? 'error' : ''}`}
+                value={formData.PayoutAyush}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout AyushPay Percentage (0-60)"
+                required
+              />
+              {formErrors.PayoutAyush && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutAyush}
+                </div>
+              )}
+            </div>
+
+
           </div>
 
           <div className="form-row">

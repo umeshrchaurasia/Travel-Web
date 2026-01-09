@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-//export const BASE_URL = 'http://localhost:3000/api';
-//export const PDF_BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3000/api';
+export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
-export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
-export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+//export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+//export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -836,6 +836,83 @@ export const getProposalDetailsByAgent_Practo = async (agentId, paymentStatus) =
   }
 };
 
+//AyushPay
+
+
+export const createAyushPayProposal = async (ProposalData) => {
+  try {
+    // This uses the 'api' instance you already configured with axios
+    const response = await api.post('/createAyushPayProposal', ProposalData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating Practo Proposal:', error);
+    // Re-throw the error so the component's catch block can handle it and show a message
+    throw error;
+  }
+};
+
+
+// FIX: Replaced broken recursive function with correct API call
+export const checkAyushDuplicate = async (mobile, email) => {
+  try {
+    const response = await api.post('/checkAyushDuplicate', { mobile, email });
+    return response.data;
+  } catch (error) {
+    console.error('Error checking duplicate:', error);
+    throw error;
+  }
+};
+
+export const updateAyushProposalWallet = async (payload) => {
+  try {
+    const response = await api.post('/update-ayush-proposal-wallet', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Ayush proposal wallet:', error);
+    throw error;
+  }
+};
+
+
+
+export const generateInvoiceAyushPayPdf = async (Ayush_id) => {
+  try {
+    const response = await api.post('/generateInvoiceAyushPayPdf', {
+      Ayush_id: Ayush_id
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching InvoicePractoPdf:', error);
+    throw error;
+  }
+};
+
+export const getProposalDetailsByAgent_AyushPay = async (agentId, paymentStatus) => {
+  try {
+    const response = await api.post('/getProposalDetailsByAgent_AyushPay', {
+      agentId,
+      paymentStatus
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getAyushPayPremium = async (agentId) => {
+  try {
+    const response = await api.post('/getAyushPayPremium', {
+      AgentId: agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching Practo premium details:', error);
+    throw error;
+  }
+};
+
+
 // New function to apply wallet payment
 export const applyWalletPayment_Practo = async (paymentData) => {
   try {
@@ -953,5 +1030,35 @@ export const getSub_Main_AgentMIS_byAdmin = async (startdate, enddate, empId, ag
     throw error;
   }
 };
+
+export const applyWalletPayment_AyushPay = async (paymentData) => {
+  try {
+ //   console.log('Sending payment data to API:', paymentData);
+
+    // Use api instance with proper headers and base URL
+    const response = await api.post('/insertBatchPayment_AyushPay', paymentData);
+
+//    console.log('API response received:', response.data);
+
+    // Return the data from the response
+    return response.data;
+  } catch (error) {
+    console.error('Error details:', error.response || error);
+    throw error;
+  }
+};
+
+export const getProposalMIS_AyushPay = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalMIS_AyushPay', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
 
 export default api;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   UserCircle, Mail, BadgeCheck, HardDrive, FileText, LogOut, UserPlus,
-  RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard, ArrowLeftCircle
+  RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard, ArrowLeftCircle,
+  Activity, Heart
 } from 'lucide-react';
 
 import { getAgentById } from '../../../services/api';
@@ -24,9 +25,13 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [MainAgent, setMainAgent] = useState('');
 
+  const [showWellnessOptions, setShowWellnessOptions] = useState(false);
 
 
   const navigate = useNavigate();
+
+  // ADD THIS LINE TO Agent id wise Display DATA
+  const displayData = userData || JSON.parse(localStorage.getItem('userProfile'));
   // --- CORRECTED useEffect HOOK ---
   useEffect(() => {
     const initializeAndFetch = async () => {
@@ -87,6 +92,12 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
     navigate('/practo', { state: { agentData: displayData_sel } });
   };
 
+  const handleAyushPayHealthClick = () => {
+    navigate('/Ayushpay', { state: { agentData: displayData_sel } });
+
+  };
+
+
 
   const handleAgentDashboardClick = () => {
     navigate('/AgentDashboard', { state: { agentData: displayData_sel } });
@@ -108,7 +119,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
   // --- NEW LOGIC FOR CONDITIONAL RENDERING ---
   //const allowedAgentIds = [28, 23, 12];
   //const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
- // const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
+  // const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
   // --- END NEW LOGIC ---
   const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0' || MainAgent === 'null' || MainAgent === 'undefined';;
 
@@ -121,8 +132,6 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             <span className="d-none d-lg-block">Travel Assistance Service</span>
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
-
-           
             <button
               onClick={handleLogout}
               style={{
@@ -161,44 +170,77 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
                 <span className="info-value">{displayData_sel.email || displayData_sel.EmailID}</span>
               </div>
 
-              {/* Enhanced Wallet Button with yellow highlight */}
-
-
               {isAddSubAgentButtonVisible && (
                 <div className="wallet-button-container">
-
-
                   <button onClick={handleAddAgent} className="apply-btn flex items-center gap-2">
                     <UserPlus className="w-4 h-4 mr-2 pr-2" />
                     Add Sub Agent
-
                   </button>
-
                 </div>
               )}
             </div>
           </div>
         </div>
 
-
-        <div className="selection-container">
-          <div className="selection-card" onClick={handleAgentDashboardClick}>
-            <HardDrive size={48} className="selection-icon" />
-            <h3>Travel Assist</h3>
-            <p>Proceed to calculate premium and execute travel assistance & services.</p>
+        {/* Back Button for Wellness View */}
+        {showWellnessOptions && (
+          <div style={{ maxWidth: '100%', marginBottom: '1rem', marginTop: '1rem' }}>
+            <button
+              onClick={() => setShowWellnessOptions(false)}
+              className="back-to-selection-btn"
+              style={{ position: 'relative', top: '0', right: '0' }}
+            >
+              <ArrowLeftCircle size={18} />
+              Back to Main Menu
+            </button>
           </div>
+        )}
 
-          {/* --- CONDITIONAL RENDERING OF PRACTO CARD ---
-          {showPractoCard && ( */}
+        {/* Dynamic Selection Container */}
+        <div className="selection-container">
+
+          {!showWellnessOptions ? (
+            /* --- MAIN VIEW: Travel Assist & Zextra Wellness --- */
+            <>
+              {/* Card 1: Travel Assist */}
+              <div className="selection-card" onClick={handleAgentDashboardClick}>
+                <HardDrive size={48} className="selection-icon" />
+                <h3>Travel Assist</h3>
+                <p>Proceed to calculate premium and execute travel assistance & services.</p>
+              </div>
+
+              {/* Card 2: Zextra Wellness */}
+              <div className="selection-card" onClick={() => setShowWellnessOptions(true)}>
+                <Activity size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }} />
+                <h3>Zextra Wellness</h3>
+                <p>Access wellness plans, Practo subscriptions, and health services.</p>
+              </div>
+            </>
+          ) : (
+            /* --- SUB VIEW: Practo Subscription & Practo Health --- */
+            <>
+              {/* Card 1: Practo Subscription */}
+              <div className="selection-card" onClick={handlePractoClick}>
+                <FileText size={48} className="selection-icon" />
+                <h3>Practo Subscription</h3>
+                <p>Navigate to the Practo section for subscription plans.</p>
+              </div>
+
         
-            <div className="selection-card" onClick={handlePractoClick}>
-              <FileText size={48} className="selection-icon" />
-              <h3>Practo Subscription</h3>
-              <p>Navigate to the Practo section for health services.</p>
-            </div>
 
-       {/*   )}
-           --- END CONDITIONAL RENDERING --- */}
+              {/* Card 2: AyushPay Health */}
+
+              {[12, 28, 29].includes(Number(displayData?.AgentId)) && (
+              <div className="selection-card" onClick={handleAyushPayHealthClick}>
+                <Heart size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)' }} />
+                <h3>AyushPay</h3>
+                <p>Navigate to the AyushPay section for subscription plans.</p>
+              </div>
+              )}
+
+            </>
+          )}
+
         </div>
       </main>
 
@@ -208,6 +250,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
     </div>
   );
 };
+
 const commonStyles = {
   container: {
     backgroundColor: '#f3f4f6',
@@ -231,7 +274,7 @@ const commonStyles = {
   logo: {
     height: '40px'
   },
-   button: {
+  button: {
     backgroundColor: '#dc2626',
     color: 'white',
     padding: '8px 16px',
@@ -242,7 +285,7 @@ const commonStyles = {
     alignItems: 'center',
     gap: '8px'
   },
-    mainContent1: {
+  mainContent1: {
     maxWidth: '1200px',
     margin: '20px auto',
     padding: '0 20px',

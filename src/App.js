@@ -60,6 +60,16 @@ import MIS_Proposal_SubAgent__ByAgent from './components/Dashboards/MIS_Report/M
 import MIS_Proposal_SubAgent_ByAdmin from './components/Dashboards/MIS_Report/MIS_Proposal_SubAgent_ByAdmin';
 import TDS_Proposal_SubAgent from './components/Dashboards/MIS_Report/TDS_Proposal_SubAgent';
 
+import Ayushpay from './components/Dashboards/Ayushpayhealth/Ayushpay';
+
+import AyushWalletDetails from './components/Dashboards/Ayushpayhealth/AyushWalletDetails';
+
+import WalletPageAyush from './components/Dashboards/Ayushpayhealth/WalletPageAyush';
+
+import ReplenishWallet_Ayush from './components/Dashboards/ReplenishWallet/ReplenishWallet_Ayush';
+
+import MIS_Proposal_AyushPay from './components/Dashboards/MIS_Report/MIS_Proposal_AyushPay';
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -276,6 +286,13 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/Ayushpay" element={
+            <ProtectedRoute>
+              <Ayushpay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
           <Route path="/ReplenishWallet_Practo" element={
             <ProtectedRoute>
               <ReplenishWallet_Practo userData={userData} onLogout={handleLogout} />
@@ -312,26 +329,51 @@ function App() {
             </ProtectedRoute>
           } />
 
-          
+
           <Route path="/MIS_Proposal_SubAgent__ByAgent" element={
             <ProtectedRoute>
               <MIS_Proposal_SubAgent__ByAgent userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
-          
+
           <Route path="/MIS_Proposal_SubAgent_ByAdmin" element={
             <ProtectedRoute>
               <MIS_Proposal_SubAgent_ByAdmin userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
-     
+
           <Route path="/TDS_Proposal_SubAgent" element={
             <ProtectedRoute>
               <TDS_Proposal_SubAgent userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
+
+          <Route path="/AyushWalletDetails" element={
+            <ProtectedRoute>
+              <AyushWalletDetails userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/WalletPageAyush" element={
+            <ProtectedRoute>
+              <WalletPageAyush userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+            <Route path="/ReplenishWallet_Ayush" element={
+            <ProtectedRoute>
+              <ReplenishWallet_Ayush userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+           <Route path="/MIS_Proposal_AyushPay" element={
+            <ProtectedRoute>
+              <MIS_Proposal_AyushPay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+          
 
         </Routes>
       </div>
