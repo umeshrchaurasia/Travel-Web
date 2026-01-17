@@ -230,13 +230,14 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
               {/* Card 2: AyushPay Health */}
 
-              {[12, 28, 29].includes(Number(displayData?.AgentId)) && (
+             {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
+
               <div className="selection-card" onClick={handleAyushPayHealthClick}>
                 <Heart size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)' }} />
                 <h3>AyushPay</h3>
                 <p>Navigate to the AyushPay section for subscription plans.</p>
               </div>
-              )}
+              
 
             </>
           )}

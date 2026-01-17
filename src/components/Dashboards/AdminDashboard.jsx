@@ -203,7 +203,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
 
   const gotoMISAyushpay = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
-    navigate('/MIS_Proposal_AyushPay', {
+    navigate('/MIS_Proposal_Admin_AyushPay', {
       state: {
         empid: '',
         agentData: displayData,

@@ -27,6 +27,8 @@ interface AgentFormData {
     Gender: 'Male' | 'Female' | 'Other';
     DOB: string;
     PayoutPercentage: string;
+    PayoutPracto: string;
+    PayoutAyush: string;
     PaymentMode: 'Full Pay' | 'Upfront Commission' | 'Discount';
     Wallet_Amount: string;
     EducationQualification: string;
@@ -114,8 +116,8 @@ const validations = {
         return "";
     },
 
-    validatePayout: (payout: string, mainAgentPayout: string) => {
-        if (!payout) return "Payout percentage is required";
+    validatePayout: (payout: string, mainAgentPayout: string, fieldLabel: string = "Payout Percentage") => {
+        if (!payout) return `${fieldLabel} is required`;
 
         const payoutNum = parseFloat(payout);
         const mainPayoutNum = parseFloat(mainAgentPayout);
@@ -124,11 +126,9 @@ const validations = {
         if (payoutNum < 0 || payoutNum > 60) return "Payout percentage must be between 0 and 60";
 
         if (!isNaN(mainPayoutNum) && payoutNum >= mainPayoutNum) {
-            return `Payout Percentage must be less than Main Agent Payout (${mainAgentPayout}%)`;
+            return `${fieldLabel} must be less than Main Agent Payout (${mainAgentPayout}%)`;
         }
         return "";
-
-
     },
 
     validateEducation: (edu: string) => {
@@ -162,6 +162,8 @@ const Add_subAgent: React.FC = () => {
         Gender: 'Male',
         DOB: '',
         PayoutPercentage: '',
+        PayoutPracto: '',
+        PayoutAyush: '',
         PaymentMode: 'Full Pay',
         Wallet_Amount: '0',
         EducationQualification: '',
@@ -297,6 +299,26 @@ const Add_subAgent: React.FC = () => {
                     // END CHANGE 4
                 }
                 break;
+            case 'PayoutPracto':
+                if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+                    processedValue = value;
+                    setFormData(prev => ({ ...prev, [key]: processedValue }));
+
+                    // CHANGE: Pass specific label
+                    const errorMsg = validations.validatePayout(processedValue, Main_Agent_Payout, "Payout Practo (%)");
+                    setFormErrors(prev => ({ ...prev, PayoutPracto: errorMsg }));
+                }
+                break;
+            case 'PayoutAyush':
+                if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+                    processedValue = value;
+                    setFormData(prev => ({ ...prev, [key]: processedValue }));
+
+                    // CHANGE: Pass specific label
+                    const errorMsg = validations.validatePayout(processedValue, Main_Agent_Payout, "Payout AyushPay (%)");
+                    setFormErrors(prev => ({ ...prev, PayoutAyush: errorMsg }));
+                }
+                break;
 
             case 'DOB':
             case 'State':
@@ -315,32 +337,38 @@ const Add_subAgent: React.FC = () => {
     const validateForm = () => {
         const errors: Partial<Record<keyof AgentFormData, string>> = {};
 
-        const checkFields: Array<keyof AgentFormData> = ['FullName', 'TraderName', 'Password', 'DOB', 'PayoutPercentage', 'EducationQualification', 'State'];
+        // Removed 'PayoutPercentage' from this generic loop to handle it explicitly below with others
+        const checkFields: Array<keyof AgentFormData> = ['FullName', 'TraderName', 'Password', 'DOB', 'EducationQualification', 'State'];
 
         checkFields.forEach(key => {
+            // ... existing loop logic ...
             const validationFn = validations[`validate${key}` as keyof typeof validations];
             if (validationFn) {
-                let errorMsg = '';
-                if (key === 'PayoutPercentage') {
-                    // CHANGE 5: Pass Main_Agent_Payout during form submission validation
-                    errorMsg = validations.validatePayout(formData[key] as string, Main_Agent_Payout);
-                } else {
-                    const singleArgValidationFn = validationFn as (value: string) => string;
-
-                    // Now call the single-argument function.
-                    errorMsg = singleArgValidationFn(formData[key] as string);
-                }
-                if (errorMsg) {
-                    errors[key] = errorMsg;
-                }
+                const singleArgValidationFn = validationFn as (value: string) => string;
+                const errorMsg = singleArgValidationFn(formData[key] as string);
+                if (errorMsg) errors[key] = errorMsg;
             }
         });
+
+        // Explicit Payout Validations with Labels
+        if (formData.PayoutPercentage) {
+            const msg = validations.validatePayout(formData.PayoutPercentage, Main_Agent_Payout, "Payout TravelAssist (%)");
+            if (msg) errors.PayoutPercentage = msg;
+        }
+        if (formData.PayoutPracto) {
+            const msg = validations.validatePayout(formData.PayoutPracto, Main_Agent_Payout, "Payout Practo (%)");
+            if (msg) errors.PayoutPracto = msg;
+        }
+        if (formData.PayoutAyush) {
+            const msg = validations.validatePayout(formData.PayoutAyush, Main_Agent_Payout, "Payout AyushPay (%)");
+            if (msg) errors.PayoutAyush = msg;
+        }
 
         if (!formData.State) errors.State = 'State is required';
 
         setFormErrors(prev => ({ ...prev, ...errors }));
         return Object.keys(errors).length === 0;
-    };
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -390,7 +418,10 @@ const Add_subAgent: React.FC = () => {
                 Wallet_Amount: formData.Wallet_Amount,
                 // Ensure PAN_No is explicitly empty as per user's current requirement (no KYC)
                 PAN_No: '',
-                Main_Agent: parentAgentData.AgentId
+                Main_Agent: parentAgentData.AgentId,
+                PayoutPracto: formData.PayoutPracto || '0',
+                PayoutAyush: formData.PayoutAyush || '0',
+                Address: formData.Address || ''
 
             };
 
@@ -582,7 +613,7 @@ const Add_subAgent: React.FC = () => {
                 </div>
             </header>
 
-            <main   style={{ padding: '2rem'}}>
+            <main style={{ padding: '2rem' }}>
                 <div className="card">
                     <div style={{
                         padding: '6px',
@@ -865,7 +896,7 @@ const Add_subAgent: React.FC = () => {
                                 {/* Row 7: Payout, Payment Mode */}
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="PayoutPercentage">Payout Percentage  <span style={{ color: '#4154f1', fontWeight: 500 }}>(Main Agent Payout is {Main_Agent_Payout})</span></label>
+                                        <label htmlFor="PayoutPercentage">Payout TravelAssist (%)<span style={{ color: '#4154f1', fontWeight: 500 }}>(Main Agent Payout is {Main_Agent_Payout})</span></label>
                                         <input
                                             type="text"
                                             id="PayoutPercentage"
@@ -899,6 +930,44 @@ const Add_subAgent: React.FC = () => {
                                         </select>
                                         {/* Empty container for layout consistency */}
                                         <div className="error-message-container"></div>
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="PayoutPracto">Payout Practo (%)</label>
+                                        <input
+                                            type="text"
+                                            id="PayoutPracto"
+                                            name="PayoutPracto"
+                                            className={`form-control ${formErrors.PayoutPracto ? 'error' : ''}`}
+                                            value={formData.PayoutPracto}
+                                            onChange={handleChange}
+                                            autoComplete="off"
+                                            placeholder="Enter Payout Practo Percentage (0-50)"
+                                            required
+                                        />
+                                        <div className="error-message-container">
+                                            {formErrors.PayoutPracto && <div className="error-message">{formErrors.PayoutPracto}</div>}
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="PayoutAyush">Payout AyushPay (%)</label>
+                                        <input
+                                            type="text"
+                                            id="PayoutAyush"
+                                            name="PayoutAyush"
+                                            className={`form-control ${formErrors.PayoutAyush ? 'error' : ''}`}
+                                            value={formData.PayoutAyush}
+                                            onChange={handleChange}
+                                            autoComplete="off"
+                                            placeholder="Enter Payout AyushPay Percentage (0-50)"
+                                            required
+                                        />
+                                        <div className="error-message-container">
+                                            {formErrors.PayoutAyush && <div className="error-message">{formErrors.PayoutAyush}</div>}
+                                        </div>
                                     </div>
                                 </div>
 

@@ -16,23 +16,32 @@ interface Agent {
     MobileNumber?: string;
     Paymentmode?: string;
     Payout?: string;
+    Payout_Practo?: string;
+    Payout_Ayush?: string;
     Wallet_Amount?: string;
 }
 
 const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSuccess, agent }) => {
     const [formData, setFormData] = useState({
         Payout: '',
+        Payout_Practo: '',
+        Payout_Ayush: '',
         Wallet_Amount: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    // Get current date for display
+    const currentDate = new Date().toLocaleDateString('en-GB');
+
     useEffect(() => {
         // When the agent prop changes, update the form data
         if (agent) {
             setFormData({
-                Payout: agent.Payout || '',
+                Payout: agent.Payout || '0',
+                Payout_Practo: agent.Payout_Practo || '0',
+                Payout_Ayush: agent.Payout_Ayush || '0',
                 Wallet_Amount: agent.Wallet_Amount || ''
             });
         }
@@ -51,12 +60,12 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
         }));
     };
 
-       const handleNumericKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleNumericKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // Allow backspace, delete, tab, escape, enter, and arrow keys
         if ([46, 8, 9, 27, 13, 110].includes(e.keyCode) ||
             (e.keyCode === 65 && e.ctrlKey === true) || // Ctrl+A
             (e.keyCode >= 35 && e.keyCode <= 39)) { // Home, End, Arrows
-                 return;
+            return;
         }
         // Ensure that it is a number and stop the keypress if not
         if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
@@ -101,7 +110,7 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
                         <X size={24} />
                     </button>
                 </div>
-                <form onSubmit={handleSubmit} style={{backgroundColor:"white"}}>
+                <form onSubmit={handleSubmit} style={{ backgroundColor: "white" }}>
                     <div className="modal-body">
                         {/* Read-only fields */}
                         <div className="form-group-readonly">
@@ -121,32 +130,74 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
                             <span>{agent.Paymentmode}</span>
                         </div>
                         <hr />
+
                         {/* Editable fields */}
-                        <div className="form-group">
-                            <label htmlFor="Payout">Payout (%)</label>
-                            <input
-                                id="Payout"
-                                name="Payout"
-                                type="number"
-                                value={formData.Payout}
-                                onChange={handleChange}
-                                placeholder="e.g., 10"
-                                required
-                            />
+
+                        {/* Row 1: Parallel Columns for Payout TravelAssist and Payout Practo */}
+                        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label htmlFor="Payout">Payout TravelAssist (%)</label>
+                                <input
+                                    id="Payout"
+                                    name="Payout"
+                                    type="number"
+                                    value={formData.Payout}
+                                    onChange={handleChange}
+                                    placeholder="e.g., 10"
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label htmlFor="Payout_Practo">Payout Practo (%)</label>
+                                <input
+                                    id="Payout_Practo"
+                                    name="Payout_Practo"
+                                    type="number"
+                                    value={formData.Payout_Practo}
+                                    onChange={handleChange}
+                                    placeholder="e.g., 5"
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="Wallet_Amount">Wallet Balance (₹)</label>
-                            <input
-                                id="Wallet_Amount"
-                                name="Wallet_Amount"
-                                type="number"
-                                value={formData.Wallet_Amount}
-                                onChange={handleChange}
-                                onKeyDown={handleNumericKeyDown}
-                                placeholder="e.g., 5000"
-                                required
-                            />
+                        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+                            {/* Row 2: Payout AyushPay */}
+                            <div className="form-group">
+                                <label htmlFor="Payout_Ayush">Payout AyushPay (%)</label>
+                                <input
+                                    id="Payout_Ayush"
+                                    name="Payout_Ayush"
+                                    type="number"
+                                    value={formData.Payout_Ayush}
+                                    onChange={handleChange}
+                                    placeholder="e.g., 5"
+                                    required
+                                />
+                            </div>
+
+                            {/* Wallet Section */}
+                            <div className="form-group">
+                                <label htmlFor="Wallet_Amount">Wallet Balance (₹)</label>
+                                <input
+                                    id="Wallet_Amount"
+                                    name="Wallet_Amount"
+                                    type="number"
+                                    value={formData.Wallet_Amount}
+                                    onChange={handleChange}
+                                    onKeyDown={handleNumericKeyDown}
+                                    placeholder="e.g., 5000"
+                                    required
+                                />
+                            </div>
                         </div>
+
+                        {/* Wallet Update Date Display */}
+                        <div className="form-group-readonly">
+                            <label>Wallet Update Date:</label>
+                            <span style={{ fontWeight: '500', color: '#555' }}>{currentDate}</span>
+                        </div>
+
                         {error && <div className="form-message error">{error}</div>}
                         {success && <div className="form-message success">{success}</div>}
                     </div>

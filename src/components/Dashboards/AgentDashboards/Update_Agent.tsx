@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, X, Filter, Edit,ArrowLeftCircle } from "lucide-react";
+import { Search, LogOut, Home, X, Filter, Edit, ArrowLeftCircle } from "lucide-react";
 import { logout } from '../../../services/auth';
 import { get_agentnamelist_admin } from "../../../services/api";
 
@@ -21,6 +21,8 @@ interface Agent {
     Gender?: string;
     DOB?: string;
     Payout?: string;
+    Payout_Practo?: string;
+    Payout_Ayush?: string;
     Paymentmode?: string;
     Wallet_Amount?: string;
     Wallet_Update_Date?: string;
@@ -184,7 +186,7 @@ const Update_Agent: React.FC = () => {
         navigate('/dashboard');
     };
 
-      const handleGoToPlanSelection = () => {
+    const handleGoToPlanSelection = () => {
         navigate('/dashboard', {
             state: {
                 view: 'approvals',
@@ -218,7 +220,7 @@ const Update_Agent: React.FC = () => {
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} -Update Agent Details</h2>
-                         <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
+                        <button onClick={handleGoToPlanSelection} className="back-to-selection-btn_admin">
                             <ArrowLeftCircle size={18} />
                             <span>Back To Previous Page</span>
                         </button>
@@ -302,7 +304,9 @@ const Update_Agent: React.FC = () => {
                                             <th className="coi-table-header">Email ID</th>
                                             <th className="coi-table-header">Mobile</th>
                                             <th className="coi-table-header">Employee Name</th>
-                                            <th className="coi-table-header">Payout</th>
+                                            <th className="coi-table-header">Payout Travel</th>
+                                            <th className="coi-table-header">Payout Practo</th>
+                                            <th className="coi-table-header">Payout AyushPay</th>
                                             <th className="coi-table-header">Payment Mode</th>
                                             <th className="coi-table-header">Wallet Balance</th>
                                             <th className="coi-table-header">Wallet Update Date</th>
@@ -332,6 +336,8 @@ const Update_Agent: React.FC = () => {
                                                 <td className="coi-table-cell">{agent.MobileNumber || ''}</td>
                                                 <td className="coi-table-cell">{agent.EmpName || 'N/A'}</td>
                                                 <td className="coi-table-cell">{agent.Payout || '0'}%</td>
+                                                <td className="coi-table-cell">{agent.Payout_Practo || '0'}%</td>
+                                                <td className="coi-table-cell">{agent.Payout_Ayush || '0'}%</td>
                                                 <td className="coi-table-cell">{agent.Paymentmode || ''}</td>
                                                 <td className="coi-table-cell">{formatCurrency(agent.Wallet_Amount)}</td>
                                                 <td className="coi-table-cell">{(agent.Wallet_Update_Date)}</td>

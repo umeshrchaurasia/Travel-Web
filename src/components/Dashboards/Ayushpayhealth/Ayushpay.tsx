@@ -407,6 +407,26 @@ const Ayushpay: React.FC<AyushpayProps> = ({ onLogout = () => { } }) => {
         adminId: ''
       }
     });
+
+     if (agentData.paymentmode === 'Upfront Commission') {
+      navigate('/TDS_Proposal_AyushPay', {
+        state: {
+          empid: '',
+          agentData: agentData,
+          userType: 'Agent',
+          adminId: ''
+        }
+      });
+    } else {
+      navigate('/MIS_Proposal_AyushPay', {
+        state: {
+          empid: '',
+          agentData: agentData,
+          userType: 'Agent',
+          adminId: ''
+        }
+      });
+    }
   }
 
   if (!agentData) return <div className="ayush-page-container"><div className="ayush-card">Access Denied</div></div>;

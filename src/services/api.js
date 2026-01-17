@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-export const BASE_URL = 'http://localhost:3000/api';
-export const PDF_BASE_URL = 'http://localhost:3000';
+//export const BASE_URL = 'http://localhost:3000/api';
+//export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
-//export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
-//export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -1060,5 +1060,37 @@ export const getProposalMIS_AyushPay = async (startdate, enddate, empId, agentId
   }
 };
 
+export const getProposalTDS_AyushPay = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalTDS_AyushPay', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getBatchPaymentsByStatus_AyushPay = async (status) => {
+  try {
+    const response = await api.post('/getBatchPaymentsByStatus_AyushPay', { status });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching batch payments:', error);
+    throw error;
+  }
+};
+
+// Function to update batch payment status and UTR
+export const updateBatchPayment_AyushPay = async (paymentData) => {
+  try {
+    const response = await api.post('/updateBatchPayment_AyushPay', paymentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating batch payment:', error);
+    throw error;
+  }
+};
 
 export default api;

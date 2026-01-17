@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import '../Modal_addAgent.css';
 
-const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,mainAgentPayout }) => {
+const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, mainAgentPayout }) => {
   // Initialize form data
   const initialFormData = {
     UId: userId || '',
@@ -19,6 +19,8 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
     Gender: 'Male',
     DOB: '',
     PayoutPercentage: '',
+    PayoutPracto: '',
+    PayoutAyush: '',
     PaymentMode: 'Full Pay',
     Wallet_Amount: '0',
     EducationQualification: '',
@@ -75,6 +77,8 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
       Gender: 'Male',
       DOB: '',
       PayoutPercentage: '',
+      PayoutPracto: '',
+      PayoutAyush: '',
       PaymentMode: 'Full Pay',
       Wallet_Amount: '0',
       EducationQualification: '',
@@ -478,21 +482,56 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
 
       return "";
     },
-   validatePayout: (payout) => {
+    validatePayout: (payout) => {
       if (!payout) return "Payout percentage is required";
-      
+
       const payoutNum = parseFloat(payout);
       // Use the prop passed to the component
-      const mainPayoutNum = parseFloat(mainAgentPayout); 
+      const mainPayoutNum = parseFloat(mainAgentPayout);
 
       if (isNaN(payoutNum)) return "Please enter a valid number";
       if (payoutNum < 0 || payoutNum > 60) return "Payout percentage must be between 0 and 60";
 
       // The new condition logic
       if (!isNaN(mainPayoutNum) && payoutNum >= mainPayoutNum) {
-          return `Payout Percentage must be less than Main Agent Payout (${mainPayoutNum}%)`;
+        return `Payout Percentage must be less than Main Agent Payout (${mainPayoutNum}%)`;
       }
-      
+
+      return "";
+    },
+
+    validatePayout_ayush: (payout) => {
+      if (!payout) return "Payout percentage is required";
+
+      const payoutNum = parseFloat(payout);
+      // Use the prop passed to the component
+      const mainPayoutNum = parseFloat(mainAgentPayout);
+
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout percentage must be between 0 and 50";
+
+      // The new condition logic
+      if (!isNaN(mainPayoutNum) && payoutNum >= mainPayoutNum) {
+        return `Payout Percentage must be less than Main Agent Payout (${mainPayoutNum}%)`;
+      }
+
+      return "";
+    },
+     validatePayout_practo: (payout) => {
+      if (!payout) return "Payout percentage is required";
+
+      const payoutNum = parseFloat(payout);
+      // Use the prop passed to the component
+      const mainPayoutNum = parseFloat(mainAgentPayout);
+
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout percentage must be between 0 and 50";
+
+      // The new condition logic
+      if (!isNaN(mainPayoutNum) && payoutNum >= mainPayoutNum) {
+        return `Payout Percentage must be less than Main Agent Payout (${mainPayoutNum}%)`;
+      }
+
       return "";
     },
 
@@ -619,7 +658,7 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
         break;
 
       case 'PayoutPercentage':
-        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 60)) {
+         if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 60)) {
           processedValue = value;
           setFormData(prev => ({ ...prev, [name]: processedValue }));
 
@@ -632,6 +671,37 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
           return;
         }
         break;
+
+      case 'PayoutPracto':
+         if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutError = validations.validatePayout_practo(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutPracto: payoutError
+          }));
+        } else {
+          return;
+        }
+        break;
+
+      case 'PayoutAyush':
+         if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutError = validations.validatePayout_ayush(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutAyush: payoutError
+          }));
+        } else {
+          return;
+        }
+        break;
+       
 
       case 'EducationQualification':
         processedValue = value;
@@ -685,6 +755,12 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
     }
     if (formData.PayoutPercentage) {
       errors.PayoutPercentage = validations.validatePayout(formData.PayoutPercentage);
+    }
+    if (formData.PayoutPracto) {
+      errors.PayoutPracto = validations.validatePayout_practo(formData.PayoutPracto);
+    }
+    if (formData.PayoutAyush) {
+      errors.PayoutAyush = validations.validatePayout_ayush(formData.PayoutAyush);
     }
     if (formData.EducationQualification) {
       errors.EducationQualification = validations.validateEducation(formData.EducationQualification);
@@ -754,7 +830,11 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
         ...formData,
         UId: userId,
         Wallet_Amount: formData.Wallet_Amount,
-        Main_Agent: mainAgentId
+        Main_Agent: mainAgentId,
+        PayoutPracto: formData.PayoutPracto || '0',
+        PayoutAyush: formData.PayoutAyush || '0',
+        Address: formData.Address || ''
+
       };
 
       const response = await addAgent_kyc(submissionData);
@@ -1214,13 +1294,14 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
               />
             </div>
           </div>
+
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="PayoutPercentage" style={{
                 fontWeight: '500',
                 color: '#333',
                 fontSize: '16px'
-              }}>Payout Percentage</label>
+              }}>Payout TravelAssist (%)</label>
 
               <input
                 type="text"
@@ -1264,6 +1345,52 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId,mainAgentId,main
                 <option value="Upfront Commission">Upfront Commission</option>
                 <option value="Discount">Discount</option>
               </select>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="PayoutPracto" style={{ fontWeight: '500', color: '#333', fontSize: '16px' }}>
+                Payout Practo (%)
+              </label>
+              <input
+                type="text"
+                id="PayoutPracto"
+                name="PayoutPracto"
+                className={`form-control ${formErrors.PayoutPracto ? 'error' : ''}`}
+                value={formData.PayoutPracto}
+                onChange={handleChange} 
+                autoComplete="off"
+                placeholder="Enter Payout Practo Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutPracto && (
+                <div className="error-message" style={{ marginTop: '5px', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutPracto}
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="PayoutAyush" style={{ fontWeight: '500', color: '#333', fontSize: '16px' }}>
+                Payout AyushPay (%)
+              </label>
+              <input
+                type="text"
+                id="PayoutAyush"
+                name="PayoutAyush"
+                className={`form-control ${formErrors.PayoutAyush ? 'error' : ''}`}
+                value={formData.PayoutAyush}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout AyushPay Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutAyush && (
+                <div className="error-message" style={{ marginTop: '5px', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutAyush}
+                </div>
+              )}
             </div>
           </div>
 

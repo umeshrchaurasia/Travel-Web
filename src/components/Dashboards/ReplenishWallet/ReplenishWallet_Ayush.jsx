@@ -6,8 +6,8 @@ import {
 } from 'lucide-react';
 import { logout } from '../../../services/auth';
 import {
-  getBatchPaymentsByStatus_Practo,
-  updateBatchPayment_Practo
+  getBatchPaymentsByStatus_AyushPay,
+  updateBatchPayment_AyushPay
 
 } from '../../../services/api';
 import './ReplenishWallet.css';
@@ -84,7 +84,7 @@ const ReplenishWallet_Ayush = () => {
       setError('');
 
       console.log("Fetching batch payments with status: InProcess");
-      const response = await getBatchPaymentsByStatus_Practo('InProcess');
+      const response = await getBatchPaymentsByStatus_AyushPay('InProcess');
       console.log("API Response:", response);
 
       if (response && response.Status === 'Success' && response.MasterData) {
@@ -203,7 +203,7 @@ const ReplenishWallet_Ayush = () => {
       console.log('Approving payment:', paymentData);
 
       // Call API to update status
-      const response = await updateBatchPayment_Practo(paymentData);
+      const response = await updateBatchPayment_AyushPay(paymentData);
       console.log('Approval response:', response);
 
       if (response && response.Status === 'Success') {

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Search, LogOut, Home, Download } from "lucide-react";
 import { logout } from '../../../services/auth';
-import { getProposalMIS_AyushPay } from "../../../services/api";
+import { getProposalMIS_AyushPay, PDF_BASE_URL } from "../../../services/api";
 
 import logo from '../../../../src/assets/img/TravelAssist_practo.webp';
 import '../UpdatePolicy/generatecoi.css';
+
 
 interface Proposal {
     proposal_id?: number;
@@ -26,6 +27,9 @@ interface Proposal {
     Paymentreceived?: string;
     UId?: string;
     Payment_Status?: string;
+
+    gstamount?: string;
+    tdsamount?: string;
     ayush_fees?: string;
 }
 
@@ -36,7 +40,7 @@ interface ApiResponse {
     } | null;
 }
 
-const MIS_Proposal_AyushPay: React.FC = () => {
+const MIS_Proposal_Admin_AyushPay: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state || {};
@@ -55,13 +59,11 @@ const MIS_Proposal_AyushPay: React.FC = () => {
 
     const [paymentFilter, setPaymentFilter] = useState<'Discount' | 'Upfront'>('Discount');
 
+
+
     useEffect(() => {
-        // Set dates: 7 days ago to today
+
         const today = new Date();
-        //  const sevenDaysAgo = new Date(today);
-        // sevenDaysAgo.setDate(today.getDate() - 14);
-        //   const start = sevenDaysAgo.toISOString().split('T')[0];
-        //   const end = today.toISOString().split('T')[0];
 
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
@@ -77,14 +79,10 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         setEndDate(end);
 
         // Auto search based on user type
-        if (userType === 'Employee' && empId) {
-            searchData(start, end, empId, '');
-        } else if (userType === 'Agent' && agentId) {
-            searchData(start, end, '', agentId);
-        } else if (userType === 'Admin') {
+        if (userType === 'Admin') {
             searchData(start, end, '', '');
         }
-    }, [empId, agentId, userType]);
+    }, [userType]);
 
     const formatDate = (dateStr?: string): string => {
         if (!dateStr) return 'N/A';
@@ -106,14 +104,22 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         return Math.round(upfrontAmount);
     };
 
+    const calculate_commision_amount = (proposal: Proposal): number => {
 
+        const postTax = parseFloat(String(proposal.Assiatance_charges_PostTaxAmount)) || 0;
+        const discountComm = parseFloat(String(proposal.Discount)) || 0;
+        const upfront_amt_filter = postTax * (discountComm / 100);
+
+        return Math.round(upfront_amt_filter);
+    };
+
+    const formatCurrency = (amount?: string | number): string => {
+        const num = typeof amount === 'string' ? parseFloat(amount) : amount ?? 0;
+        return `₹${num.toLocaleString()}`;
+    };
 
     const handleSearch = (): void => {
-        if (userType === 'Employee') {
-            searchData(startDate, endDate, empId, '');
-        } else if (userType === 'Agent') {
-            searchData(startDate, endDate, '', agentId);
-        } else {
+        {
             searchData(startDate, endDate, '', '');
         }
     };
@@ -124,46 +130,17 @@ const MIS_Proposal_AyushPay: React.FC = () => {
             return;
         }
 
-        // Validation based on user type
-        if (userType === 'Employee' && !employeeId) {
-            setError('Employee ID is required');
-            return;
-        }
-
-        if (userType === 'Agent' && !agentId) {
-            setError('Agent ID is required');
-            return;
-        }
-
         setLoading(true);
         setError('');
 
         try {
-            let response: ApiResponse;
 
-            if (userType === 'Employee') {
-                response = await getProposalMIS_AyushPay(fromDate, toDate, employeeId, '');
-            } else if (userType === 'Agent') {
-                response = await getProposalMIS_AyushPay(fromDate, toDate, '', agentId);
-            } else {
-                // Admin or other user types - fetch all data
-                response = await getProposalMIS_AyushPay(fromDate, toDate, '', '');
-            }
+            // Admin or other user types - fetch all data
+            const response: ApiResponse = await getProposalMIS_AyushPay(fromDate, toDate, '', '');
+
 
             if (response.Status === 'Success' && response.MasterData?.proposals && response.MasterData.proposals.length > 0) {
                 setProposals(response.MasterData.proposals);
-
-                const firstProposal = response.MasterData.proposals[0];
-                const paymentModeFromAPI = firstProposal.Selected_Payment_Mode;
-                if (paymentModeFromAPI === 'Upfront' || paymentModeFromAPI === 'Discount') {
-                    // If it's valid, set it
-                    setPaymentFilter(paymentModeFromAPI);
-                } else {
-                    // Otherwise, fall back to a default value to ensure type safety
-                    setPaymentFilter('Discount');
-                }
-
-
                 setError('');
             } else {
                 setProposals([]);
@@ -188,9 +165,10 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         return true; // Fallback
     });
 
+
     // CSV Download Function
     const downloadCSV = (): void => {
-        if (proposal.length === 0) {
+        if (filteredProposals.length === 0) {
             alert('No data available to download');
             return;
         }
@@ -211,20 +189,24 @@ const MIS_Proposal_AyushPay: React.FC = () => {
             'Agent Mobile No',
             'Selected Payment Mode',
             'Payment Type',
-            'Discount/Comm%',
-            paymentFilter === 'Upfront' ? 'Upfront Amount Paid' : 'Full Pay/Discount Amount Paid',
+            'Discount/Comm%',      
+            
+            'Premium Inclusive GST',
+            'Inclusive TDS',
             'Payment Received',
-            'Ayush  Fees'
+            'Ayush Fees'
         ];
 
         // Convert data to CSV format
-        const csvData = proposal.map((item: Proposal, index: number) => {
+        const csvData = filteredProposals.map((item, index) => {
             const amountCell = paymentFilter === 'Upfront'
-                ? calculateUpfrontAmount(item)
+                ? calculateUpfrontAmount(item).toFixed(2)
                 : item.Fullpay_Discount_amount_to_be_paid || '';
+            const Comm_amountCell = calculate_commision_amount(item);
+
             return [
                 index + 1,
-                item.proposal_id  || '',
+                item.proposal_id || '',
                 item.Policy_No || '',
                 item.Planname || '',
                 item.Nameofthepassenger || '',
@@ -238,11 +220,13 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                 item.Agent_Mobileno || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
-                item.Discount || '',
-                amountCell,
+                item.Discount || '',            
+                item.gstamount || '',
+                item.tdsamount || '',
                 item.Paymentreceived || '',
-                item.ayush_fees
-            ]
+                item.ayush_fees || '0'
+
+            ];
         });
 
         // Combine headers and data
@@ -251,9 +235,9 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         // Convert to CSV string
         const csvContent = allData.map(row =>
             row.map(field => {
+                // Handle fields that might contain commas or quotes
                 const stringField = String(field);
                 if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
-                    // Enclose in double quotes and escape existing double quotes
                     return `"${stringField.replace(/"/g, '""')}"`;
                 }
                 return stringField;
@@ -268,7 +252,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
 
         // Generate filename with current date
         const currentDate = new Date().toISOString().split('T')[0];
-        const filename = `AyushPay_MIS_Report_${userType}_${empId || agentId || 'All'}_${currentDate}.csv`;
+        const filename = `Ayush_MIS_Proposal_Report_${userType}_${empId || agentId || 'All'}_${currentDate}.csv`;
         link.setAttribute('download', filename);
 
         link.style.visibility = 'hidden';
@@ -297,8 +281,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
 
     // Determine which field to show based on user type
-    const showEmployeeField = userType === 'Employee';
-    const showAgentField = userType === 'Agent';
+
     const showAdminField = userType === 'Admin';
 
     return (
@@ -334,16 +317,6 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} MIS Reports Details</h2>
-                        {empId && userType === 'Employee' && (
-                            <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
-                                Employee ID: <strong>{empId}</strong>
-                            </p>
-                        )}
-                        {agentId && userType === 'Agent' && (
-                            <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
-                                Agent ID: <strong>{agentId}</strong>
-                            </p>
-                        )}
                         {adminId && userType === 'Admin' && (
                             <p style={{ margin: '10px 0', color: '#6b7280', fontSize: '14px' }}>
                                 Admin ID: <strong>{adminId}</strong>
@@ -365,58 +338,22 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                             marginRight: '5px',
                             border: '1px solid #e2e8f0'
                         }}>
-                            {showEmployeeField && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                    <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
-                                        Employee ID: {userType === 'Employee' && <span style={{ color: '#ef4444' }}>*</span>}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={empId}
-                                        onChange={(e) => setEmpId(e.target.value)}
-                                        placeholder="Enter Employee ID"
-                                        className="coi-filter-input"
-                                        style={{
-                                            width: '150px',
-                                            backgroundColor: (location.state?.empid && userType === 'Employee') ? '#f3f4f6' : 'white'
-                                        }}
-                                        readOnly={location.state?.empid && userType === 'Employee'}
-                                    />
-                                </div>
-                            )}
-
-                            {showAgentField && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                    <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
-                                        Agent ID: {userType === 'Agent' && <span style={{ color: '#ef4444' }}>*</span>}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={agentId}
-                                        onChange={(e) => setAgentId(e.target.value)}
-                                        placeholder="Enter Agent ID"
-                                        className="coi-filter-input"
-                                        style={{
-                                            width: '150px',
-                                            backgroundColor: (location.state?.agent && userType === 'Agent') ? '#f3f4f6' : 'white'
-                                        }}
-                                        readOnly={location.state?.agent && userType === 'Agent'}
-                                    />
-                                </div>
-                            )}
 
                             {showAdminField && (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                     <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
-                                        Admin ID:
+                                        Admin ID: {userType === 'Admin' && <span style={{ color: '#ef4444' }}>*</span>}
                                     </label>
                                     <input
                                         type="text"
                                         value={adminId}
                                         onChange={(e) => setAdminId(e.target.value)}
-                                        placeholder="Enter Admin ID (Optional)"
+                                        placeholder="Enter Admin ID"
                                         className="coi-filter-input"
-                                        style={{ width: '150px' }}
+                                        style={{
+                                            width: '110px',
+                                            backgroundColor: (location.state?.adminId && userType === 'Admin') ? '#f3f4f6' : 'white'
+                                        }}
                                         readOnly={location.state?.adminId && userType === 'Admin'}
                                     />
                                 </div>
@@ -431,11 +368,11 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     className="coi-filter-input"
-                                    style={{ width: '150px' }}
+                                    style={{ width: '110px' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginLeft: '15px' }}>
                                 <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
                                     To Date: <span style={{ color: '#ef4444' }}>*</span>
                                 </label>
@@ -444,14 +381,40 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                     value={endDate}
                                     onChange={(e) => setEndDate(e.target.value)}
                                     className="coi-filter-input"
-                                    style={{ width: '150px' }}
+                                    style={{ width: '110px' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'end' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '15px' }}>
+                                <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Payment Type</label>
+                                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', height: '40px', padding: '0 5px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                                        <input
+                                            type="radio"
+                                            name="paymentFilter"
+                                            value="Discount"
+                                            checked={paymentFilter === 'Discount'}
+                                            onChange={() => setPaymentFilter('Discount')}
+                                        />
+                                        Discount / Full Pay
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                                        <input
+                                            type="radio"
+                                            name="paymentFilter"
+                                            value="Upfront Commission"
+                                            checked={paymentFilter === 'Upfront'}
+                                            onChange={() => setPaymentFilter('Upfront')}
+                                        />
+                                        Upfront Commission
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}>
                                 <button
                                     onClick={handleSearch}
-                                    disabled={loading || !startDate || !endDate || (userType === 'Employee' && !empId) || (userType === 'Agent' && !agentId)}
+                                    disabled={loading}
                                     className="coi-search-button"
                                     style={{
                                         padding: '10px 20px',
@@ -468,10 +431,10 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                 <button
                                     className='apply-btn-emp'
                                     onClick={downloadCSV}
-                                    disabled={proposal.length === 0}
+                                    disabled={filteredProposals.length === 0}
                                     style={{
-                                        opacity: proposal.length === 0 ? 0.5 : 1,
-                                        cursor: proposal.length === 0 ? 'not-allowed' : 'pointer',
+                                        opacity: filteredProposals.length === 0 ? 0.5 : 1,
+                                        cursor: filteredProposals.length === 0 ? 'not-allowed' : 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '5px'
@@ -487,18 +450,18 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                     {/* Results */}
                     {loading && <p>Loading...</p>}
 
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {error && !loading && <p style={{ color: 'red' }}>{error}</p>}
 
-                    {proposal.length > 0 && (
+                    {!loading && filteredProposals.length > 0 && (
                         <div>
-                            <p><strong>{proposal.length} proposals found</strong></p>
+                            <p><strong>{filteredProposals.length} proposals found</strong></p>
 
                             <div className="coi-table-container">
                                 <table className="coi-table">
                                     <thead>
                                         <tr>
                                             <th className="coi-table-header">Sr.No</th>
-                                            <th className="coi-table-header">Ayush Proposal ID</th>
+                                            <th className="coi-table-header">Proposal ID</th>
                                             <th className="coi-table-header">Policy No</th>
                                             <th className="coi-table-header">Plan Name</th>
                                             <th className="coi-table-header">Name of the Passenger</th>
@@ -513,16 +476,18 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
-                                            <th className="coi-table-header">
-                                                {paymentFilter === 'Upfront' ? 'Upfront Amount Paid' : 'Full Pay/Discount Amount Paid'}
-                                            </th>
+                                          
+                                           
+
+                                            <th className="coi-table-header">Premium Inclusive GST</th>
+                                            <th className="coi-table-header">Inclusive TDS</th>
                                             <th className="coi-table-header">Payment Received</th>
                                             <th className="coi-table-header">Ayush Fees</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {proposal.map((proposal: Proposal, index: number) => (
-                                            <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f8f9fa' }}>
+                                        {filteredProposals.map((proposal: Proposal, index: number) => (
+                                            <tr key={proposal.proposal_id || index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f8f9fa' }}>
                                                 <td className="coi-table-cell">{index + 1}</td>
                                                 <td className="coi-table-cell">{proposal.proposal_id || ''}</td>
                                                 <td className="coi-table-cell">{proposal.Policy_No || ''}</td>
@@ -538,13 +503,12 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                                 <td className="coi-table-cell">{proposal.Agent_Mobileno || ''}</td>
                                                 <td className="coi-table-cell">{proposal.Selected_Payment_Mode || ''}</td>
                                                 <td className="coi-table-cell">{proposal.PaymentType || ''}</td>
+
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>
-                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>
-                                                    {proposal.Selected_Payment_Mode === 'Upfront'
-                                                        ? calculateUpfrontAmount(proposal)
-                                                        : proposal.Fullpay_Discount_amount_to_be_paid
-                                                    }
-                                                </td>
+                                                                                               
+
+                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.gstamount}</td>
+                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.tdsamount}</td>
                                                 <td className="coi-table-cell">
                                                     <span style={{
                                                         padding: '2px 6px',
@@ -555,7 +519,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                                         {proposal.Paymentreceived || ''}
                                                     </span>
                                                 </td>
-                                                <td className="coi-table-cell">{proposal.ayush_fees || ''}</td>
+                                                <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.ayush_fees}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -563,13 +527,16 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                             </div>
                         </div>
                     )}
+                    {!loading && filteredProposals.length === 0 && proposal.length > 0 && (
+                        <p style={{ textAlign: 'center', marginTop: '20px' }}>No proposals found for the selected payment type.</p>
+                    )}
                 </div>
-            </main>
+            </main >
             <footer className="coi-footer">
                 <p>© {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All rights reserved</p>
             </footer>
-        </div>
+        </div >
     );
 };
 
-export default MIS_Proposal_AyushPay;
+export default MIS_Proposal_Admin_AyushPay;

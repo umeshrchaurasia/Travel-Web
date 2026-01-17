@@ -485,6 +485,24 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       return "";
     },
 
+    // NEW: For PayoutPracto - Range 0-50
+    validatePayoutPracto: (payout) => {
+      if (!payout) return "Payout Practo percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout Practo percentage must be between 0 and 50";
+      return "";
+    },
+
+    // NEW: For PayoutAyush - Range 0-50
+    validatePayoutAyush: (payout) => {
+      if (!payout) return "Payout AyushPay percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout AyushPay percentage must be between 0 and 50";
+      return "";
+    },
+
     validateEducation: (edu) => {
       if (!edu || !edu.trim()) return "Education qualification is required";
       return "";
@@ -622,6 +640,39 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
         }
         break;
 
+
+      case 'PayoutPracto':
+        // PayoutPracto: Range 0-50
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutPractoError = validations.validatePayoutPracto(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutPracto: payoutPractoError
+          }));
+        } else {
+          return;
+        }
+        break;
+
+      case 'PayoutAyush':
+        // PayoutAyush: Range 0-50
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutAyushError = validations.validatePayoutAyush(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutAyush: payoutAyushError
+          }));
+        } else {
+          return;
+        }
+        break;
+
       case 'EducationQualification':
         processedValue = value;
         setFormData(prev => ({ ...prev, [name]: processedValue }));
@@ -675,6 +726,17 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     if (formData.PayoutPercentage) {
       errors.PayoutPercentage = validations.validatePayout(formData.PayoutPercentage);
     }
+
+    // UPDATED: Add validation for PayoutPracto
+    if (formData.PayoutPracto) {
+      errors.PayoutPracto = validations.validatePayoutPracto(formData.PayoutPracto);
+    }
+    // UPDATED: Add validation for PayoutAyush
+    if (formData.PayoutAyush) {
+      errors.PayoutAyush = validations.validatePayoutAyush(formData.PayoutAyush);
+    }
+
+
     if (formData.EducationQualification) {
       errors.EducationQualification = validations.validateEducation(formData.EducationQualification);
     }
@@ -1268,7 +1330,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 value={formData.PayoutPracto}
                 onChange={handleChange}
                 autoComplete="off"
-                placeholder="Enter Payout Practo Percentage (0-60)"
+                placeholder="Enter Payout Practo Percentage (0-50)"
                 required
               />
               {formErrors.PayoutPracto && (
@@ -1292,7 +1354,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 value={formData.PayoutAyush}
                 onChange={handleChange}
                 autoComplete="off"
-                placeholder="Enter Payout AyushPay Percentage (0-60)"
+                placeholder="Enter Payout AyushPay Percentage (0-50)"
                 required
               />
               {formErrors.PayoutAyush && (

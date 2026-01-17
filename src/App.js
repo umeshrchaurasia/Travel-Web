@@ -70,6 +70,11 @@ import ReplenishWallet_Ayush from './components/Dashboards/ReplenishWallet/Reple
 
 import MIS_Proposal_AyushPay from './components/Dashboards/MIS_Report/MIS_Proposal_AyushPay';
 
+import TDS_Proposal_AyushPay from './components/Dashboards/MIS_Report/TDS_Proposal_AyushPay';
+
+
+import MIS_Proposal_Admin_AyushPay from './components/Dashboards/MIS_Report/MIS_Proposal_Admin_AyushPay';
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -362,18 +367,30 @@ function App() {
             </ProtectedRoute>
           } />
 
-            <Route path="/ReplenishWallet_Ayush" element={
+          <Route path="/ReplenishWallet_Ayush" element={
             <ProtectedRoute>
               <ReplenishWallet_Ayush userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
-           <Route path="/MIS_Proposal_AyushPay" element={
+          <Route path="/MIS_Proposal_AyushPay" element={
             <ProtectedRoute>
               <MIS_Proposal_AyushPay userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
-          
+
+          <Route path="/TDS_Proposal_AyushPay" element={
+            <ProtectedRoute>
+              <TDS_Proposal_AyushPay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_Admin_AyushPay" element={
+            <ProtectedRoute>
+              <MIS_Proposal_Admin_AyushPay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
 
         </Routes>
       </div>
