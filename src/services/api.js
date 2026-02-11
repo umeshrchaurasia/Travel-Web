@@ -1093,4 +1093,41 @@ export const updateBatchPayment_AyushPay = async (paymentData) => {
   }
 };
 
+export const createCustomerDetailEntry = async (ProposalData) => {
+  try {
+    // This uses the 'api' instance you already configured with axios
+    const response = await api.post('/createCustomerDetailEntry', ProposalData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating Practo Proposal:', error);
+    // Re-throw the error so the component's catch block can handle it and show a message
+    throw error;
+  }
+};
+
+
+export const getAgentByAgentCode = async (agentCode) => {
+  try {
+    const response = await api.post('/getAgentByAgentCode', {
+      agentCode
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching agent details:', error);
+    throw error;
+  }
+};
+
+export const getCustomerList_emp_wise = async (startdate, enddate, empId) => {
+  try {
+    const response = await api.post('/getCustomerList_emp_wise', {
+      startdate, enddate, empId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching customer list:', error);
+    throw error;
+  }
+};
+
 export default api;

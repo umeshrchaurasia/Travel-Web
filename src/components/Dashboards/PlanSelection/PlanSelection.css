@@ -847,3 +847,24 @@ color: white !important;
 }
 
 
+/* Practo Card: Changes to Light Purple on Hover */
+.practo-hover-card:hover {
+    border: 2px solid #6c63ff !important;
+    background-color: #f5f3ff !important;
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2) !important;
+}
+
+/* AyushPay Card: Changes to Light Pink on Hover */
+.ayush-hover-card:hover {
+    border: 2px solid #ec4899 !important;
+    background-color: #fdf2f8 !important;
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2) !important;
+}
+
+/* Selection Effect (Click animation) */
+.selection-card:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}

@@ -395,7 +395,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             {/* --- ACTION BUTTONS AND AGENT TABLE (After Selection) --- */}
             {currentView === VIEW_APPROVALS && (
               <>
-                <div className="action-group">
+                <div  className="action-group">
                   {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
                     <>
                       <button onClick={gotoMIS} className="action-button button-mis">

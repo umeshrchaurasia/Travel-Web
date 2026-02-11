@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   UserCircle, Mail, BadgeCheck, HardDrive, FileText, LogOut, UserPlus,
   RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard, ArrowLeftCircle,
-  Activity, Heart
+  Activity, Heart, Link, Check, Copy
 } from 'lucide-react';
 
 import { getAgentById } from '../../../services/api';
@@ -27,6 +27,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [showWellnessOptions, setShowWellnessOptions] = useState(false);
 
+  const [isCopied, setIsCopied] = useState(false);
 
   const navigate = useNavigate();
 
@@ -107,6 +108,38 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
     navigate('/Add_subAgent', { state: { agentData: displayData_sel } });
   };
 
+  const handleCopyLink = () => {
+    if (!displayData_sel?.Agent_Code) return;
+
+    const link = `${window.location.origin}/CustomerPlanSelection/${displayData_sel.Agent_Code}`;
+
+    // Modern Clipboard API (HTTPS / localhost)
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(link).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      });
+    }
+    // Fallback for HTTP
+    else {
+      const textArea = document.createElement("textarea");
+      textArea.value = link;
+      textArea.style.position = "fixed"; // avoid scroll
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      } catch (err) {
+        alert("Copy failed. Please copy manually.");
+      }
+
+      document.body.removeChild(textArea);
+    }
+  };
 
   if (loading) {
     return <div className="loading-container"><p>Loading...</p></div>;
@@ -168,12 +201,34 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
                   <span className="font-weight">Email</span>
                 </span>
                 <span className="info-value">{displayData_sel.email || displayData_sel.EmailID}</span>
+                {displayData_sel.Agent_Code && (
+                  <button
+                    onClick={handleCopyLink}
+                    className="apply-btn flex items-center gap-2"
+                    style={{
+                      backgroundColor: isCopied ? '#059669' : '#6c63ff', // Green if copied, Purple default
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: 'white',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.375rem',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                    {isCopied ? 'Copied!' : 'Zextraa link'}
+                  </button>
+                )}
               </div>
 
               {isAddSubAgentButtonVisible && (
                 <div className="wallet-button-container">
                   <button onClick={handleAddAgent} className="apply-btn flex items-center gap-2">
-                    <UserPlus className="w-4 h-4 mr-2 pr-2" />
+                    <UserPlus className="w-4 h-4 mr-2 pr-2 " />
                     Add Sub Agent
                   </button>
                 </div>
@@ -226,18 +281,18 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
                 <p>Navigate to the Practo section for subscription plans.</p>
               </div>
 
-        
+
 
               {/* Card 2: AyushPay Health */}
 
-             {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
+              {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
 
               <div className="selection-card" onClick={handleAyushPayHealthClick}>
                 <Heart size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)' }} />
                 <h3>AyushPay</h3>
                 <p>Navigate to the AyushPay section for subscription plans.</p>
               </div>
-              
+
 
             </>
           )}

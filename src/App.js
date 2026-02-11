@@ -75,6 +75,12 @@ import TDS_Proposal_AyushPay from './components/Dashboards/MIS_Report/TDS_Propos
 
 import MIS_Proposal_Admin_AyushPay from './components/Dashboards/MIS_Report/MIS_Proposal_Admin_AyushPay';
 
+import CustomerPlanSelection from './components/Dashboards/NoLoginCustomer/CustomerPlanSelection';
+
+import CustomerDetails from './components/Dashboards/NoLoginCustomer/CustomerDetails';
+
+import CustomerList_emp_wise from './components/Dashboards/NoLoginCustomer/CustomerList_emp_wise';
+ 
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -115,6 +121,10 @@ function App() {
           <Route path="/signup" element={
             <Signup onSignupSuccess={() => <Navigate to="/login" />} />
           } />
+
+          <Route path="/CustomerPlanSelection/:Agent_Code" element={<CustomerPlanSelection />} />
+          <Route path="/CustomerDetails/" element={<CustomerDetails />} />
+
 
           <Route path="/dashboard" element={
             <ProtectedRoute>
@@ -388,6 +398,13 @@ function App() {
           <Route path="/MIS_Proposal_Admin_AyushPay" element={
             <ProtectedRoute>
               <MIS_Proposal_Admin_AyushPay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          
+          <Route path="/CustomerList_emp_wise" element={
+            <ProtectedRoute>
+              <CustomerList_emp_wise userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 

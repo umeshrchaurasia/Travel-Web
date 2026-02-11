@@ -353,11 +353,12 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
-  const goOcrNumber = () => {
+
+   const gotoCustomerList = () => {
     const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
 
-    navigate('/OcrNumber', {
+    navigate('/CustomerList_emp_wise', {
       state: {
         empid: empId,
         agentData: displayData,
@@ -366,18 +367,6 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-  const goPlateOCR = () => {
-    const empId = displayData.id || displayData.UId;
-    localStorage.setItem('walletData', JSON.stringify(displayData));
-
-    navigate('/PlateOCR', {
-      state: {
-        empid: empId,
-        agentData: displayData,
-        userType: 'Employee'
-      }
-    });
-  }
 
 
 
@@ -435,7 +424,8 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
                 <span className="info-value">{displayData.email || displayData.EmailID}</span>
               </div>
 
-
+            </div>
+            <div className="action-group">
 
               <button
                 className="btn btn-primary"
@@ -451,10 +441,9 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
               <button onClick={gototest} className='apply-btn-emp' style={{ display: '' }}>
                 MIS Report
               </button>
-
-
-
-
+              <button onClick={gotoCustomerList} className='apply-btn-emp-cust' style={{ display: '' }}>
+                Zextra Customer List
+              </button>
             </div>
           </div>
         </div>
