@@ -1130,4 +1130,25 @@ export const getCustomerList_emp_wise = async (startdate, enddate, empId) => {
   }
 };
 
+export const saveMasterPlan_calc = async (payload) => {
+  try {
+    // payload contains: { StartDate, EndDate, AgentId, ProposerDetails, ... }
+    const response = await api.post('/saveMasterPlan_calc', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error calculating Bajaj premium:', error);
+    throw error;
+  }
+};
+
+export const saveMasterPlan_ISSUE_POLICY = async (payload) => {
+  try {
+    const response = await api.post('/saveMasterPlan_ISSUE_POLICY', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error issuing Bajaj policy:', error);
+    throw error;
+  }
+};
+
 export default api;

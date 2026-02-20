@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {
   UserCircle, Mail, BadgeCheck, HardDrive, FileText, LogOut, UserPlus,
   RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard, ArrowLeftCircle,
-  Activity, Heart, Link, Check, Copy
+  Activity, Heart, Link, Check, Copy, Plane, Shield
 } from 'lucide-react';
 
 import { getAgentById } from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../services/auth';
+
+import { useAgentDispatch } from '../../../redux/Agent/hooks';
+import { setAgentData } from '../../../redux/Agent/agentSlice';
 
 import './PlanSelection.css';
 
@@ -15,6 +18,8 @@ import logo from '../../../../src/assets/img/TravelAssist.webp';
 
 
 const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
+
+  const dispatch = useAgentDispatch();
 
   const [displayData_sel, setDisplayData_sel] = useState(userData);
 
@@ -25,7 +30,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [MainAgent, setMainAgent] = useState('');
 
-  const [showWellnessOptions, setShowWellnessOptions] = useState(false);
+  const [currentView, setCurrentView] = useState('main');
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -102,6 +107,25 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const handleAgentDashboardClick = () => {
     navigate('/AgentDashboard', { state: { agentData: displayData_sel } });
+  };
+
+  const handleBajajTravelClick = () => {
+    if (displayData_sel) {
+      // 1. Prepare payload matching AgentState interface
+      const reduxPayload = {
+        agentId: displayData_sel.AgentId || displayData_sel.agentId,
+        FullName: displayData_sel.name || displayData_sel.FullName,
+        agentEmail: displayData_sel.email || displayData_sel.EmailID,
+        Agent_Code: displayData_sel.Agent_Code,
+        MobileNumber: displayData_sel.MobileNumber,
+        UId: displayData_sel.UId
+      };
+      // 2. Dispatch to the AGENT store
+      dispatch(setAgentData(reduxPayload));
+
+      // 3. Navigate
+      navigate('/BajajTravel');
+    }
   };
 
   const handleAddAgent = () => {
@@ -186,6 +210,16 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
           <div className="card-header">
             <h2 className="welcome-title">Welcome, {displayData_sel.name || displayData_sel.FullName}
             </h2>
+            {/* Back Button positioned top-right inside header */}
+            {currentView !== 'main' && (
+              <button
+                onClick={() => setCurrentView('main')}
+                className="back-to-selection-btn"
+              >
+                <ArrowLeftCircle size={18} />
+                <span>Back to Main Menu</span>
+              </button>
+            )}
           </div>
           <div className="employee-info">
             <div className="info-row">
@@ -236,43 +270,51 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             </div>
           </div>
         </div>
-
-        {/* Back Button for Wellness View */}
-        {showWellnessOptions && (
-          <div style={{ maxWidth: '100%', marginBottom: '1rem', marginTop: '1rem' }}>
-            <button
-              onClick={() => setShowWellnessOptions(false)}
-              className="back-to-selection-btn"
-              style={{ position: 'relative', top: '0', right: '0' }}
-            >
-              <ArrowLeftCircle size={18} />
-              Back to Main Menu
-            </button>
-          </div>
-        )}
-
+              
         {/* Dynamic Selection Container */}
         <div className="selection-container">
-
-          {!showWellnessOptions ? (
+          {/* VIEW 1: MAIN SELECTION */}
+          {currentView === 'main' && (
             /* --- MAIN VIEW: Travel Assist & Zextra Wellness --- */
             <>
               {/* Card 1: Travel Assist */}
-              <div className="selection-card" onClick={handleAgentDashboardClick}>
+              <div className="selection-card" onClick={() => setCurrentView('travel')}>
                 <HardDrive size={48} className="selection-icon" />
                 <h3>Travel Assist</h3>
                 <p>Proceed to calculate premium and execute travel assistance & services.</p>
               </div>
 
               {/* Card 2: Zextra Wellness */}
-              <div className="selection-card" onClick={() => setShowWellnessOptions(true)}>
+              <div className="selection-card" onClick={() => setCurrentView('wellness')}>
                 <Activity size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }} />
                 <h3>Zextra Wellness</h3>
                 <p>Access wellness plans, Practo subscriptions, and health services.</p>
               </div>
             </>
-          ) : (
-            /* --- SUB VIEW: Practo Subscription & Practo Health --- */
+          )}
+
+          {/* VIEW 2: TRAVEL SELECTION (Reliance & Bajaj) */}
+          {currentView === 'travel' && (
+            <>
+              {/* Card 1: Reliance Traveller */}
+              <div className="selection-card" onClick={handleAgentDashboardClick}>
+                {/* Reusing a styled icon for Reliance */}
+                <Plane size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)' }} />
+                <h3>Reliance Traveller</h3>
+                <p>Calculate premium for Reliance Travel Insurance.</p>
+              </div>
+              {/* Card 2: Bajaj Traveller */}
+           {/*   <div className="selection-card" onClick={handleBajajTravelClick}>
+               
+                <Shield size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }} />
+                <h3>Bajaj Traveller</h3>
+                <p>Calculate premium for Bajaj Travel Insurance.</p>
+              </div> */}
+            </>
+          )}
+
+          {/* VIEW 3: WELLNESS SELECTION (Practo & AyushPay) */}
+          {currentView === 'wellness' && (
             <>
               {/* Card 1: Practo Subscription */}
               <div className="selection-card" onClick={handlePractoClick}>

@@ -5,7 +5,9 @@ import { getAgentByAgentCode } from '../../../services/api';
 
 // Importing your existing CSS (remains unchanged)
 import '../PlanSelection/PlanSelection.css';
-import logo from '../../../../src/assets/img/TravelAssist.webp';
+import logo from '../../../../src/assets/img/TravelAssist_practo.webp';
+
+import ayushlogo from '../../../../src/assets/img/ayushlogo.png';
 
 // FIXED: Use the typed hooks instead of regular useDispatch
 import { useAppDispatch } from '../../../redux/NoLoginCustomer/hooks';
@@ -109,7 +111,7 @@ const CustomerPlanSelection = () => {
                     <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
                     <div style={commonStyles.centerSection}>
                         <div className="logo  align-items-center w-auto">
-                            <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Travel Assistance Service</span>
+                            <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Zextra Wellness</span>
                         </div></div>
                     <div style={commonStyles.rightSection}></div>
                 </div>
@@ -120,7 +122,7 @@ const CustomerPlanSelection = () => {
                     <div className="card-header"><h2 className="welcome-title">Welcome, {agentData.FullName}</h2></div>
                     <div className="employee-info">
                         <div className="info-row">
-                            <div className="info-item" style={{padding: '0.5rem 1rem', borderRadius: '0.5rem'}}>
+                            <div className="info-item" style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem' }}>
                                 <UserCircle className="inline mr-2" /> Agent Code: {agentData.Agent_Code}
                                 <Mail className="inline ml-4 mr-2" /> {agentData.EmailID}
                             </div>
@@ -140,26 +142,24 @@ const CustomerPlanSelection = () => {
                         Access to doctors has never been easier — plus enjoy great discounts on medicines and diagnostics
                     </h4>
                     <p style={{ fontSize: '1.1rem', color: '#4b5563', maxWidth: '700px', margin: '0 auto' }}>
-                      <h3 style={{
-                        textAlign: 'center',
-                        margin: '2rem 0',
-                        color: '#6c63ff',
-                        fontWeight: '700',
-                        letterSpacing: '-0.02em',
-                        lineHeight: '1.1'
-                    }}><span style={{ color: '#1c8721' }}>Choose your subscription plan</span>
-                   </h3>   </p>
+                        <h3 style={{
+                            textAlign: 'center',
+                            margin: '2rem 0',
+                            color: '#6c63ff',
+                            fontWeight: '700',
+                            letterSpacing: '-0.02em',
+                            lineHeight: '1.1'
+                        }}><span style={{ color: '#1c8721' }}>Choose your plan</span>
+                        </h3>   </p>
                 </div>
                 <div className="selection-container" style={{ marginTop: '-3rem', display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
 
                     {/* Card 1: Practo Subscription */}
                     <div
                         className="customer-selection-card practo-hover-card"
-                        onClick={() => navigateToDetails('PractoSubscription')}
-                    >
-                        <div className="selection-icon" style={{ background: 'linear-gradient(135deg, #6c63ff, #4a1ddc)' }}>
-                            <FileText size={48} />
-                        </div>
+                        onClick={() => navigateToDetails('PractoSubscription')}>
+                        <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+
                         <h3>Practo Subscription</h3>
                         <p style={{ fontWeight: 'bold', color: '#6c63ff' }}>(Rs. 699 + 18% GST)</p>
 
@@ -172,7 +172,7 @@ const CustomerPlanSelection = () => {
                         </div>
 
                         <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#6c63ff' }}>
-                            Select Practo <ArrowRight size={18} className="inline ml-2" />
+                            Click Here <ArrowRight size={18} className="inline ml-2" />
                         </button>
                     </div>
 
@@ -181,10 +181,11 @@ const CustomerPlanSelection = () => {
                         className="customer-selection-card ayush-hover-card"
                         onClick={() => navigateToDetails('AyushPayHealth')}
                     >
-                        <div className="selection-icon" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)' }}>
-                            <Heart size={48} />
-                        </div>
-                        <h3>AyushPay Subscription</h3>
+
+                        <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+
+
+                        <h3>Medical Emergency Landing</h3>
                         <p style={{ fontWeight: 'bold', color: '#ec4899' }}>(Rs. 499 + 18% GST)</p>
 
                         <div style={benefitListStyle}>
@@ -199,11 +200,18 @@ const CustomerPlanSelection = () => {
                         </div>
 
                         <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#ec4899' }}>
-                            Select AyushPay <ArrowRight size={18} className="inline ml-2" />
+                            Click Here <ArrowRight size={18} className="inline ml-2" />
                         </button>
+                        <footer style={{marginTop:'1.5rem'}}>
+                        
+                          <p>  <img src={ayushlogo} style={{ maxHeight: '20px' }}/> powered by Ayushpay</p>
+                        </footer>
                     </div>
                 </div>
             </main>
+            <footer className="footer">
+                <p>© {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All rights reserved</p>
+            </footer>
         </div>
     );
 };

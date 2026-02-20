@@ -1,0 +1,801 @@
+.dashboard-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f6fa;
+}
+
+.font-weight {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+/* Header Styles */
+.top-header {
+  background-color: #6c63ff;
+  padding: 0 1rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-image {
+  height: 70px;
+  width: auto;
+  max-height: 70px;
+}
+
+
+.company-name {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+
+
+.nav-link {
+  color: white !important;
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+
+  gap: 2rem;
+
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #b91c1c;
+}
+
+.Premium-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #059669;
+  color: white;
+  border: 'none';
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.Premium-btn:hover {
+  background-color: #0F766E;
+}
+
+.Premium-btn:disabled {
+  background-color: #0F766E;
+  cursor: not-allowed;
+}
+
+
+
+.Premium-btn-MIS {
+  padding: 0.5rem 1.5rem;
+  background-color: #2563EB;
+  color: white;
+  border: 'none';
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.Premium-btn-MIS:hover {
+  background-color: #1D4ED8;
+}
+
+.Premium-btn-MIS:disabled {
+  background-color: #1D4ED8;
+  cursor: not-allowed;
+}
+
+/* Main Content Styles */
+.main-content-b {
+  margin-top: 5rem;
+  padding: 2rem;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+   flex-grow: 1;
+}
+
+/* User Info Card Styles */
+.user-info-card-b {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.card-header-b {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.welcome-title-b {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+    margin: 0;
+  padding-right: 200px;
+}
+
+.user-details {
+  padding: 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  gap: 2rem;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.info-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: #6c63ff;
+}
+
+.label-text {
+  font-weight: 600;
+  color: #374151;
+}
+
+.info-value {
+  color: #6b7280;
+}
+
+/* Summary Section Styles */
+.summary-container {
+  margin-bottom: 2rem;
+}
+
+.summary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summary-box {
+  background-color: #059669;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.summary-box:hover {
+  transform: translateY(-2px);
+}
+
+.summary-box h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-box p {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Calculator Container Styles */
+.calculator-container {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #6c63ff;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Loading Container Styles */
+.loading-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f6fa;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .info-item {
+    flex-wrap: wrap;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animation for Summary Boxes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.summary-box {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.calculator-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.summary-container {
+  margin-bottom: 2rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.summary-box {
+  background: #059669;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.summary-box:hover {
+  transform: translateY(-2px);
+}
+
+.summary-box h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-box p {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-6 {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Add these styles to your AgentDashboard.css file */
+
+/* Wallet Button Styles */
+.wallet-button-container {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+
+
+.wallet-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.wallet-iconA {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+  /* Orange color for the icon */
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wallet-button-container {
+    margin: 10px 0 0 0;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
+
+  .wallet-containerA {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Enhanced Button Styles for Agent Dashboard */
+
+/* Common button styles */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* Payment Button Styles */
+.payment-btn {
+  background-color: #4338ca;
+  /* Indigo */
+  color: white;
+}
+
+.payment-btn:hover {
+  background-color: #3730a3;
+}
+
+/* View COI Button Styles */
+.coi-btn {
+  background-color: #0891b2;
+  /* Cyan */
+  color: white;
+}
+
+.coi-btn:hover {
+  background-color: #0e7490;
+}
+
+/* Wallet Button Styles */
+.wallet-containerA {
+  display: flex;
+  align-items: center;
+  background-color: #F59E0B;
+  /* Light yellow background */
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  /* Slightly darker yellow border */
+}
+
+.wallet-containerA:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #D97706;
+}
+
+.wallet-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.wallet-icon {
+  width: 20px;
+  height: 20px;
+  color: #FF9800;
+  /* Orange color for the icon */
+}
+
+.wallet-textA {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Action buttons container */
+.action-buttons-container {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons-container {
+    margin: 10px 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .action-button,
+  .wallet-containerA {
+    margin-bottom: 8px;
+    min-width: 120px;
+    justify-content: center;
+  }
+}
+
+/* Button Styles */
+.apply-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #059669;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.apply-btn:hover:not(:disabled) {
+  background-color: #047857;
+}
+
+.apply-btn:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Button Styles */
+.apply-btn-emp {
+  padding: 0.5rem 1.5rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.apply-btn-emp:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.apply-btn-emp:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* ... All your existing styles ... */
+
+/* Styles for the new Selection View */
+
+
+
+/* ... (Keep all your existing styles above this) ... */
+
+/* Styles for the new Selection View */
+.selection-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  flex-wrap: wrap;
+  min-height: 60vh;
+}
+
+/* --- UPDATED SELECTION CARD STYLES --- */
+.selection-card {
+  background: #ffffff;
+  /* White background */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  padding: 2rem;
+  width: 320px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+  /* Lighter grey border */
+  border-top: 4px solid #e0e0e0;
+  /* Default top border color */
+  transition: all 0.3s ease;
+  overflow: hidden;
+  /* Ensures no overflow for effects */
+  position: relative;
+  /* For potential future badge/overlay */
+}
+
+.selection-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  background-color: #f7faff;
+  /* Very light blue on hover */
+  border-top-color: #6c63ff;
+  /* Highlight with theme color on hover */
+}
+
+.selection-card:active {
+  transform: translateY(-2px) scale(0.99);
+  /* Gentle press-down effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #eef2ff;
+  /* Slightly darker light blue on click */
+  border-top-color: #5a52d9;
+  /* Darker theme color on active */
+}
+
+/* --- END UPDATED SELECTION CARD STYLES --- */
+
+.selection-icon {
+  color: #6c63ff;
+  /* Matching the theme color */
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.selection-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.selection-card p {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* Ensure main content takes up space */
+.main-content {
+  flex-grow: 1;
+}
+
+/* User Info Card needs relative positioning for the new back button */
+.user-info-card {
+  position: relative;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  /* Ensure consistent padding */
+}
+
+/* --- PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
+.back-to-selection-btn {
+  /* Position it absolutely within the .user-info-card */
+  position: absolute;
+  top: 1.5rem;
+  /* Adjust top margin for spacing */
+  right: 1.5rem;
+  /* Adjust right margin for spacing */
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Space between icon and text */
+  padding: 0.6rem 1.2rem;
+  /* Comfortable padding */
+
+  background-color: #e0e7ff;
+  /* Light blue background, predefined color */
+  color: #3b82f6;
+  /* A more distinct blue for text */
+  border: 1px solid #bfdbfe;
+  /* A slightly darker border */
+  border-radius: 0.375rem;
+  /* Rounded corners */
+  font-weight: 600;
+  /* Bolder text */
+  font-size: 0.9rem;
+  /* Slightly smaller font size */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Smooth transitions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Subtle shadow */
+}
+
+.back-to-selection-btn:hover {
+  background-color: #bfdbfe;
+  /* Darker blue on hover */
+  color: #2563eb;
+  /* Darker text */
+  border-color: #93c5fd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* More prominent shadow on hover */
+  transform: translateY(-1px);
+  /* Slight lift effect */
+}
+
+.back-to-selection-btn:active {
+  background-color: #93c5fd;
+  /* Even darker on active */
+  color: #1e40af;
+  border-color: #60a5fa;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Recessed shadow on active */
+  transform: translateY(0);
+  /* Return to original position */
+}
+
+/* Adjust the icon color for consistency with the new button color */
+.back-to-selection-btn svg {
+  color: #3b82f6;
+  /* Matching the button text color */
+}
+
+.back-to-selection-btn:hover svg {
+  color: #2563eb;
+}
+
+/* --- END PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
+
+/* Adjust card header if needed to make space for the button */
+.user-info-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  /* This will push the button to the right if it's not absolute */
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Ensure welcome title doesn't overlap the button */
+.user-info-card .welcome-title {
+  margin-right: 150px;
+  /* Adjust as needed based on button width */
+}
+
+/* Ensure padding around content within the card, assuming .user-details is already styled */
+.user-details {
+  padding-top: 1rem;
+  /* Add some space below the header/button area */
+}
+
+/* BajajTravel.css */
+
+
+/* --- PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
+.back-to-selection-btn-b {
+  /* Position it absolutely within the .user-info-card */
+  position: absolute;
+  top: 1.5rem;
+  /* Match top padding of the card header */
+  right: 1.5rem;
+  /* Match right padding of the card header */
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+
+  background-color: #e0e7ff;
+  /* Light blue background */
+  color: #3b82f6;
+  /* A distinct blue for text */
+  border: 1px solid #bfdbfe;
+  /* A slightly darker border */
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-to-selection-btn-b:hover {
+  background-color: #bfdbfe;
+  /* Darker blue on hover */
+  color: #2563eb;
+  border-color: #93c5fd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.back-to-selection-btn-b:active {
+  background-color: #93c5fd;
+  color: #1e40af;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+}

@@ -81,6 +81,9 @@ import CustomerDetails from './components/Dashboards/NoLoginCustomer/CustomerDet
 
 import CustomerList_emp_wise from './components/Dashboards/NoLoginCustomer/CustomerList_emp_wise';
  
+import BajajTravel from './components/Dashboards/BajajTravel/BajajTravel';
+
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -408,6 +411,12 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/BajajTravel" element={
+            <ProtectedRoute>
+              <BajajTravel userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />    
+          
 
         </Routes>
       </div>
