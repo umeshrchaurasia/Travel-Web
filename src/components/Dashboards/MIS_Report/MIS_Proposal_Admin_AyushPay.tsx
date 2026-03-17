@@ -17,6 +17,7 @@ interface Proposal {
     Policy_Generation_Date?: string; // Corresponds to CreateDate
     Assiatance_charges_PreTaxAmount?: string | number; // Corresponds to PremiumAmount
     Assiatance_charges_PostTaxAmount?: string | number; // Corresponds to Selected_PremiumAmount
+    Assiatance_charges_AfterTaxAmount?: string | number; 
     AgentId?: number;
     Agent_Mobileno?: string;
     AgentName?: string;
@@ -184,6 +185,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
             'Policy Subscription Date',
             'Pre Tax Amount',
             'Post Tax Amount',
+            'After Tax Amount',
             'Agent ID', // Using AgentId from the data
             'Agent Name',
             'Agent Mobile No',
@@ -215,6 +217,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
                 formatDate(item.Policy_Generation_Date),
                 item.Assiatance_charges_PreTaxAmount || '',
                 item.Assiatance_charges_PostTaxAmount || '',
+                item.Assiatance_charges_AfterTaxAmount || '',
                 item.AgentId || '',
                 item.AgentName || '',
                 item.Agent_Mobileno || '',
@@ -470,6 +473,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
                                             <th className="coi-table-header">Policy Subscription Date</th>
                                             <th className="coi-table-header">Pre Tax Amount</th>
                                             <th className="coi-table-header">Post Tax Amount</th>
+                                            <th className="coi-table-header">After Tax Amount</th>
                                             <th className="coi-table-header">Agent ID</th>
                                             <th className="coi-table-header">Agent Name</th>
                                             <th className="coi-table-header">Agent Mobile No</th>
@@ -498,6 +502,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
                                                 <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount || ''}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
+                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_AfterTaxAmount || ''}</td>
                                                 <td className="coi-table-cell">{proposal.AgentId || ''}</td>
                                                 <td className="coi-table-cell">{proposal.AgentName || ''}</td>
                                                 <td className="coi-table-cell">{proposal.Agent_Mobileno || ''}</td>

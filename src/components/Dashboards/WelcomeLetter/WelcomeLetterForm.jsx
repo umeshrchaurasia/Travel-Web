@@ -18,7 +18,7 @@ const WelcomeLetterForm = () => {
         assistanceCharges: '',
         SupportEmail: 'support@interstellarservices.com',
         SupportcontactNo: '+91-9876543210',
-        contactNo: '+91-9876543210'
+        contactNo: ''
     });
     
     // State to track success and show details
@@ -165,7 +165,7 @@ const WelcomeLetterForm = () => {
                             />
                         </div>
                         
-                        <div className="form-group">
+                        <div className="form-group12">
                             <label htmlFor="customerAddress">Customer Full Address</label>
                             <textarea
                                 id="customerAddress"
@@ -174,11 +174,11 @@ const WelcomeLetterForm = () => {
                                 onChange={handleChange}
                                 className="form-control"
                                 rows="2"
-                                required
+                                
                             />
                         </div>
                         
-                        <div className="form-group">
+                        <div className="form-group12">
                             <label htmlFor="customerEmail">Customer Email ID</label>
                             <input
                                 type="email"
@@ -187,7 +187,7 @@ const WelcomeLetterForm = () => {
                                 value={formData.customerEmail}
                                 onChange={handleChange}
                                 className="form-control"
-                                required
+                                
                             />
                         </div>
                         
@@ -282,7 +282,7 @@ const WelcomeLetterForm = () => {
                             />
                         </div>
                         
-                        <div className="form-group">
+                        <div className="form-group12">
                             <label htmlFor="contactNo">Customer Contact No</label>
                             <input
                                 type="text"
@@ -291,7 +291,7 @@ const WelcomeLetterForm = () => {
                                 value={formData.contactNo}
                                 onChange={handleChange}
                                 className="form-control"
-                                required
+                                
                             />
                         </div>
                     </div>

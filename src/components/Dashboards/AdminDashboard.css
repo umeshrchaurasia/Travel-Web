@@ -734,6 +734,15 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+
+.AdminDashboard .button-bajajwelcome {
+  background: hwb(262 28% 7%);
+}
+
+
+
+
+
 .AdminDashboard .back-button {
   background: #6c757d;
   color: white;

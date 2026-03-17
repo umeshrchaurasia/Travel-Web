@@ -38,7 +38,6 @@ import TDS_Proposal from './components/Dashboards/MIS_Report/TDS_Proposal';
 import Update_Agent from './components/Dashboards/AgentDashboards/Update_Agent';
 
 
-
 import Practo from './components/Dashboards/Practo/Practo'
 import PlanSelectionAgent from './components/Dashboards/PlanSelection/PlanSelection';
 
@@ -80,9 +79,14 @@ import CustomerPlanSelection from './components/Dashboards/NoLoginCustomer/Custo
 import CustomerDetails from './components/Dashboards/NoLoginCustomer/CustomerDetails';
 
 import CustomerList_emp_wise from './components/Dashboards/NoLoginCustomer/CustomerList_emp_wise';
- 
+
 import BajajTravel from './components/Dashboards/BajajTravel/BajajTravel';
 
+import BajajTravelProposal from './components/Dashboards/BajajTravel/BajajTravelProposal';
+
+import BajajTravelWallet from './components/Dashboards/BajajTravel/BajajTravelWallet';
+
+import WelcomeLetterBajaj from './components/Dashboards/WelcomeLetter/WelcomeLetterBajaj';
 
 function App() {
   const [userData, setUserData] = useState(() => {
@@ -124,6 +128,7 @@ function App() {
           <Route path="/signup" element={
             <Signup onSignupSuccess={() => <Navigate to="/login" />} />
           } />
+        
 
           <Route path="/CustomerPlanSelection/:Agent_Code" element={<CustomerPlanSelection />} />
           <Route path="/CustomerDetails/" element={<CustomerDetails />} />
@@ -404,7 +409,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-          
+
           <Route path="/CustomerList_emp_wise" element={
             <ProtectedRoute>
               <CustomerList_emp_wise userData={userData} onLogout={handleLogout} />
@@ -415,8 +420,26 @@ function App() {
             <ProtectedRoute>
               <BajajTravel userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
-          } />    
+          } />
+
+          <Route path="/BajajTravelProposal" element={
+            <ProtectedRoute>
+              <BajajTravelProposal userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
           
+          <Route path="/BajajTravelWallet" element={
+            <ProtectedRoute>
+              <BajajTravelWallet userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />             
+
+          <Route path="/WelcomeLetterBajaj" element={
+            <ProtectedRoute>
+              <WelcomeLetterBajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />   
 
         </Routes>
       </div>

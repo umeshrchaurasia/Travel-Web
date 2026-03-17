@@ -185,7 +185,7 @@ const RazorPaymentPage = ({ userData = null, onLogout = () => { } }) => {
       setProcessingPayment(true);
 
       // First call generatePolicybyPolicyno API
-      const policyNo = policyDetails.Policy_No;
+      const policyNo =  policyDetails.Policy_No;
 
       try {
         // Call the generatePolicybyPolicyno API function from api.js

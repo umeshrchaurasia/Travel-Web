@@ -716,6 +716,8 @@ export const generatePolicybyPolicyno = async (data) => {
   }
 };
 
+
+
 export const checkEmailDuplicate = async (email) => {
   try {
     const response = await api.post('/check-email-duplicate', { email });
@@ -1141,12 +1143,86 @@ export const saveMasterPlan_calc = async (payload) => {
   }
 };
 
-export const saveMasterPlan_ISSUE_POLICY = async (payload) => {
+export const calculatePremiumIncluding_bajaj = async (premiumData) => {
   try {
-    const response = await api.post('/saveMasterPlan_ISSUE_POLICY', payload);
+    const response = await api.post('/getPremium-including_bajaj', premiumData);
     return response.data;
   } catch (error) {
-    console.error('Error issuing Bajaj policy:', error);
+    console.error('Calculate premium error:', error);
+    throw error;
+  }
+};
+
+export const calculatePremiumExcluding_bajaj = async (premiumData) => {
+  try {
+    const response = await api.post('/getPremium-excluding_bajaj', premiumData);
+    return response.data;
+  } catch (error) {
+    console.error('Calculate premium error:', error);
+    throw error;
+  }
+};
+
+export const generatePolicybyPolicyno_bajaj = async (data) => {
+  try {
+  //  console.log("Generating policy with data:", data);
+    // Changed from GET to POST to match your backend route
+    const response = await api.post('/generatePolicybyPolicyno_bajaj', {
+      Policyno: data.Policyno
+    });
+  //  console.log("Policy generation response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Policy generation error:', error);
+    throw error;
+  }
+};
+
+export const generateWelcomeLetterBajaj = async (formData) => {
+  try {
+    // Single API call that handles both certificate check and welcome letter generation
+    const response = await api.post('/welcome-letter_bajaj_excel', formData);
+
+    // Handle different response formats
+    // Check if we have response.data.Data or response.data.MasterData
+    if (response.data?.Data) {
+      return {
+        data: {
+          Status: response.data.Status,
+          Message: response.data.Message,
+          Data: response.data.Data
+        }
+      };
+    } else if (response.data?.MasterData) {
+      // Convert MasterData format to Data format for consistency
+      return {
+        data: {
+          Status: response.data.Status,
+          Message: response.data.Message,
+          Data: response.data.MasterData
+        }
+      };
+    } else {
+      // Fallback for unexpected response format
+      console.warn('Unexpected response format:', response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error('Welcome letter generation error:', error);
+    throw error;
+  }
+};
+
+// ADD THIS NEW FUNCTION AT THE BOTTOM OF api.js
+export const downloadWelcomeBajajZip = async (policyNumbers) => {
+  try {
+    const response = await api.post('/download_welcome_bajaj_zip', 
+      { policyNumbers },
+      { responseType: 'blob' } // CRITICAL: This tells Axios to expect a binary file
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error downloading zip:', error);
     throw error;
   }
 };

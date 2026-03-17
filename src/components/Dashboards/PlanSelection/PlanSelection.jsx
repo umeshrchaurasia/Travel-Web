@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   UserCircle, Mail, BadgeCheck, HardDrive, FileText, LogOut, UserPlus,
   RefreshCw, Home, Upload, CheckCircle, X, Wallet, CreditCard, ArrowLeftCircle,
-  Activity, Heart, Link, Check, Copy, Plane, Shield
+  Activity, Heart, Link, Check, Copy, Plane, ArrowRight, Shield
 } from 'lucide-react';
 
 import { getAgentById } from '../../../services/api';
@@ -15,7 +15,7 @@ import { setAgentData } from '../../../redux/Agent/agentSlice';
 import './PlanSelection.css';
 
 import logo from '../../../../src/assets/img/TravelAssist.webp';
-
+import ayushlogo from '../../../../src/assets/img/ayushlogo.png';
 
 const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
@@ -182,6 +182,63 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   return (
     <div style={commonStyles.container}>
+
+      {/* Injecting specific card designs to match CustomerPlanSelection */}
+      <style>
+        {`
+          .customer-selection-card {
+              background: #ffffff;
+              border-radius: 0.75rem;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+              padding: 2.5rem;
+              width: 470px;
+              text-align: center;
+              cursor: pointer;
+              border: 1px solid #e0e0e0;
+              border-top: 4px solid #e0e0e0;
+              transition: all 0.3s ease;
+              overflow: hidden;
+              position: relative;
+          }
+          /* Practo Hover Effect (Purple) */
+          .practo-hover-card:hover {
+              border: 2px solid #6c63ff !important;
+              border-top: 4px solid #6c63ff !important;
+              background-color: #f5f3ff !important;
+              transform: translateY(-10px);
+              box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2) !important;
+          }
+          /* AyushPay Hover Effect (Pink) */
+          .ayush-hover-card:hover {
+              border: 2px solid #ec4899 !important;
+              border-top: 4px solid #ec4899 !important;
+              background-color: #fdf2f8 !important;
+              transform: translateY(-10px);
+              box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2) !important;
+          }
+          /* Active/Selected Animation */
+          .customer-selection-card:active {
+              transform: scale(0.97);
+              opacity: 0.9;
+          }
+          .ayush-premium-btn {
+              color: white;
+              padding: 0.75rem;
+              border-radius: 0.5rem;
+              border: none;
+              font-weight: 600;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: opacity 0.2s;
+          }
+          .ayush-premium-btn:hover {
+              opacity: 0.9;
+          }
+          `}
+      </style>
+
+
       <header style={commonStyles.header}>
         <div style={commonStyles.headerContent}>
           <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
@@ -270,7 +327,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             </div>
           </div>
         </div>
-              
+
         {/* Dynamic Selection Container */}
         <div className="selection-container">
           {/* VIEW 1: MAIN SELECTION */}
@@ -303,13 +360,17 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
                 <h3>Reliance Traveller</h3>
                 <p>Calculate premium for Reliance Travel Insurance.</p>
               </div>
-              {/* Card 2: Bajaj Traveller */}
-           {/*   <div className="selection-card" onClick={handleBajajTravelClick}>
-               
+
+                {/* Card 2: Bajaj Traveller */}
+
+               {[42,12, 28, 29].includes(Number(displayData?.AgentId)) && (           
+              <div className="selection-card" onClick={handleBajajTravelClick}>
+
                 <Shield size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }} />
                 <h3>Bajaj Traveller</h3>
                 <p>Calculate premium for Bajaj Travel Insurance.</p>
-              </div> */}
+              </div>
+             )}
             </>
           )}
 
@@ -317,10 +378,20 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
           {currentView === 'wellness' && (
             <>
               {/* Card 1: Practo Subscription */}
-              <div className="selection-card" onClick={handlePractoClick}>
-                <FileText size={48} className="selection-icon" />
+              <div className="customer-selection-card practo-hover-card" onClick={handlePractoClick}>
+                <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
                 <h3>Practo Subscription</h3>
-                <p>Navigate to the Practo section for subscription plans.</p>
+                <p style={{ fontWeight: 'bold', color: '#6c63ff' }}>(Rs. 699 + 18% GST)</p>
+                <div style={benefitListStyle}>
+                  <p>✓ Covers up to 2 adults and 1 kid under one subscription</p>
+                  <p>✓ Unlimited chat, audio, and video consultations with doctors</p>
+                  <p>✓ One free, in-person OPD consultation per year at any Practo Cashless Network clinic</p>
+                  <p>✓ Discount on diagnostic tests up to 20% and medicines up to 5%</p>
+                  <p>-</p><p>-</p>
+                </div>
+                <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#6c63ff' }}>
+                  Click Here <ArrowRight size={18} className="inline ml-2" />
+                </button>
               </div>
 
 
@@ -329,10 +400,28 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
               {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
 
-              <div className="selection-card" onClick={handleAyushPayHealthClick}>
-                <Heart size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)' }} />
-                <h3>AyushPay</h3>
-                <p>Navigate to the AyushPay section for subscription plans.</p>
+              <div className="customer-selection-card ayush-hover-card" onClick={handleAyushPayHealthClick}>
+                <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+                <h3>Medical Emergency Landing</h3>
+                <p style={{ fontWeight: 'bold', color: '#ec4899' }}>(Rs. 499 + 18% GST)</p>
+
+                <div style={benefitListStyle}>
+                  <p>✓ Covers up to 2 adults under one subscription</p>
+                  <p>✓ Unlimited video consultations with doctors (General Physicians only)</p>
+                  <p>✓ No, in-person OPD consultation available</p>
+                  <p>✓ Discount on diagnostic tests and medicines up to 25%</p>
+                  <p>✓ 0% Interest Medical Loans up to 1 year - Max ₹15 Lakhs.Subject to min CIBIL score of rs.650+</p>
+                  <p>✓ Max 10% Cashback on Hospital Treatment cost</p>
+                  <p>✓ ₹500 per day Hospital Admission Allowance (Max 3 days)</p>
+                  <p>✓ ₹5,00 Health Wallet Credit on the above subscription</p>
+                </div>
+
+                <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#ec4899' }}>
+                  Click Here <ArrowRight size={18} className="inline ml-2" />
+                </button>
+                <footer style={{ marginTop: '1.5rem' }}>
+                  <p>  <img src={ayushlogo} style={{ maxHeight: '20px' }} /> powered by Ayushpay</p>
+                </footer>
               </div>
 
 
@@ -347,6 +436,15 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
       </footer>
     </div>
   );
+};
+const benefitListStyle = {
+  textAlign: 'left',
+  marginTop: '15px',
+  padding: '10px',
+  background: '#f9fafb',
+  borderRadius: '8px',
+  fontSize: '0.85rem',
+  lineHeight: '1.6'
 };
 
 const commonStyles = {
@@ -368,6 +466,9 @@ const commonStyles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  leftSection: {
+    flex: 1
   },
   logo: {
     height: '40px'

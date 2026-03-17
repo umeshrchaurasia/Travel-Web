@@ -8,6 +8,7 @@ import {
   FileBarChart,
   UserCog,
   ArrowLeftCircle,
+  NotebookPen 
 } from 'lucide-react';
 import {
   getPendingApprovals,
@@ -236,6 +237,18 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
+  
+   const handlewelcomeLetterBajajClick = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/welcomeLetterBajaj', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
 
   const handleWalletClick = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
@@ -409,6 +422,9 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       </button>
                       <button onClick={handleWalletClick} className="action-button button-replenish">
                         <Wallet className="w-4 h-4 mr-2" size={20} /> Replenish Wallet
+                      </button>
+                      <button onClick={handlewelcomeLetterBajajClick} className="action-button button-bajajwelcome">
+                        <NotebookPen  className="w-4 h-4 mr-2" size={20} /> Welcome Letter Bajaj
                       </button>
                     </>
                   )}
