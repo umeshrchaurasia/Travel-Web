@@ -29,6 +29,8 @@ interface AgentFormData {
     PayoutPercentage: string;
     PayoutPracto: string;
     PayoutAyush: string;
+    PayoutBajaj: string;      // NEW
+    PayoutBajaj61: string;    // NEW
     PaymentMode: 'Full Pay' | 'Upfront Commission' | 'Discount';
     Wallet_Amount: string;
     EducationQualification: string;
@@ -131,6 +133,24 @@ const validations = {
         return "";
     },
 
+    // NEW
+    validatePayoutBajaj: (payout: string) => {
+        if (!payout) return "Payout Bajaj (0-60) percentage is required";
+        const payoutNum = parseFloat(payout);
+        if (isNaN(payoutNum)) return "Please enter a valid number";
+        if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj percentage must be between 0 and 50";
+        return "";
+    },
+
+    // NEW
+    validatePayoutBajaj61: (payout: string) => {
+        if (!payout) return "Payout Bajaj (61-80) percentage is required";
+        const payoutNum = parseFloat(payout);
+        if (isNaN(payoutNum)) return "Please enter a valid number";
+        if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj (61-80) percentage must be between 0 and 50";
+        return "";
+    },
+
     validateEducation: (edu: string) => {
         if (!edu || !edu.trim()) return "Education qualification is required";
         return "";
@@ -164,6 +184,8 @@ const Add_subAgent: React.FC = () => {
         PayoutPercentage: '',
         PayoutPracto: '',
         PayoutAyush: '',
+        PayoutBajaj: '',    // NEW
+        PayoutBajaj61: '',  // NEW
         PaymentMode: 'Full Pay',
         Wallet_Amount: '0',
         EducationQualification: '',
@@ -320,6 +342,21 @@ const Add_subAgent: React.FC = () => {
                 }
                 break;
 
+            // NEW: Bajaj fields
+            case 'PayoutBajaj':
+            case 'PayoutBajaj61':
+                if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+                    processedValue = value;
+                    setFormData(prev => ({ ...prev, [key]: processedValue }));
+
+                    const specificValidationFn = validations[`validate${key}` as keyof typeof validations];
+                    if (specificValidationFn) {
+                        const singleArgValidationFn = specificValidationFn as (value: string) => string;
+                        setFormErrors(prev => ({ ...prev, [key]: singleArgValidationFn(processedValue) }));
+                    }
+                }
+                break;
+
             case 'DOB':
             case 'State':
                 setFormData(prev => ({ ...prev, [key]: value }));
@@ -363,6 +400,14 @@ const Add_subAgent: React.FC = () => {
             const msg = validations.validatePayout(formData.PayoutAyush, Main_Agent_Payout, "Payout AyushPay (%)");
             if (msg) errors.PayoutAyush = msg;
         }
+        if (formData.PayoutBajaj) {
+            const msg = validations.validatePayoutBajaj(formData.PayoutBajaj);
+            if (msg) errors.PayoutBajaj = msg;
+        }
+        if (formData.PayoutBajaj61) {
+            const msg = validations.validatePayoutBajaj61(formData.PayoutBajaj61);
+            if (msg) errors.PayoutBajaj61 = msg;
+        }
 
         if (!formData.State) errors.State = 'State is required';
 
@@ -375,7 +420,8 @@ const Add_subAgent: React.FC = () => {
 
         const requiredFields: Array<keyof AgentFormData> = [
             'FullName', 'TraderName', 'Password', 'EmailID', 'MobileNumber', 'DOB',
-            'PayoutPercentage', 'EducationQualification', 'State'
+            'PayoutPercentage', 'EducationQualification', 'State', 
+            'PayoutBajaj', 'PayoutBajaj61'
         ];
 
         const emptyFields = requiredFields.filter(key => !formData[key]?.toString().trim());
@@ -421,6 +467,8 @@ const Add_subAgent: React.FC = () => {
                 Main_Agent: parentAgentData.AgentId,
                 PayoutPracto: formData.PayoutPracto || '0',
                 PayoutAyush: formData.PayoutAyush || '0',
+                PayoutBajaj: formData.PayoutBajaj || '0',
+                PayoutBajaj61: formData.PayoutBajaj61 || '0',
                 Address: formData.Address || ''
 
             };
@@ -967,6 +1015,45 @@ const Add_subAgent: React.FC = () => {
                                         />
                                         <div className="error-message-container">
                                             {formErrors.PayoutAyush && <div className="error-message">{formErrors.PayoutAyush}</div>}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* NEW ROW: Payout Bajaj */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="PayoutBajaj">Payout Bajaj 0-60 Years (%)</label>
+                                        <input
+                                            type="text"
+                                            id="PayoutBajaj"
+                                            name="PayoutBajaj"
+                                            className={`form-control ${formErrors.PayoutBajaj ? 'error' : ''}`}
+                                            value={formData.PayoutBajaj}
+                                            onChange={handleChange}
+                                            autoComplete="off"
+                                            placeholder="Enter Payout Bajaj Percentage (0-50)"
+                                            required
+                                        />
+                                        <div className="error-message-container">
+                                            {formErrors.PayoutBajaj && <div className="error-message">{formErrors.PayoutBajaj}</div>}
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="PayoutBajaj61">Payout Bajaj 61-80 Years (%)</label>
+                                        <input
+                                            type="text"
+                                            id="PayoutBajaj61"
+                                            name="PayoutBajaj61"
+                                            className={`form-control ${formErrors.PayoutBajaj61 ? 'error' : ''}`}
+                                            value={formData.PayoutBajaj61}
+                                            onChange={handleChange}
+                                            autoComplete="off"
+                                            placeholder="Enter Payout Bajaj 61-80 Years Percentage (0-50)"
+                                            required
+                                        />
+                                        <div className="error-message-container">
+                                            {formErrors.PayoutBajaj61 && <div className="error-message">{formErrors.PayoutBajaj61}</div>}
                                         </div>
                                     </div>
                                 </div>

@@ -15,6 +15,8 @@ import { setAgentData } from '../../../redux/Agent/agentSlice';
 import './PlanSelection.css';
 
 import logo from '../../../../src/assets/img/TravelAssist.webp';
+import logowellness from '../../../../src/assets/img/TravelAssist_practo.webp';
+
 import ayushlogo from '../../../../src/assets/img/ayushlogo.png';
 
 const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
@@ -379,7 +381,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
             <>
               {/* Card 1: Practo Subscription */}
               <div className="customer-selection-card practo-hover-card" onClick={handlePractoClick}>
-                <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+                <div style={commonStyles.leftSection}><img src={logowellness} alt="Logo" style={{ maxHeight: '60px' }} /></div>
                 <h3>Practo Subscription</h3>
                 <p style={{ fontWeight: 'bold', color: '#6c63ff' }}>(Rs. 699 + 18% GST)</p>
                 <div style={benefitListStyle}>
@@ -401,7 +403,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
               {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
 
               <div className="customer-selection-card ayush-hover-card" onClick={handleAyushPayHealthClick}>
-                <div style={commonStyles.leftSection}><img src={logo} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+                <div style={commonStyles.leftSection}><img src={logowellness} alt="Logo" style={{ maxHeight: '60px' }} /></div>
                 <h3>Medical Emergency Landing</h3>
                 <p style={{ fontWeight: 'bold', color: '#ec4899' }}>(Rs. 499 + 18% GST)</p>
 

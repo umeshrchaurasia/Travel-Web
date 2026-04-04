@@ -8,7 +8,9 @@ import {
   FileBarChart,
   UserCog,
   ArrowLeftCircle,
-  NotebookPen 
+  NotebookPen,
+  Plane,
+  Shield
 } from 'lucide-react';
 import {
   getPendingApprovals,
@@ -27,10 +29,15 @@ const defaultData = {
 
 // Define constants for product selection
 const PRODUCT_TRAVEL_ASSIST = 'travelAssist';
+const PRODUCT_RELIANCE_TRAVEL = 'relianceTravel';
+const PRODUCT_BAJAJ_TRAVEL = 'bajajTravel';
 const PRODUCT_ZEXTRA_WELLNESS = 'zextraWellness';
 const PRODUCT_PRACTO = 'practo';
 const PRODUCT_AYUSHPAY = 'ayushpay';
+
+// Define constants for Views
 const VIEW_SELECTION = 'selection';
+const VIEW_TRAVEL_SELECTION = 'travelSelection';
 const VIEW_ZEXTRA_SELECTION = 'zextraSelection';
 const VIEW_APPROVALS = 'approvals';
 
@@ -51,7 +58,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   const [documentStatuses, setDocumentStatuses] = useState({});
 
   const [selectedProduct, setSelectedProduct] = useState(() => {
-    if (location.state?.product === 'travelAssist') return PRODUCT_TRAVEL_ASSIST;
+    if (location.state?.product === 'relianceTravel') return PRODUCT_RELIANCE_TRAVEL;
+    if (location.state?.product === 'bajajTravel') return PRODUCT_BAJAJ_TRAVEL;
     if (location.state?.product === 'zextraWellness') return PRODUCT_ZEXTRA_WELLNESS;
     if (location.state?.product === 'practo') return PRODUCT_PRACTO;
     if (location.state?.product === 'ayushpay') return PRODUCT_AYUSHPAY;
@@ -59,6 +67,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
   });
 
   const [currentView, setCurrentView] = useState(() => {
+    if (location.state?.product === 'travelAssist') return VIEW_TRAVEL_SELECTION;
     return location.state?.view === 'approvals' ? VIEW_APPROVALS : VIEW_SELECTION;
   });
 
@@ -66,6 +75,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     if (product === PRODUCT_ZEXTRA_WELLNESS) {
       setSelectedProduct(product);
       setCurrentView(VIEW_ZEXTRA_SELECTION);
+    } else if (product === PRODUCT_TRAVEL_ASSIST) {
+      setCurrentView(VIEW_TRAVEL_SELECTION);
     } else {
       setSelectedProduct(product);
       setCurrentView(VIEW_APPROVALS);
@@ -77,12 +88,12 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     setCurrentView(VIEW_APPROVALS);
   };
 
-  const resetView = () => {
-    setSelectedProduct(null);
-    setCurrentView(VIEW_SELECTION);
+  const handleTravelProductSelection = (product) => {
+    setSelectedProduct(product);
+    setCurrentView(VIEW_APPROVALS);
   };
 
-  const goBackFromZextra = () => {
+  const resetView = () => {
     setSelectedProduct(null);
     setCurrentView(VIEW_SELECTION);
   };
@@ -226,6 +237,19 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
+  const handleMISReportsBajajClick = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/MIS_Proposal_Admin_bajaj', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
+
+
   const gotoUpdateAgent = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/Update_Agent', {
@@ -237,8 +261,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
-  
-   const handlewelcomeLetterBajajClick = () => {
+
+  const handlewelcomeLetterBajajClick = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/welcomeLetterBajaj', {
       state: {
@@ -249,6 +273,15 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
+
+  const handleReplenishWalletBajajClick = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/ReplenishWallet_bajaj', { state: { agentData: displayData } });
+
+  }
+
+
+
 
   const handleWalletClick = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
@@ -324,7 +357,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             <h2 className="welcome-title">Welcome, {displayData.FullName}</h2>
           </div>
           <div className="employee-info">
-            
+
             {/* --- NEW LAYOUT: Info + Back Button in one row --- */}
             <div className="info-header-row">
               <div className="info-item">
@@ -341,17 +374,33 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                 <span className="info-value">{displayData.EmailID}</span>
               </div>
 
-              {/* Back Button positioned here */}
+              {/* Back Button Handling Based on Current View */}
               {currentView === VIEW_ZEXTRA_SELECTION && (
-                <button onClick={goBackFromZextra} className="back-to-selection-btn-admin">
+                <button onClick={resetView} className="back-to-selection-btn-admin">
+                  <ArrowLeftCircle size={18} />
+                  <span>Back To Selection</span>
+                </button>
+              )}
+              {currentView === VIEW_TRAVEL_SELECTION && (
+                <button onClick={resetView} className="back-to-selection-btn-admin">
                   <ArrowLeftCircle size={18} />
                   <span>Back To Selection</span>
                 </button>
               )}
               {currentView === VIEW_APPROVALS && (
-                <button onClick={resetView} className="back-to-selection-btn-admin">
+                <button onClick={() => {
+                  if (selectedProduct === PRODUCT_RELIANCE_TRAVEL || selectedProduct === PRODUCT_BAJAJ_TRAVEL) {
+                    setCurrentView(VIEW_TRAVEL_SELECTION);
+                    setSelectedProduct(null);
+                  } else if (selectedProduct === PRODUCT_PRACTO || selectedProduct === PRODUCT_AYUSHPAY) {
+                    setCurrentView(VIEW_ZEXTRA_SELECTION);
+                    setSelectedProduct(null);
+                  } else {
+                    resetView();
+                  }
+                }} className="back-to-selection-btn-admin">
                   <ArrowLeftCircle size={18} />
-                  <span>Back To Selection</span>
+                  <span>Back</span>
                 </button>
               )}
             </div>
@@ -379,6 +428,30 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                 </div>
               </div>
             )}
+
+            {/* --- TRAVEL SELECTION VIEW: RELIANCE & BAJAJ --- */}
+            {currentView === VIEW_TRAVEL_SELECTION && (
+              <div className="product-selection-grid">
+                <div
+                  className="product-card card-travel"
+                  onClick={() => handleTravelProductSelection(PRODUCT_RELIANCE_TRAVEL)}
+                >
+                  <Plane size={48} className="card-icon" style={{ color: '#3b82f6' }} />
+                  <h3>Reliance Traveller</h3>
+                  <p>Manage Reliance Travel Assist Agents, Wallet, and Reports.</p>
+                </div>
+
+                <div
+                  className="product-card card-travel"
+                  onClick={() => handleTravelProductSelection(PRODUCT_BAJAJ_TRAVEL)}
+                >
+                  <Shield size={48} className="card-icon" style={{ color: '#f59e0b' }} />
+                  <h3>Bajaj Traveller</h3>
+                  <p>Manage Bajaj Travel Assistance services and Welcome Letters.</p>
+                </div>
+              </div>
+            )}
+
 
             {/* --- ZEXTRA SELECTION VIEW: PRACTO & AYUSHPAY --- */}
             {currentView === VIEW_ZEXTRA_SELECTION && (
@@ -408,8 +481,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
             {/* --- ACTION BUTTONS AND AGENT TABLE (After Selection) --- */}
             {currentView === VIEW_APPROVALS && (
               <>
-                <div  className="action-group">
-                  {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
+                <div className="action-group">
+                  {selectedProduct === PRODUCT_RELIANCE_TRAVEL && (
                     <>
                       <button onClick={gotoMIS} className="action-button button-mis">
                         <FileBarChart size={18} /> MIS Reports
@@ -423,8 +496,19 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       <button onClick={handleWalletClick} className="action-button button-replenish">
                         <Wallet className="w-4 h-4 mr-2" size={20} /> Replenish Wallet
                       </button>
+                    </>
+                  )}
+
+                  {selectedProduct === PRODUCT_BAJAJ_TRAVEL && (
+                    <>
+                      <button onClick={handleMISReportsBajajClick} className="action-button button-mis">
+                        <FileBarChart size={18} /> MIS Reports
+                      </button>
+                      <button onClick={handleReplenishWalletBajajClick} className="action-button button-replenish">
+                        <Wallet className="w-4 h-4 mr-2" size={20} /> Replenish Wallet
+                      </button>
                       <button onClick={handlewelcomeLetterBajajClick} className="action-button button-bajajwelcome">
-                        <NotebookPen  className="w-4 h-4 mr-2" size={20} /> Welcome Letter Bajaj
+                        <NotebookPen className="w-4 h-4 mr-2" size={20} /> Welcome Letter Bajaj
                       </button>
                     </>
                   )}
@@ -452,8 +536,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                   )}
                 </div>
 
-                {/* Only show "Pending Agent Document Approvals" title for Travel Assist */}
-                {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
+                {/* Only show "Pending Agent Document Approvals" title for Reliance Travel Assist */}
+                {selectedProduct === PRODUCT_RELIANCE_TRAVEL && (
                   <div className="mt-8">
                     <h2 className="text-xl font-semibold mb-3">Pending Agent Document Approvals</h2>
                   </div>
@@ -463,8 +547,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
           </div>
         </div>
 
-        {/* Agents List Card - VISIBLE ONLY FOR TRAVEL ASSIST */}
-        {selectedProduct === PRODUCT_TRAVEL_ASSIST && (
+        {/* Agents List Card - VISIBLE ONLY FOR RELIANCE TRAVEL ASSIST */}
+        {selectedProduct === PRODUCT_RELIANCE_TRAVEL && (
           <div className="card">
             <div className="card-header">
               {/* Added class for header layout and padding */}

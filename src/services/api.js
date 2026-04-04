@@ -440,9 +440,29 @@ export const getWalletApplications = async () => {
   }
 };
 
+export const getWalletApplications_bajaj = async () => {
+  try {
+    const response = await api.get('/wallet-applications_bajaj');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching wallet applications:', error);
+    throw error;
+  }
+};
+
 export const processWalletApplication = async (applicationData) => {
   try {
     const response = await api.post('/process-wallet-application', applicationData);
+    return response.data;
+  } catch (error) {
+    console.error('Error processing wallet application:', error);
+    throw error;
+  }
+};
+
+export const processWalletApplication_bajaj = async (applicationData) => {
+  try {
+    const response = await api.post('/process-wallet-application_bajaj', applicationData);
     return response.data;
   } catch (error) {
     console.error('Error processing wallet application:', error);
@@ -1167,7 +1187,7 @@ export const generatePolicybyPolicyno_bajaj = async (data) => {
   try {
   //  console.log("Generating policy with data:", data);
     // Changed from GET to POST to match your backend route
-    const response = await api.post('/generatePolicybyPolicyno_bajaj', {
+      const response = await api.post('/generatePolicybyPolicyno_bajaj', {
       Policyno: data.Policyno
     });
   //  console.log("Policy generation response:", response.data);
@@ -1223,6 +1243,244 @@ export const downloadWelcomeBajajZip = async (policyNumbers) => {
     return response.data;
   } catch (error) {
     console.error('Error downloading zip:', error);
+    throw error;
+  }
+};
+
+export const generateBajajInvoicePdf = async (policyNo) => {
+  try {
+    const response = await api.post(`/generateBajajInvoicePdf`, { certificateId: policyNo });
+    return response.data;
+  } catch (error) {
+    console.error('Error getting payment status:', error);
+    throw error;
+  }
+};
+
+export const getUpdateProposalDetailsByAgent_bajaj = async (agentId, paymentStatus) => {
+  try {
+    const response = await api.post('/getUpdateProposalDetailsByAgent_bajaj', {
+      agentId,
+      paymentStatus
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalByPassport_bajaj = async (passportNo) => {
+  try {
+    const response = await api.post('/getProposalByPassport_bajaj', {
+      passportpassportno: passportNo
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal:', error);
+    throw error;
+  }
+};
+
+export const getProposalDetailsByAgent_bajaj = async (agentId, paymentStatus) => {
+  try {
+    const response = await api.post('/getProposalDetailsByAgent_bajaj', {
+      agentId,
+      paymentStatus
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+// New function to apply wallet payment
+export const applyWalletPayment_bajaj = async (paymentData) => {
+  try {
+ //   console.log('Sending payment data to API:', paymentData);
+
+    // Use api instance with proper headers and base URL
+    const response = await api.post('/insertBatchPayment_bajaj', paymentData);
+
+ //   console.log('API response received:', response.data);
+
+    // Return the data from the response
+    return response.data;
+  } catch (error) {
+    console.error('Error details:', error.response || error);
+    throw error;
+  }
+};
+
+export const ApplyWalletBalance_bajaj = async (walletData) => {
+  try {
+    const response = await api.post('/Apply-wallet-balance_bajaj', walletData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating wallet balance:', error);
+    throw error;
+  }
+};
+
+export const getBatchPaymentsByStatus_bajaj = async (status) => {
+  try {
+    const response = await api.post('/getBatchPaymentsByStatus_bajaj', { status });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching batch payments:', error);
+    throw error;
+  }
+};
+
+// Function to update batch payment status and UTR
+export const updateBatchPayment_bajaj = async (paymentData) => {
+  try {
+    const response = await api.post('/updateBatchPayment_bajaj', paymentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating batch payment:', error);
+    throw error;
+  }
+};
+
+export const getWelcomeLetterBajaj = async (formData) => {
+  try {
+    // Single API call that handles both certificate check and welcome letter generation
+    const response = await api.post('/getWelcomeLetterBajaj', formData);
+
+    // Handle different response formats
+    // Check if we have response.data.Data or response.data.MasterData
+    if (response.data?.Data) {
+      return {
+        data: {
+          Status: response.data.Status,
+          Message: response.data.Message,
+          Data: response.data.Data
+        }
+      };
+    } else if (response.data?.MasterData) {
+      // Convert MasterData format to Data format for consistency
+      return {
+        data: {
+          Status: response.data.Status,
+          Message: response.data.Message,
+          Data: response.data.MasterData
+        }
+      };
+    } else {
+      // Fallback for unexpected response format
+      console.warn('Unexpected response format:', response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error('Welcome letter generation error:', error);
+    throw error;
+  }
+};
+
+export const searchWelcomeLettersBajaj = async (searchData) => {
+  try {
+    // searchData contains { startDate, endDate }
+    const response = await api.post('/search_welcome_letters_bajaj', searchData);
+    return response.data;
+  } catch (error) {
+    console.error('Error searching welcome letters:', error);
+    throw error;
+  }
+};
+
+export const getSub_Main_AgentMIS_byAdmin_bajaj = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getSub_Main_AgentMIS_byAdmin_bajaj', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+
+export const getProposalDetailsByEmployee_bajaj = async (empId, startdate, enddate) => {
+  try {
+    const response = await api.post('/getProposalDetailsByEmployee_bajaj', {
+      empId, startdate, enddate
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getPolicyDetailsbyPolicyno_bajaj = async (Policyno) => {
+  try {
+    const response = await api.post('/getPolicyDetailsbyPolicyno_bajaj', {
+      Policyno
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching policy details:', error);
+    throw error;
+  }
+};
+
+export const cancelpolicy_bajaj = async (cancelData) => {
+  try {
+    const response = await api.post('/cancelpolicy_bajaj', cancelData);
+    return response.data;
+  } catch (error) {
+    console.error('Error cancel payment:', error);
+    throw error;
+  }
+};
+
+export const getProposalMIS_bajaj = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalMIS_bajaj', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalTDS_bajaj = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalTDS_bajaj', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalMIS_SubAgent_bajaj = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalMIS_SubAgent_bajaj', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+export const getProposalTDS_SubAgent_bajaj = async (startdate, enddate, empId, agentId) => {
+  try {
+    const response = await api.post('/getProposalTDS_SubAgent_bajaj', {
+      startdate, enddate, empId, agentId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
     throw error;
   }
 };

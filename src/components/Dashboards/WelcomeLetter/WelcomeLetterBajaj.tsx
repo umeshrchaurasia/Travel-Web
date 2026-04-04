@@ -105,6 +105,13 @@ const WelcomeLetterBajaj: React.FC = () => {
         });
     };
 
+    const WelcomeLetterSearch = () => {
+        navigate('/WelcomeLetterBajajSearch', {
+            state: {
+                agentId}
+        });
+    }
+
     const downloadSampleCSV = () => {
         const csvContent =
             'Customer Name,Address,Email,Date,Departure Date,Arrival Date,Duration,Policy Number,Charges,custcontactno\n' +
@@ -319,9 +326,14 @@ const WelcomeLetterBajaj: React.FC = () => {
                     <div className="card">
                         <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h2 className="card-title m-0">Bajaj Welcome Letter Generator</h2>
+                           <button type="button" className="btn btn-outline-primary btn-sm" onClick={WelcomeLetterSearch} disabled={isZipping || loading}>
+                                Welcome Letter Search
+                            </button>
                             <button type="button" className="btn btn-outline-primary btn-sm" onClick={downloadSampleCSV} disabled={isZipping || loading}>
                                 Download Sample CSV
                             </button>
+                          
+                          
                         </div>
 
                         <div className="card-body">

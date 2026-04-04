@@ -24,6 +24,8 @@ interface Agent {
     Payout_Practo?: string;
     Payout_Ayush?: string;
     Paymentmode?: string;
+    Payout_Bajaj: string;          // NEW
+    Payout_Bajaj_above61: string;  // NEW
     Wallet_Amount?: string;
     Wallet_Update_Date?: string;
     EducationQualification?: string;
@@ -121,7 +123,7 @@ const Update_Agent: React.FC = () => {
         const date = new Date(dateStr);
         return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-GB');
     };
-
+    
     const formatCurrency = (amount?: string | number): string => {
         const num = typeof amount === 'string' ? parseFloat(amount) : amount ?? 0;
         return `₹${num.toLocaleString('en-IN')}`;
@@ -340,7 +342,7 @@ const Update_Agent: React.FC = () => {
                                                 <td className="coi-table-cell">{agent.Payout_Ayush || '0'}%</td>
                                                 <td className="coi-table-cell">{agent.Paymentmode || ''}</td>
                                                 <td className="coi-table-cell">{formatCurrency(agent.Wallet_Amount)}</td>
-                                                <td className="coi-table-cell">{(agent.Wallet_Update_Date)}</td>
+                                                <td className="coi-table-cell">{formatDateForDisplay(agent.Wallet_Update_Date)}</td>
                                                 <td className="coi-table-cell">{agent.PAN_No || ''}</td>
                                                 <td className="coi-table-cell">{formatDateForDisplay(agent.Created_on)}</td>
                                                 <td className="coi-table-cell">

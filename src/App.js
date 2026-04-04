@@ -88,6 +88,27 @@ import BajajTravelWallet from './components/Dashboards/BajajTravel/BajajTravelWa
 
 import WelcomeLetterBajaj from './components/Dashboards/WelcomeLetter/WelcomeLetterBajaj';
 
+import GenerateCOI_bajaj from './components/Dashboards/BajajTravel/GenerateCOI_bajaj';
+import WalletPage_bajaj from './components/Dashboards/BajajTravel/WalletPage_bajaj';
+
+import WelcomeLetterBajajSearch from './components/Dashboards/WelcomeLetter/WelcomeLetterBajajSearch';
+
+import ReplenishWallet_bajaj from './components/Dashboards/ReplenishWallet/ReplenishWallet_bajaj';
+
+import MIS_Proposal_Admin_bajaj from './components/Dashboards/MIS_Report/MIS_Proposal_Admin_bajaj';
+
+import Employee_COI_bajaj from './components/Dashboards/UpdatePolicy/Employee_COI_bajaj';
+
+import MIS_Proposal_bajaj from './components/Dashboards/MIS_Report/MIS_Proposal_bajaj';
+
+import TDS_Proposal_bajaj from './components/Dashboards/MIS_Report/TDS_Proposal_bajaj';
+
+
+import MIS_Proposal_SubAgent__ByAgent_bajaj from './components/Dashboards/MIS_Report/MIS_Proposal_SubAgent__ByAgent_bajaj';
+import MIS_Proposal_SubAgent_ByAdmin_bajaj from './components/Dashboards/MIS_Report/MIS_Proposal_SubAgent_ByAdmin_bajaj';
+
+import TDS_Proposal_SubAgent_bajaj from './components/Dashboards/MIS_Report/TDS_Proposal_SubAgent_bajaj';
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -128,7 +149,7 @@ function App() {
           <Route path="/signup" element={
             <Signup onSignupSuccess={() => <Navigate to="/login" />} />
           } />
-        
+
 
           <Route path="/CustomerPlanSelection/:Agent_Code" element={<CustomerPlanSelection />} />
           <Route path="/CustomerDetails/" element={<CustomerDetails />} />
@@ -152,8 +173,6 @@ function App() {
               <AgentDashboard userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
-
-
 
 
 
@@ -428,18 +447,85 @@ function App() {
             </ProtectedRoute>
           } />
 
-          
+
           <Route path="/BajajTravelWallet" element={
             <ProtectedRoute>
               <BajajTravelWallet userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
-          } />             
+          } />
 
           <Route path="/WelcomeLetterBajaj" element={
             <ProtectedRoute>
               <WelcomeLetterBajaj userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
-          } />   
+          } />
+
+          <Route path="/GenerateCOI_bajaj" element={
+            <ProtectedRoute>
+              <GenerateCOI_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/WalletPage_bajaj" element={
+            <ProtectedRoute>
+              <WalletPage_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/WelcomeLetterBajajSearch" element={
+            <ProtectedRoute>
+              <WelcomeLetterBajajSearch userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/ReplenishWallet_bajaj" element={
+            <ProtectedRoute>
+              <ReplenishWallet_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_Admin_bajaj" element={
+            <ProtectedRoute>
+              <MIS_Proposal_Admin_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Employee_COI_bajaj" element={
+            <ProtectedRoute>
+              <Employee_COI_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_bajaj" element={
+            <ProtectedRoute>
+              <MIS_Proposal_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/TDS_Proposal_bajaj" element={
+            <ProtectedRoute>
+              <TDS_Proposal_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_SubAgent__ByAgent_bajaj" element={
+            <ProtectedRoute>
+              <MIS_Proposal_SubAgent__ByAgent_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/MIS_Proposal_SubAgent_ByAdmin_bajaj" element={
+            <ProtectedRoute>
+              <MIS_Proposal_SubAgent_ByAdmin_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+            <Route path="/TDS_Proposal_SubAgent_bajaj" element={
+            <ProtectedRoute>
+              <TDS_Proposal_SubAgent_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
 
         </Routes>
       </div>

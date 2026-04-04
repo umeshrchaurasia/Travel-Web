@@ -1,4 +1,4 @@
-// AddAgentModal.jsx - PART 1: Imports, States, and Functions
+// AddAgentModal_KYC.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { addAgent_kyc, sendOtp, checkEmailDuplicate, checkMobileDuplicate, verifyPanpro } from '../../../services/api';
 import {
@@ -8,7 +8,7 @@ import {
 import '../Modal_addAgent.css';
 
 const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, mainAgentPayout }) => {
-  // Initialize form data
+  // Initialize form data - ADDED PayoutBajaj and PayoutBajaj61
   const initialFormData = {
     UId: userId || '',
     FullName: '',
@@ -21,6 +21,8 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
     PayoutPercentage: '',
     PayoutPracto: '',
     PayoutAyush: '',
+    PayoutBajaj: '',      // NEW
+    PayoutBajaj61: '',    // NEW
     PaymentMode: 'Full Pay',
     Wallet_Amount: '0',
     EducationQualification: '',
@@ -79,6 +81,8 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
       PayoutPercentage: '',
       PayoutPracto: '',
       PayoutAyush: '',
+      PayoutBajaj: '',      // NEW
+      PayoutBajaj61: '',    // NEW
       PaymentMode: 'Full Pay',
       Wallet_Amount: '0',
       EducationQualification: '',
@@ -535,6 +539,24 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
       return "";
     },
 
+    // NEW
+    validatePayoutBajaj: (payout) => {
+      if (!payout) return "Payout Bajaj (0-60) percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj percentage must be between 0 and 50";
+      return "";
+    },
+
+    // NEW
+    validatePayoutBajaj61: (payout) => {
+      if (!payout) return "Payout Bajaj (61-80) percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj (61-80) percentage must be between 0 and 50";
+      return "";
+    },
+
     validateEducation: (edu) => {
       if (!edu || !edu.trim()) return "Education qualification is required";
       return "";
@@ -701,6 +723,37 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
           return;
         }
         break;
+
+      // NEW BAJAJ HANDLERS
+      case 'PayoutBajaj':
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutBajajError = validations.validatePayoutBajaj(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutBajaj: payoutBajajError
+          }));
+        } else {
+          return;
+        }
+        break;
+
+      case 'PayoutBajaj61':
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutBajaj61Error = validations.validatePayoutBajaj61(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutBajaj61: payoutBajaj61Error
+          }));
+        } else {
+          return;
+        }
+        break;
        
 
       case 'EducationQualification':
@@ -762,6 +815,13 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
     if (formData.PayoutAyush) {
       errors.PayoutAyush = validations.validatePayout_ayush(formData.PayoutAyush);
     }
+    // NEW Validations
+    if (formData.PayoutBajaj) {
+      errors.PayoutBajaj = validations.validatePayoutBajaj(formData.PayoutBajaj);
+    }
+    if (formData.PayoutBajaj61) {
+      errors.PayoutBajaj61 = validations.validatePayoutBajaj61(formData.PayoutBajaj61);
+    }
     if (formData.EducationQualification) {
       errors.EducationQualification = validations.validateEducation(formData.EducationQualification);
     }
@@ -788,7 +848,9 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
       'DOB',
       'PayoutPercentage',
       'EducationQualification',
-      'State'
+      'State',
+      'PayoutBajaj',      // NEW
+      'PayoutBajaj61'     // NEW
     ];
 
     const emptyFields = requiredFields.filter(field => !formData[field]?.trim());
@@ -833,6 +895,8 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
         Main_Agent: mainAgentId,
         PayoutPracto: formData.PayoutPracto || '0',
         PayoutAyush: formData.PayoutAyush || '0',
+        PayoutBajaj: formData.PayoutBajaj || '0',      // NEW
+        PayoutBajaj61: formData.PayoutBajaj61 || '0',  // NEW
         Address: formData.Address || ''
 
       };
@@ -1389,6 +1453,53 @@ const AddAgentModal_KYC = ({ isOpen, onClose, onSuccess, userId, mainAgentId, ma
               {formErrors.PayoutAyush && (
                 <div className="error-message" style={{ marginTop: '5px', color: 'red', fontSize: '14px' }}>
                   {formErrors.PayoutAyush}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* NEW ROW: Payout Bajaj */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="PayoutBajaj" style={{ fontWeight: '500', color: '#333', fontSize: '16px' }}>
+                Payout Bajaj 0-60 Years (%)
+              </label>
+              <input
+                type="text"
+                id="PayoutBajaj"
+                name="PayoutBajaj"
+                className={`form-control ${formErrors.PayoutBajaj ? 'error' : ''}`}
+                value={formData.PayoutBajaj}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout Bajaj Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutBajaj && (
+                <div className="error-message" style={{ marginTop: '5px', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutBajaj}
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="PayoutBajaj61" style={{ fontWeight: '500', color: '#333', fontSize: '16px' }}>
+                Payout Bajaj 61-80 Years (%)
+              </label>
+              <input
+                type="text"
+                id="PayoutBajaj61"
+                name="PayoutBajaj61"
+                className={`form-control ${formErrors.PayoutBajaj61 ? 'error' : ''}`}
+                value={formData.PayoutBajaj61}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout Bajaj 61-80 Years Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutBajaj61 && (
+                <div className="error-message" style={{ marginTop: '5px', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutBajaj61}
                 </div>
               )}
             </div>

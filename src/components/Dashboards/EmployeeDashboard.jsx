@@ -341,7 +341,7 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   };
 
-  const gototest = () => {
+  const gotoMISProposal = () => {
     const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
 
@@ -354,7 +354,38 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-   const gotoCustomerList = () => {
+
+  const goToEmpCOIBajaj = () => {
+
+    const empId = displayData.id || displayData.UId;
+
+    // Store the enriched display data in localStorage
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    // Navigate to the wallet page with the enriched state
+    navigate('/Employee_COI_bajaj', {
+      state: {
+        empid: empId,
+        agentData: displayData
+      }
+    });
+  };
+
+  const gotoMISBajaj = () => {
+    const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    navigate('/MIS_Proposal_bajaj', {
+      state: {
+        empid: empId,
+        agentData: displayData,
+        userType: 'Employee'
+      }
+    });
+  }
+
+
+  const gotoCustomerList = () => {
     const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
 
@@ -366,8 +397,6 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
       }
     });
   }
-
-
 
 
   if (!userData && !userProfile) {
@@ -438,11 +467,17 @@ const EmployeeDashboard = ({ userData = null, onLogout = () => { } }) => {
               <button onClick={goToEmpCOI} className="apply-btn">
                 View COI
               </button>
-              <button onClick={gototest} className='apply-btn-emp' style={{ display: '' }}>
+              <button onClick={gotoMISProposal} className='apply-btn-emp' style={{ display: '' }}>
                 MIS Report
               </button>
               <button onClick={gotoCustomerList} className='apply-btn-emp-cust' style={{ display: '' }}>
                 Zextra Customer List
+              </button>
+              <button onClick={goToEmpCOIBajaj} className="apply-btn">
+                Bajaj View COI
+              </button>
+              <button onClick={gotoMISBajaj} className='apply-btn-emp' style={{ display: '' }}>
+                Bajaj  MIS Report
               </button>
             </div>
           </div>

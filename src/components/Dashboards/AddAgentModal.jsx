@@ -8,7 +8,7 @@ import {
 import './Modal_addAgent.css';
 
 const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
-  // Initialize form data
+  // Initialize form data - ADDED PayoutBajaj and PayoutBajaj61
   const initialFormData = {
     UId: userId || '',
     FullName: '',
@@ -21,6 +21,8 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     PayoutPercentage: '',
     PayoutPracto: '',
     PayoutAyush: '',
+    PayoutBajaj: '',
+    PayoutBajaj61: '',
     PaymentMode: 'Full Pay',
     Wallet_Amount: '0',
     EducationQualification: '',
@@ -76,6 +78,10 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       Gender: 'Male',
       DOB: '',
       PayoutPercentage: '',
+      PayoutPracto: '',
+      PayoutAyush: '',
+      PayoutBajaj: '',
+      PayoutBajaj61: '',
       PaymentMode: 'Full Pay',
       Wallet_Amount: '0',
       EducationQualification: '',
@@ -157,7 +163,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
     try {
       const result = await verifyPanpro(formData.PAN_No, formData.FullName);
-      //   console.log('PAN Verification Result:', result);
 
       // FIXED: Check the actual API response structure
       if (result.Status === 'Success' && result.MasterData) {
@@ -218,7 +223,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
 
   // Enhanced PAN Validation Display Component
-
   const PanValidationDisplay = () => {
     if (!showPanValidationResult) return null;
 
@@ -373,8 +377,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     );
   };
 
-
-
   // Enhanced validations with duplicate checking
   const enhancedValidations = {
     validateEmail: async (email) => {
@@ -435,9 +437,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       return "";
     },
 
-
     // Validation for Trader Name
-
     validateTraderName: (name) => {
       if (!name || !name.trim()) return "Trader Name is required";
 
@@ -465,18 +465,14 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     },
 
     validatePAN: (pan) => {
-      // If empty, it's valid (optional field)
       if (!pan || !pan.trim()) return "";
-
-      // PAN format: 5 letters + 4 digits + 1 letter (e.g., ABCDE1234F)
       const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-
       if (!panRegex.test(pan.trim().toUpperCase())) {
         return "Please enter a valid PAN format (e.g., ABCDE1234F)";
       }
-
       return "";
     },
+
     validatePayout: (payout) => {
       if (!payout) return "Payout percentage is required";
       const payoutNum = parseFloat(payout);
@@ -485,7 +481,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       return "";
     },
 
-    // NEW: For PayoutPracto - Range 0-50
     validatePayoutPracto: (payout) => {
       if (!payout) return "Payout Practo percentage is required";
       const payoutNum = parseFloat(payout);
@@ -494,12 +489,29 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       return "";
     },
 
-    // NEW: For PayoutAyush - Range 0-50
     validatePayoutAyush: (payout) => {
       if (!payout) return "Payout AyushPay percentage is required";
       const payoutNum = parseFloat(payout);
       if (isNaN(payoutNum)) return "Please enter a valid number";
       if (payoutNum < 0 || payoutNum > 50) return "Payout AyushPay percentage must be between 0 and 50";
+      return "";
+    },
+    
+    // NEW: For PayoutBajaj - Range 0-50
+    validatePayoutBajaj: (payout) => {
+      if (!payout) return "Payout Bajaj (0-60) percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj percentage must be between 0 and 50";
+      return "";
+    },
+
+    // NEW: For PayoutBajaj61 - Range 0-50
+    validatePayoutBajaj61: (payout) => {
+      if (!payout) return "Payout Bajaj (61-80) percentage is required";
+      const payoutNum = parseFloat(payout);
+      if (isNaN(payoutNum)) return "Please enter a valid number";
+      if (payoutNum < 0 || payoutNum > 50) return "Payout Bajaj (61-80) percentage must be between 0 and 50";
       return "";
     },
 
@@ -528,8 +540,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     }, 1000);
   };
 
-
-
   const handleMobileValidation = async (mobile) => {
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -545,7 +555,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       }
     }, 1000);
   };
-
 
   // Event Handlers
   const handleChange = (e) => {
@@ -565,7 +574,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
         break;
 
       case 'TraderName':
-        processedValue = value; // Allow any characters for now, or add specific regex
+        processedValue = value;
         setFormData(prev => ({ ...prev, [name]: processedValue }));
         const traderNameError = validations.validateTraderName(processedValue);
         setFormErrors(prev => ({
@@ -607,17 +616,14 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
         break;
 
       case 'PAN_No':
-        // Convert to uppercase and allow only alphanumeric characters
         processedValue = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 10);
         setFormData(prev => ({ ...prev, [name]: processedValue }));
 
-        // Reset PAN validation when PAN field changes
         setIsPanValidated(false);
         setShowPanValidationResult(false);
         setPanValidationResult(null);
         setPanValidationError('');
 
-        // Validate PAN format if value is provided
         const panError = validations.validatePAN(processedValue);
         setFormErrors(prev => ({
           ...prev,
@@ -635,14 +641,10 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
             ...prev,
             PayoutPercentage: payoutError
           }));
-        } else {
-          return;
         }
         break;
 
-
       case 'PayoutPracto':
-        // PayoutPracto: Range 0-50
         if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
           processedValue = value;
           setFormData(prev => ({ ...prev, [name]: processedValue }));
@@ -652,13 +654,10 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
             ...prev,
             PayoutPracto: payoutPractoError
           }));
-        } else {
-          return;
         }
         break;
 
       case 'PayoutAyush':
-        // PayoutAyush: Range 0-50
         if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
           processedValue = value;
           setFormData(prev => ({ ...prev, [name]: processedValue }));
@@ -668,8 +667,33 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
             ...prev,
             PayoutAyush: payoutAyushError
           }));
-        } else {
-          return;
+        }
+        break;
+        
+      // NEW: Payout Bajaj Handlers
+      case 'PayoutBajaj':
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutBajajError = validations.validatePayoutBajaj(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutBajaj: payoutBajajError
+          }));
+        }
+        break;
+
+      case 'PayoutBajaj61':
+        if (value === '' || (/^\d{0,2}(\.\d{0,2})?$/.test(value) && parseFloat(value) <= 50)) {
+          processedValue = value;
+          setFormData(prev => ({ ...prev, [name]: processedValue }));
+
+          const payoutBajaj61Error = validations.validatePayoutBajaj61(processedValue);
+          setFormErrors(prev => ({
+            ...prev,
+            PayoutBajaj61: payoutBajaj61Error
+          }));
         }
         break;
 
@@ -716,7 +740,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     if (formData.TraderName) {
       errors.TraderName = validations.validateTraderName(formData.TraderName);
     }
-
     if (formData.Password) {
       errors.Password = validations.validatePassword(formData.Password);
     }
@@ -726,17 +749,19 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
     if (formData.PayoutPercentage) {
       errors.PayoutPercentage = validations.validatePayout(formData.PayoutPercentage);
     }
-
-    // UPDATED: Add validation for PayoutPracto
     if (formData.PayoutPracto) {
       errors.PayoutPracto = validations.validatePayoutPracto(formData.PayoutPracto);
     }
-    // UPDATED: Add validation for PayoutAyush
     if (formData.PayoutAyush) {
       errors.PayoutAyush = validations.validatePayoutAyush(formData.PayoutAyush);
     }
-
-
+    // NEW: Validation calls for Bajaj fields
+    if (formData.PayoutBajaj) {
+      errors.PayoutBajaj = validations.validatePayoutBajaj(formData.PayoutBajaj);
+    }
+    if (formData.PayoutBajaj61) {
+      errors.PayoutBajaj61 = validations.validatePayoutBajaj61(formData.PayoutBajaj61);
+    }
     if (formData.EducationQualification) {
       errors.EducationQualification = validations.validateEducation(formData.EducationQualification);
     }
@@ -763,7 +788,9 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       'DOB',
       'PayoutPercentage',
       'EducationQualification',
-      'State'
+      'State',
+      'PayoutBajaj',
+      'PayoutBajaj61'
     ];
 
     const emptyFields = requiredFields.filter(field => !formData[field]?.trim());
@@ -807,7 +834,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
       };
 
       const response = await addAgent(submissionData);
-      //  console.log("Agent creation response:", response);
 
       if (response.Status === 'Error') {
         setError(response.Message || 'Failed to add agent');
@@ -919,8 +945,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               )}
             </div>
 
-
-
             <div className="form-group">
               <label htmlFor="Password" style={{
                 fontWeight: '500',
@@ -967,7 +991,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-
           </div>
 
           <div className="form-row">
@@ -1033,8 +1056,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-
-
           </div>
 
           <div className="form-row">
@@ -1102,12 +1123,9 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 <option value="Other">Other</option>
               </select>
             </div>
-
-
           </div>
 
           <div className="form-row">
-
             <div className="form-group">
               <label htmlFor="DOB"
                 style={{
@@ -1157,12 +1175,9 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-
-
           </div>
 
           <div className="form-row">
-
             <div className="form-group">
               <label htmlFor="PAN_No" style={{
                 fontWeight: '500',
@@ -1210,7 +1225,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 {panValidationLoading ? 'Validating...' : 'Validate PAN Card'}
               </button>
 
-              {/* FIXED: Use the enhanced PAN validation display component */}
               <PanValidationDisplay />
             </div>
 
@@ -1233,7 +1247,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 placeholder="Enter GST No"
               />
             </div>
-
           </div>
 
           <div className="form-row" style={{ display: 'block', width: '100%' }}>
@@ -1364,6 +1377,57 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
               )}
             </div>
 
+          </div>
+
+          <div className="form-row">
+
+            <div className="form-group">
+              <label htmlFor="PayoutBajaj" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>Payout Bajaj 0-60 Years (%)</label>
+              <input
+                type="text"
+                id="PayoutBajaj"
+                name="PayoutBajaj"
+                className={`form-control ${formErrors.PayoutBajaj ? 'error' : ''}`}
+                value={formData.PayoutBajaj}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout Bajaj Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutBajaj && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutBajaj}
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="PayoutBajaj61" style={{
+                fontWeight: '500',
+                color: '#333',
+                fontSize: '16px'
+              }}>Payout Bajaj 61-80 Years (%)</label>
+              <input
+                type="text"
+                id="PayoutBajaj61"
+                name="PayoutBajaj61"
+                className={`form-control ${formErrors.PayoutBajaj61 ? 'error' : ''}`}
+                value={formData.PayoutBajaj61}
+                onChange={handleChange}
+                autoComplete="off"
+                placeholder="Enter Payout Bajaj 61-80 Years Percentage (0-50)"
+                required
+              />
+              {formErrors.PayoutBajaj61 && (
+                <div className="error-message" style={{ marginTop: '5px', position: 'static', color: 'red', fontSize: '14px' }}>
+                  {formErrors.PayoutBajaj61}
+                </div>
+              )}
+            </div>
 
           </div>
 
@@ -1409,7 +1473,7 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 name="State"
                 className={`form-control ${formErrors.State ? 'error' : ''}`}
                 value={formData.State}
-                onChange={handleChange} // Use the existing handleChange function
+                onChange={handleChange} 
                 required
                 style={{
                   backgroundColor: '#fff',
@@ -1463,8 +1527,6 @@ const AddAgentModal = ({ isOpen, onClose, onSuccess, userId }) => {
                 </div>
               )}
             </div>
-
-
           </div>
 
           {error && <div className="alert alert-error" style={{ color: 'red', backgroundColor: '#fee', padding: '10px', borderRadius: '4px', marginBottom: '10px' }}>{error}</div>}

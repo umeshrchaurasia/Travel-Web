@@ -71,6 +71,12 @@ const BajajTravel = () => {
   const [agentcollected, setagentcollected] = useState<number | null>(null);
   const [paymentmode, setpaymentmode] = useState<string | null>(null);
 
+  // New states for the requested parameters
+  const [commission_agent, setCommissionAgent] = useState<number | null>(null);
+  const [premium_without_gst, setPremiumWithoutGst] = useState<number | null>(null);
+  const [premium_gst, setPremiumGst] = useState<number | null>(null);
+
+
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [lastApiResponse, setLastApiResponse] = useState<any>(null);
@@ -82,7 +88,7 @@ const BajajTravel = () => {
   const [Payout_Bajaj, setPayout_Bajaj] = useState<number | null>(null);
 
   const plans = [
-    { value: '50000', label: '50,000 USD' },  
+    { value: '50000', label: '50,000 USD' },
     { value: '200000', label: '200,000 USD' },
     { value: '500000', label: '500,000 USD' },
   ];
@@ -124,7 +130,7 @@ const BajajTravel = () => {
   const getNameOfPlan = () => {
     const amountMap: Record<string, string> = {
       '50000': '50K PLAN',
-      '200000 ': '2LPLAN',     
+      '200000 ': '2LPLAN',
       '500000': '5L PLAN'
     };
     const baseLabel = amountMap[formData.planAmount] || '';
@@ -177,6 +183,12 @@ const BajajTravel = () => {
         setagentcollected(parseFloat(data.agentcollected));
       }
       setpaymentmode(apiPaymentMode);
+
+      // Setting new parameters
+      setCommissionAgent(parseFloat(data.commission_agent || '0'));
+      setPremiumWithoutGst(parseFloat(data.premium_without_gst || '0'));
+      setPremiumGst(parseFloat(data.premium_gst || '0'));
+
     }
   }, [lastApiResponse]);
 
@@ -238,6 +250,9 @@ const BajajTravel = () => {
     setLastApiResponse(null);
     setPremium(null);
     setagentcollected(null);
+    setCommissionAgent(null);
+    setPremiumWithoutGst(null);
+    setPremiumGst(null);
     setError('');
 
     if (!formData.departureDate || !formData.arrivalDate || !formData.dateOfBirth || !formData.numberOfDays) {
@@ -295,11 +310,67 @@ const BajajTravel = () => {
     setPremium(null);
     setagentcollected(null);
     setpaymentmode(null);
+    setCommissionAgent(null);
+    setPremiumWithoutGst(null);
+    setPremiumGst(null);
     setSelectedOption('');
     setError('');
     setLastApiResponse(null);
     setShowEligibilityMessage(false);
   };
+
+
+  const handleWalletBajajClick = () => {
+    // Store the enriched display data in localStorage
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    // Navigate to the wallet page with the enriched state
+    navigate('/walletPage_bajaj', {
+      state: {
+        agentData: displayData,
+        walletStatus: walletStatus
+      }
+    });
+  };
+
+  const goToCOIBajaj = () => {
+    // Store the enriched display data in localStorage
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    // Navigate to the wallet page with the enriched state
+    navigate('/GenerateCOI_bajaj', {
+      state: {
+        agentData: displayData,
+        walletStatus: walletStatus
+      }
+    });
+  };
+
+
+  const gotoMISBajaj = () => {
+    //const empId = displayData.id || displayData.UId;
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+
+    if (displayData.Paymentmode === 'Upfront Commission') {
+      navigate('/TDS_Proposal_bajaj', {
+        state: {
+          empid: '',
+          agentData: displayData,
+          userType: 'Agent',
+          adminId: ''
+        }
+      });
+    } else {
+      navigate('/MIS_Proposal_bajaj', {
+        state: {
+          empid: '',
+          agentData: displayData,
+          userType: 'Agent',
+          adminId: ''
+        }
+      });
+    }
+  }
 
   const handleProceedToProposal = () => {
     const radiobtn_selectedAmount = selectedOption === 'full' ? premium : agentcollected;
@@ -321,8 +392,6 @@ const BajajTravel = () => {
         MobileNumber: displayData.MobileNumber,
         Payout_Bajaj: Payout_Bajaj,
         Paymentmode: paymentmode
-
-
       },
       travelDetails: {
         departureDate: formData.departureDate,
@@ -339,7 +408,10 @@ const BajajTravel = () => {
         agentCollection: agentcollected,
         radiobtn_selectedOption: selectedOption,
         radiobtn_selectedAmount: radiobtn_selectedAmount,
-        selectedOption: selectedOption
+        selectedOption: selectedOption,
+        commission_agent: commission_agent,
+        premium_without_gst: premium_without_gst,
+        premium_gst: premium_gst
       }
     };
 
@@ -409,15 +481,15 @@ const BajajTravel = () => {
               </div>
 
               <div className="wallet-button-container" style={{ display: 'flex', gap: '10px' }}>
-                <button className="Premium-btn" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px' }}>
-                  View COI
+                <button onClick={goToCOIBajaj} className="Premium-btn" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px' }}>
+                  Bajaj View COI
                 </button>
-                <div className="wallet-containerA" style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: '#F59E0B', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
+                <div onClick={handleWalletBajajClick} className="wallet-containerA" style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: '#F59E0B', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
                   <Wallet size={18} color="white" />
-                  <span style={{ color: 'white', fontWeight: 'bold' }}>Wallet</span>
+                  <span style={{ color: 'white', fontWeight: 'bold' }}>Bajaj Wallet</span>
                 </div>
-                <button className="Premium-btn-MIS" style={{ backgroundColor: '#2563EB', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px' }}>
-                  MIS Report
+                <button onClick={gotoMISBajaj} className="Premium-btn-MIS" style={{ backgroundColor: '#2563EB', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px' }}>
+                  Bajaj MIS Report
                 </button>
               </div>
             </div>

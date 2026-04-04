@@ -95,7 +95,7 @@ interface FormData {
   TravellerEmail: string;
   TravellerMobile: string;
   TravellerPassport: string;
-  TravellerRelation: string; 
+  TravellerRelation: string;
   TravelleranyPreExistingDisease: string;
 }
 
@@ -188,6 +188,13 @@ const TitleSelect: React.FC<{
   </div>
 );
 
+const FullScreenLoader = ({ message = "Processing, please wait..." }: { message?: string }) => (
+  <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(4px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, flexDirection: 'column' }}>
+    <div style={{ width: '50px', height: '50px', border: '5px solid #f3f3f3', borderTop: '5px solid #6c63ff', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '20px' }}></div>
+    <h3 style={{ color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>{message}</h3>
+    <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+  </div>
+);
 // --- MAIN COMPONENT ---
 const BajajTravelProposal = () => {
   const navigate = useNavigate();
@@ -234,7 +241,7 @@ const BajajTravelProposal = () => {
     TravellerGender: 'M', TravellerPassport: '', TravellerRelation: 'SELF',
     TravellerEmail: '', TravellerMobile: '',
     TravelleranyPreExistingDisease: 'No',
-   
+
 
   });
 
@@ -276,9 +283,11 @@ const BajajTravelProposal = () => {
   const validateField = (name: string, value: string) => {
     let errorMsg = '';
     switch (name) {
-      case 'ProposerMobile':
+     case 'ProposerMobile':
       case 'TravellerMobile':
-        if (value && !/^[0-9]{10}$/.test(value)) errorMsg = 'Must be exactly 10 digits';
+        if (value && !/^[6-9][0-9]{9}$/.test(value)) {
+           errorMsg = 'Must be 10 digits and start with 6, 7, 8, or 9';
+        }
         break;
       case 'ProposerEmail':
       case 'TravellerEmail':
@@ -383,6 +392,11 @@ const BajajTravelProposal = () => {
       radiobtn_selectedAmount: insDetails.radiobtn_selectedAmount || 0,
       Payout_Bajaj: agentDetails.Payout_Bajaj,
 
+      // Included new parameters here
+      commission_agent: insDetails.commission_agent || 0,
+      premium_without_gst: insDetails.premium_without_gst || 0,
+      premium_gst: insDetails.premium_gst || 0,
+
       ProposerDetails: {
         beforeTitle: formData.ProposerTitle,
         firstName: formData.ProposerFirstName,
@@ -419,8 +433,8 @@ const BajajTravelProposal = () => {
         anyPreExistingDisease: formData.TravelleranyPreExistingDisease,
       }],
       TripType: {
-        groupName: "Yes",
-        natureOfGroup: "Yes",
+        groupName: "No",
+        natureOfGroup: "No",
         typeOfTour: "No",
         multipleCity: "No"
       }
@@ -464,7 +478,7 @@ const BajajTravelProposal = () => {
       setApiError("Quote number is missing. Please recalculate premium.");
       return;
     }
-
+    setIssuing(true);
     const finalPayload = {
       ...buildPayload(),
       QuoteNo: premiumResult.pQuoteNo
@@ -480,13 +494,22 @@ const BajajTravelProposal = () => {
       days: formData.NoOfDays
     };
 
-    navigate('/BajajTravelWallet', { state: paymentData });
     sessionStorage.setItem('bajajPaymentData', JSON.stringify(paymentData));
+
+    // Optional: Add a tiny delay so the user actually sees the loader message
+    setTimeout(() => {
+      setIssuing(false);
+      navigate('/BajajTravelWallet', { state: paymentData });
+    }, 500);
   };
+
+
 
   // -- 4. UI RENDER --
   return (
     <>
+      {calculating && <FullScreenLoader message="Calculating Premium & Generating Proposal..." />}
+      {issuing && <FullScreenLoader message="Preparing Payment Gateway..." />}
       <div className="dashboard-wrapper">
         {/* HEADER */}
         <header className="top-header">
@@ -630,7 +653,7 @@ const BajajTravelProposal = () => {
                 <InputField label="Any Pre-Existing Disease" name="TravelleranyPreExistingDisease" type="select" value={formData.TravelleranyPreExistingDisease} onChange={handleInputChange} options={[{ value: 'No', label: 'No' }, { value: 'Yes', label: 'Yes' }]} />
 
               </div>
-            </div>        
+            </div>
 
             {/* ERROR DISPLAY AREA */}
             {apiError && (

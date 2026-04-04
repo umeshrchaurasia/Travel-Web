@@ -4,7 +4,7 @@ import { LogOut, Home, CreditCard, Wallet, AlertTriangle, ArrowLeftCircle, Check
 import { logout } from '../../../services/auth';
 
 import logo from '../../../../src/assets/img/TravelAssist.webp';
-import { generateInvoicePdf, generatePolicybyPolicyno_bajaj } from '../../../services/api';
+import { generateBajajInvoicePdf, generatePolicybyPolicyno_bajaj } from '../../../services/api';
 
 import './BajajTravel.css'; // Uses the same CSS for header and layout
 
@@ -54,8 +54,8 @@ const BajajTravelWallet = () => {
 
   useEffect(() => {
     // Check for navigation state or session storage
-  setpolicyNo('12-9911-0009043128-00');
-/*
+     //12-9911-0009392888-00
+
     const stateData = location.state;
     const storedString = sessionStorage.getItem('bajajPaymentData');
 
@@ -71,8 +71,12 @@ const BajajTravelWallet = () => {
       setLoading(false);
     } else {
       // If no data is found, redirect back to calculator
-      navigate('/BajajTravel');
-    }*/
+    //  navigate('/BajajTravel');
+     setpolicyNo('12-9911-0009392888-00');
+     setLoading(false);
+    }
+
+   
   }, [location, navigate]);
 
   // --- HANDLERS ---
@@ -129,14 +133,14 @@ const BajajTravelWallet = () => {
 
       // Then generate the invoice PDF
       try {
-        const invoiceResponse = await generateInvoicePdf(policyNo);
+        const invoiceResponse = await generateBajajInvoicePdf(policyNo);
 
         if (invoiceResponse?.Status === "Success") {
           console.log("Invoice generated successfully:", invoiceResponse);
           // Navigate to wallet payment page
           setProcessingPayment(false);
           // navigate('/wallet'); // Go to dashboard
-          navigate('/GenerateCOI');
+          navigate('/GenerateCOI_bajaj');
         } else {
           console.error("Failed to generate invoice:", invoiceResponse);
           setError("Failed to generate invoice. Please try again.");

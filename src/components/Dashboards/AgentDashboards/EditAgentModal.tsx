@@ -18,6 +18,8 @@ interface Agent {
     Payout?: string;
     Payout_Practo?: string;
     Payout_Ayush?: string;
+    Payout_Bajaj: string;
+    Payout_Bajaj_above61: string;
     Wallet_Amount?: string;
 }
 
@@ -26,6 +28,8 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
         Payout: '',
         Payout_Practo: '',
         Payout_Ayush: '',
+        Payout_Bajaj: '',
+        Payout_Bajaj_above61: '',
         Wallet_Amount: ''
     });
     const [loading, setLoading] = useState(false);
@@ -42,6 +46,8 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
                 Payout: agent.Payout || '0',
                 Payout_Practo: agent.Payout_Practo || '0',
                 Payout_Ayush: agent.Payout_Ayush || '0',
+                Payout_Bajaj: agent.Payout_Bajaj || '0',
+                Payout_Bajaj_above61: agent.Payout_Bajaj_above61 || '0',
                 Wallet_Amount: agent.Wallet_Amount || ''
             });
         }
@@ -146,9 +152,8 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
                                     placeholder="e.g., 10"
                                     required
                                 />
-                            </div>
-
-                            <div className="form-group" style={{ flex: 1 }}>
+                            </div>                           
+                                <div className="form-group" style={{ flex: 1 }}>
                                 <label htmlFor="Payout_Practo">Payout Practo (%)</label>
                                 <input
                                     id="Payout_Practo"
@@ -191,6 +196,36 @@ const EditAgentModal: React.FC<EditAgentModalProps> = ({ isOpen, onClose, onSucc
                                 />
                             </div>
                         </div>
+
+                         <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+                            {/* Row 2: Payout Bajaj */}
+                            <div className="form-group">
+                                <label htmlFor="Payout_Bajaj">Payout Bajaj (%)</label>
+                                <input
+                                    id="Payout_Bajaj"
+                                    name="Payout_Bajaj"
+                                    type="number"
+                                    value={formData.Payout_Bajaj}
+                                    onChange={handleChange}
+                                    placeholder="e.g., 5"
+                                    required
+                                />
+                            </div>
+
+                             <div className="form-group">
+                                <label htmlFor="Payout_Bajaj_above61">Bajaj Above 61(%)</label>
+                                <input
+                                    id="Payout_Bajaj_above61"
+                                    name="Payout_Bajaj_above61"
+                                    type="number"
+                                    value={formData.Payout_Bajaj_above61}
+                                    onChange={handleChange}
+                                    placeholder="e.g., 5"
+                                    required
+                                />
+                            </div>
+                        </div>
+
 
                         {/* Wallet Update Date Display */}
                         <div className="form-group-readonly">
