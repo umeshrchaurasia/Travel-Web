@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Ayushpay.css';
 import {
-  LogOut, CheckCircle, XCircle, Loader, Wallet, ArrowLeftCircle
+  LogOut, CheckCircle, XCircle, Loader, Wallet, ArrowLeftCircle,FileText
 } from 'lucide-react';
 
 import {
@@ -394,6 +394,26 @@ const Ayushpay: React.FC<AyushpayProps> = ({ onLogout = () => { } }) => {
     });
   };
 
+  const goToCOIayushpay = () => {
+    if (!agentData) {
+      setMessage({ text: 'Agent data is missing.', type: 'error' });
+      return;
+    }
+    
+    // Store the enriched display data in localStorage
+    // Adapted to use 'agentData' as it represents the current user state here
+    localStorage.setItem('walletData', JSON.stringify(agentData));
+
+    // Navigate to the wallet page with the enriched state
+    navigate('/GenerateCOI_Ayushpay', {
+      state: {
+        agentData: agentData,
+        // walletStatus is omitted here unless you add it to the component state, 
+        // as the GenerateCOI component mainly relies on agentData.
+      }
+    });
+  };
+
   const gotoMISAyush = () => {
     if (!agentData) {
       setMessage({ text: 'Agent data is missing.', type: 'error' });
@@ -474,6 +494,10 @@ const Ayushpay: React.FC<AyushpayProps> = ({ onLogout = () => { } }) => {
               <button className="ayush-wallet-btn-top" onClick={handleGoToWalletPage}>
                 <Wallet size={18} />
                 <span>Wallet</span>
+              </button>
+              <button className="ayush-coi-btn-top" onClick={goToCOIayushpay}>
+                <FileText size={18} />
+                <span>View COI</span>
               </button>
               <button className="ayush-mis-btn-top" onClick={gotoMISAyush}>
                 MIS Report

@@ -109,6 +109,11 @@ import MIS_Proposal_SubAgent_ByAdmin_bajaj from './components/Dashboards/MIS_Rep
 
 import TDS_Proposal_SubAgent_bajaj from './components/Dashboards/MIS_Report/TDS_Proposal_SubAgent_bajaj';
 
+import GenerateCOI_Ayushpay from './components/Dashboards/Ayushpayhealth/GenerateCOI_Ayushpay';
+
+import GenerateCOI_Practo from './components/Dashboards/Practo/GenerateCOI_Practo';
+
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -520,9 +525,21 @@ function App() {
             </ProtectedRoute>
           } />
 
-            <Route path="/TDS_Proposal_SubAgent_bajaj" element={
+          <Route path="/TDS_Proposal_SubAgent_bajaj" element={
             <ProtectedRoute>
               <TDS_Proposal_SubAgent_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/GenerateCOI_Ayushpay" element={
+            <ProtectedRoute>
+              <GenerateCOI_Ayushpay userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/GenerateCOI_Practo" element={
+            <ProtectedRoute>
+              <GenerateCOI_Practo userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 

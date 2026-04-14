@@ -858,6 +858,17 @@ export const getProposalDetailsByAgent_Practo = async (agentId, paymentStatus) =
   }
 };
 
+export const getProposalByPassport_Practo = async (agentId) => {
+  try {
+    const response = await api.post('/getProposalByPassport_Practo', {
+      agentId: agentId // Pass the agent ID correctly in the body
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching Practo proposal:', error);
+    throw error;
+  }
+};
 //AyushPay
 
 
@@ -1100,6 +1111,18 @@ export const getBatchPaymentsByStatus_AyushPay = async (status) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching batch payments:', error);
+    throw error;
+  }
+};
+
+export const getProposalByPassport_AyushPay = async (passportNo) => {
+  try {
+    const response = await api.post('/getProposalByPassport_AyushPay', {
+      passportpassportno: passportNo
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal:', error);
     throw error;
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download } from "lucide-react";
+import { Search, LogOut, Home, Download ,ArrowLeftCircle} from "lucide-react";
 import { logout } from '../../../services/auth';
 import { getProposalMIS_Practo } from "../../../services/api";
 
@@ -292,6 +292,10 @@ const MIS_Proposal_Practo: React.FC = () => {
     const goBack = () => {
         navigate('/dashboard');
     };
+    
+    const goBackToPracto = () => {
+        navigate('/Practo', { state: { agentData: state.agentData } });
+    };
 
     const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
@@ -331,6 +335,37 @@ const MIS_Proposal_Practo: React.FC = () => {
                 </div>
             </header>
             <main className="coi-main-content">
+                 <div style={{ marginBottom: '15px', display: 'flex', width: '100%' }}>
+                    <button
+                        onClick={goBackToPracto}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.6rem 1.2rem',
+                            backgroundColor: '#e0e7ff',
+                            color: '#3b82f6',
+                            border: '1px solid #bfdbfe',
+                            borderRadius: '0.375rem',
+                            fontWeight: 600,
+                            fontSize: '0.9rem',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#bfdbfe';
+                            e.currentTarget.style.color = '#2563eb';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#e0e7ff';
+                            e.currentTarget.style.color = '#3b82f6';
+                        }}
+                    >
+                        <ArrowLeftCircle size={18} />
+                        <span>Back To Practo</span>
+                    </button>
+                </div>
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} MIS Reports Details</h2>

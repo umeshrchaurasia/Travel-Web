@@ -413,3 +413,23 @@
   color: #6b7280;
   margin-top: 0.5rem;
 }
+
+.ayush-coi-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #8b5cf6; /* Purple to distinguish from the blue MIS button */
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ayush-coi-btn-top:hover {
+  background-color: #7c3aed;
+}

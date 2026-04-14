@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, LogOut, Home, Download } from "lucide-react";
+import { Search, LogOut, Home, Download, ArrowLeftCircle  } from "lucide-react";
 import { logout } from '../../../services/auth';
 import { getProposalMIS_AyushPay } from "../../../services/api";
 
@@ -206,8 +206,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
             'Passenger Mobile No',
             'Policy Subscription Date',
             'Pre Tax Amount',
-            'Post Tax Amount',
-            'After Tax Amount',
+            'Post Tax Amount',           
             'Agent ID', // Using AgentId from the data
             'Agent Name',
             'Agent Mobile No',
@@ -235,7 +234,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                 formatDate(item.Policy_Generation_Date),
                 item.Assiatance_charges_PreTaxAmount || '',
                 item.Assiatance_charges_PostTaxAmount || '',
-                item.Assiatance_charges_AfterTaxAmount || '',
+                
                 item.AgentId || '',
                 item.AgentName || '',
                 item.Agent_Mobileno || '',
@@ -296,6 +295,10 @@ const MIS_Proposal_AyushPay: React.FC = () => {
         navigate('/dashboard');
     };
 
+    const goBackToAyushPay = () => {
+        navigate('/Ayushpay', { state: { agentData: state.agentData } });
+    };
+
     const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value);
 
@@ -334,6 +337,37 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                 </div>
             </header>
             <main className="coi-main-content">
+                                <div style={{ marginBottom: '15px', display: 'flex', width: '100%' }}>
+                    <button
+                        onClick={goBackToAyushPay}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.6rem 1.2rem',
+                            backgroundColor: '#e0e7ff',
+                            color: '#3b82f6',
+                            border: '1px solid #bfdbfe',
+                            borderRadius: '0.375rem',
+                            fontWeight: 600,
+                            fontSize: '0.9rem',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#bfdbfe';
+                            e.currentTarget.style.color = '#2563eb';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#e0e7ff';
+                            e.currentTarget.style.color = '#3b82f6';
+                        }}
+                    >
+                        <ArrowLeftCircle size={18} />
+                        <span>Back To AyushPay</span>
+                    </button>
+                </div>
                 <div className="coi-card">
                     <div className="coi-card-header">
                         <h2 className="coi-card-title">{userType} MIS Reports Details</h2>
@@ -510,7 +544,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                             <th className="coi-table-header">Policy Subscription Date</th>
                                             <th className="coi-table-header">Pre Tax Amount</th>
                                             <th className="coi-table-header">Post Tax Amount</th>
-                                              <th className="coi-table-header">After Tax Amount</th>
+                                            
                                             <th className="coi-table-header">Agent ID</th>
                                             <th className="coi-table-header">Agent Name</th>
                                             <th className="coi-table-header">Agent Mobile No</th>
@@ -537,7 +571,7 @@ const MIS_Proposal_AyushPay: React.FC = () => {
                                                 <td className="coi-table-cell">{formatDate(proposal.Policy_Generation_Date)}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount || ''}</td>
                                                 <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
-                                                   <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_AfterTaxAmount || ''}</td>
+                                                
                                                 <td className="coi-table-cell">{proposal.AgentId || ''}</td>
                                                 <td className="coi-table-cell">{proposal.AgentName || ''}</td>
                                                 <td className="coi-table-cell">{proposal.Agent_Mobileno || ''}</td>

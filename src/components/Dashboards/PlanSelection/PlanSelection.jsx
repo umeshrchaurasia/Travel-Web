@@ -25,7 +25,6 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   const [displayData_sel, setDisplayData_sel] = useState(userData);
 
-
   const [loading, setLoading] = useState(true);
 
   const [view, setView] = useState('selection'); // 'selection' or 'travel'
@@ -105,8 +104,6 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
 
   };
 
-
-
   const handleAgentDashboardClick = () => {
     navigate('/AgentDashboard', { state: { agentData: displayData_sel } });
   };
@@ -175,12 +172,10 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
     return <div className="loading-container"><p>No agent data found. Please login again.</p></div>;
   }
 
-  // --- NEW LOGIC FOR CONDITIONAL RENDERING ---
-  //const allowedAgentIds = [28, 23, 12];
-  //const currentAgentId = displayData_sel.AgentId ? parseInt(displayData_sel.AgentId) : null;
-  // const showPractoCard = currentAgentId && allowedAgentIds.includes(currentAgentId);
-  // --- END NEW LOGIC ---
-  const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0' || MainAgent === 'null' || MainAgent === 'undefined';;
+  const isAddSubAgentButtonVisible = !MainAgent || MainAgent === '0' || MainAgent === 'null' || MainAgent === 'undefined';
+  
+  // Safely extract the current AgentId to a number for our checks
+  const currentAgentId = Number(displayData_sel.AgentId || displayData_sel.agentId);
 
   return (
     <div style={commonStyles.container}>
@@ -364,8 +359,7 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
               </div>
 
                 {/* Card 2: Bajaj Traveller */}
-
-               {[42,12, 28, 29].includes(Number(displayData?.AgentId)) && (           
+               {[42, 12, 28, 29].includes(currentAgentId) && (           
               <div className="selection-card" onClick={handleBajajTravelClick}>
 
                 <Shield size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }} />
@@ -383,7 +377,10 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
               <div className="customer-selection-card practo-hover-card" onClick={handlePractoClick}>
                 <div style={commonStyles.leftSection}><img src={logowellness} alt="Logo" style={{ maxHeight: '60px' }} /></div>
                 <h3>Practo Subscription</h3>
-                <p style={{ fontWeight: 'bold', color: '#6c63ff' }}>(Rs. 699 + 18% GST)</p>
+                {/* Conditionally render price based on currentAgentId */}
+                <p style={{ fontWeight: 'bold', color: '#6c63ff' }}>
+                  {currentAgentId === 59 ? '(Rs. 220 + 18% GST)' : '(Rs. 699 + 18% GST)'}
+                </p>
                 <div style={benefitListStyle}>
                   <p>✓ Covers up to 2 adults and 1 kid under one subscription</p>
                   <p>✓ Unlimited chat, audio, and video consultations with doctors</p>
@@ -396,37 +393,33 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
                 </button>
               </div>
 
-
-
               {/* Card 2: AyushPay Health */}
+              {/* Hide AyushPay Health completely if agent ID is 28 */}
+              {currentAgentId !== 59 && (
+                <div className="customer-selection-card ayush-hover-card" onClick={handleAyushPayHealthClick}>
+                  <div style={commonStyles.leftSection}><img src={logowellness} alt="Logo" style={{ maxHeight: '60px' }} /></div>
+                  <h3>Medical Emergency Landing</h3>
+                  <p style={{ fontWeight: 'bold', color: '#ec4899' }}>(Rs. 499 + 18% GST)</p>
 
-              {/* {[7,12, 28, 29].includes(Number(displayData?.AgentId)) && ( code//)}*/}
+                  <div style={benefitListStyle}>
+                    <p>✓ Covers up to 2 adults under one subscription</p>
+                    <p>✓ Unlimited video consultations with doctors (General Physicians only)</p>
+                    <p>✓ No, in-person OPD consultation available</p>
+                    <p>✓ Discount on diagnostic tests and medicines up to 25%</p>
+                    <p>✓ 0% Interest Medical Loans up to 1 year - Max ₹15 Lakhs.Subject to min CIBIL score of rs.650+</p>
+                    <p>✓ Max 10% Cashback on Hospital Treatment cost</p>
+                    <p>✓ ₹500 per day Hospital Admission Allowance (Max 3 days)</p>
+                    <p>✓ ₹5,00 Health Wallet Credit on the above subscription</p>
+                  </div>
 
-              <div className="customer-selection-card ayush-hover-card" onClick={handleAyushPayHealthClick}>
-                <div style={commonStyles.leftSection}><img src={logowellness} alt="Logo" style={{ maxHeight: '60px' }} /></div>
-                <h3>Medical Emergency Landing</h3>
-                <p style={{ fontWeight: 'bold', color: '#ec4899' }}>(Rs. 499 + 18% GST)</p>
-
-                <div style={benefitListStyle}>
-                  <p>✓ Covers up to 2 adults under one subscription</p>
-                  <p>✓ Unlimited video consultations with doctors (General Physicians only)</p>
-                  <p>✓ No, in-person OPD consultation available</p>
-                  <p>✓ Discount on diagnostic tests and medicines up to 25%</p>
-                  <p>✓ 0% Interest Medical Loans up to 1 year - Max ₹15 Lakhs.Subject to min CIBIL score of rs.650+</p>
-                  <p>✓ Max 10% Cashback on Hospital Treatment cost</p>
-                  <p>✓ ₹500 per day Hospital Admission Allowance (Max 3 days)</p>
-                  <p>✓ ₹5,00 Health Wallet Credit on the above subscription</p>
+                  <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#ec4899' }}>
+                    Click Here <ArrowRight size={18} className="inline ml-2" />
+                  </button>
+                  <footer style={{ marginTop: '1.5rem' }}>
+                    <p>  <img src={ayushlogo} style={{ maxHeight: '20px' }} /> powered by Ayushpay</p>
+                  </footer>
                 </div>
-
-                <button className="ayush-premium-btn" style={{ width: '100%', marginTop: '1.5rem', backgroundColor: '#ec4899' }}>
-                  Click Here <ArrowRight size={18} className="inline ml-2" />
-                </button>
-                <footer style={{ marginTop: '1.5rem' }}>
-                  <p>  <img src={ayushlogo} style={{ maxHeight: '20px' }} /> powered by Ayushpay</p>
-                </footer>
-              </div>
-
-
+              )}
             </>
           )}
 

@@ -185,7 +185,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
             'Policy Subscription Date',
             'Pre Tax Amount',
             'Post Tax Amount',
-            'After Tax Amount',
+            'Collection From Agent',
             'Agent ID', // Using AgentId from the data
             'Agent Name',
             'Agent Mobile No',
@@ -193,7 +193,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
             'Payment Type',
             'Discount/Comm%',      
             
-            'Premium Inclusive GST',
+            'GST Amount',
             'Inclusive TDS',
             'Payment Received',
             'Ayush Fees'
@@ -473,7 +473,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
                                             <th className="coi-table-header">Policy Subscription Date</th>
                                             <th className="coi-table-header">Pre Tax Amount</th>
                                             <th className="coi-table-header">Post Tax Amount</th>
-                                            <th className="coi-table-header">After Tax Amount</th>
+                                            <th className="coi-table-header">Collection From Agent</th>
                                             <th className="coi-table-header">Agent ID</th>
                                             <th className="coi-table-header">Agent Name</th>
                                             <th className="coi-table-header">Agent Mobile No</th>
@@ -483,7 +483,7 @@ const MIS_Proposal_Admin_AyushPay: React.FC = () => {
                                           
                                            
 
-                                            <th className="coi-table-header">Premium Inclusive GST</th>
+                                            <th className="coi-table-header">GST Amount</th>
                                             <th className="coi-table-header">Inclusive TDS</th>
                                             <th className="coi-table-header">Payment Received</th>
                                             <th className="coi-table-header">Ayush Fees</th>

@@ -1,5 +1,6 @@
-.main-content {
+/* Practo.css */
 
+.main-content {
   padding: 2rem;
   max-width: 1280px;
   margin-left: auto;
@@ -7,177 +8,139 @@
   width: 100%;
 }
 
-.containerpractoright {
-  position: absolute;
-  top: 7.5rem;
-  /* Adjust top margin for spacing */
-  right: 3rem;
-  /* Adjust right margin for spacing */
-
-  display: flex;
-  align-items: center;
-}
-
-.back-to-selection-btn1 {
-  /* Position it absolutely within the .user-info-card */
-  position: absolute;
-  top: 7.5rem;
-  /* Adjust top margin for spacing */
-  /* Adjust right margin for spacing */
-  left: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  /* Space between icon and text */
-  padding: 0.6rem 1.2rem;
-  /* Comfortable padding */
-
-  background-color: #e0e7ff;
-  /* Light blue background, predefined color */
-  color: #3b82f6;
-  /* A more distinct blue for text */
-  border: 1px solid #bfdbfe;
-  /* A slightly darker border */
-  border-radius: 0.375rem;
-  /* Rounded corners */
-  font-weight: 600;
-  /* Bolder text */
-  font-size: 0.9rem;
-  /* Slightly smaller font size */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  /* Smooth transitions */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* Subtle shadow */
-}
-
-
-.back-to-selection-btn1:hover {
-  background-color: #bfdbfe;
-  /* Darker blue on hover */
-  color: #2563eb;
-  /* Darker text */
-  border-color: #93c5fd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* More prominent shadow on hover */
-  transform: translateY(-1px);
-  /* Slight lift effect */
-}
-
-.back-to-selection-btn1:active {
-  background-color: #93c5fd;
-  /* Even darker on active */
-  color: #1e40af;
-  border-color: #60a5fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  /* Recessed shadow on active */
-  transform: translateY(0);
-  /* Return to original position */
-}
-
-/* Adjust the icon color for consistency with the new button color */
-.back-to-selection-btn1 svg {
-  color: #3b82f6;
-  /* Matching the button text color */
-}
-
-.back-to-selection-btn1:hover svg {
-  color: #2563eb;
-}
-
-
-
-.back-to-selection-btn2 {
-  /* Position it absolutely within the .user-info-card */
-  position: absolute;
-  top: 8.5rem;
-  /* Adjust top margin for spacing */
-  /* Adjust right margin for spacing */
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  /* Space between icon and text */
-  padding: 0.6rem 1.2rem;
-  /* Comfortable padding */
-
-  background-color: #e0e7ff;
-  /* Light blue background, predefined color */
-  color: #3b82f6;
-  /* A more distinct blue for text */
-  border: 1px solid #bfdbfe;
-  /* A slightly darker border */
-  border-radius: 0.375rem;
-  /* Rounded corners */
-  font-weight: 600;
-  /* Bolder text */
-  font-size: 0.9rem;
-  /* Slightly smaller font size */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  /* Smooth transitions */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* Subtle shadow */
-}
-
-
-.back-to-selection-btn2:hover {
-  background-color: #bfdbfe;
-  /* Darker blue on hover */
-  color: #2563eb;
-  /* Darker text */
-  border-color: #93c5fd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* More prominent shadow on hover */
-  transform: translateY(-1px);
-  /* Slight lift effect */
-}
-
-.back-to-selection-btn2:active {
-  background-color: #93c5fd;
-  /* Even darker on active */
-  color: #1e40af;
-  border-color: #60a5fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  /* Recessed shadow on active */
-  transform: translateY(0);
-  /* Return to original position */
-}
-
-/* Adjust the icon color for consistency with the new button color */
-.back-to-selection-btn2 svg {
-  color: #3b82f6;
-  /* Matching the button text color */
-}
-
-.back-to-selection-btn2:hover svg {
-  color: #2563eb;
-}
-
-
-
+/* Update the container to stack the buttons and card */
 .practo-page-container {
   min-height: 100vh;
   display: flex;
+  flex-direction: column; /* Stack vertically */
   align-items: center;
   justify-content: center;
   background-color: #f5f6fa;
   padding: 2rem;
   font-family: 'Poppins', sans-serif;
-
 }
 
+/* Ensure the card has a consistent width */
 .practo-card {
   background: white;
   border-radius: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 2.5rem;
-  max-width: 600px;
+  max-width: 900px; /* Matched to Ayushpay */
   width: 100%;
   text-align: center;
   border-top: 5px solid #6c63ff;
 }
 
+/* --- NEW ACTION BUTTONS ABOVE CARD --- */
+.practo-actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 900px; /* Match card max-width */
+  margin-bottom: 1rem;
+}
+
+.practo-actions-right {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .practo-actions-wrapper {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .practo-actions-right {
+    justify-content: space-between;
+  }
+}
+
+.practo-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #e0e7ff;
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.practo-back-btn:hover {
+  background-color: #bfdbfe;
+  color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.practo-wallet-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.practo-wallet-btn-top:hover {
+  background-color: #d97706;
+}
+
+.practo-coi-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #8b5cf6; 
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.practo-coi-btn-top:hover {
+  background-color: #7c3aed;
+}
+
+.practo-mis-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #2563eb; 
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.practo-mis-btn-top:hover {
+  background-color: #1d4ed8;
+}
+
+/* --- TEXT & FORM STYLES --- */
 .practo-header {
   font-size: 2rem;
   font-weight: 700;
@@ -189,10 +152,8 @@
   font-size: 2rem;
   font-weight: 700;
   color: #ef4444;
-  /* Red color for error */
   margin-bottom: 1rem;
 }
-
 
 .practo-text {
   font-size: 1.1rem;
@@ -217,7 +178,6 @@
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
-
 }
 
 .practo-agent-info strong {
@@ -278,12 +238,12 @@
   background-color: #5a52d9;
 }
 
-
+/* --- PAYMENT ACTION BUTTONS --- */
 .Premium-btn {
   padding: 0.5rem 1.5rem;
   background-color: #059669;
   color: white;
-  border: 'none';
+  border: none;
   border-radius: 0.375rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -299,13 +259,11 @@
   cursor: not-allowed;
 }
 
-
-
 .Premium-btn-Wallet {
   padding: 0.5rem 1.5rem;
   background-color: #EAB308;
   color: white;
-  border: 'none';
+  border: none;
   border-radius: 0.375rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -321,8 +279,6 @@
   cursor: not-allowed;
 }
 
-
-/* Button Styles */
 .apply-btn-emp {
   padding: 0.5rem 1.5rem;
   background-color: #ef4444;
@@ -343,9 +299,7 @@
   cursor: not-allowed;
 }
 
-
-
-/* Footer Actions for Back Button */
+/* --- UTILITIES --- */
 .footer-actions {
   margin-top: 2rem;
   padding-top: 1.5rem;
@@ -398,7 +352,6 @@
   justify-content: center;
   padding: 0.75rem 2rem;
   background-color: #2563eb;
-  /* A nice blue color */
   color: white;
   text-decoration: none;
   border-radius: 0.375rem;
@@ -431,7 +384,6 @@
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }

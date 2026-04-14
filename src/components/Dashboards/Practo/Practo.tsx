@@ -3,7 +3,7 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import './Practo.css';
 import {
   UserCircle, Mail, BadgeCheck, LogOut, UserPlus, RefreshCw, Home, Upload, CheckCircle, X,
-  Wallet, CreditCard, ArrowLeftCircle, XCircle, Loader
+  Wallet, CreditCard, ArrowLeftCircle, XCircle, Loader, FileText
 } from 'lucide-react';
 
 import {
@@ -121,8 +121,6 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
   }, [agentData?.AgentId]);
 
 
-
-
   // Secondary useEffect: Sets payment state whenever new premium data is fetched
   useEffect(() => {
     if (lastApiResponse && lastApiResponse.MasterData) {
@@ -190,6 +188,22 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
     navigate('/WalletPagePracto');
   };
 
+  const goToCOIPracto = () => {
+    if (!agentData) {
+      setMessage({ text: 'Agent data is missing.', type: 'error' });
+      return;
+    }
+    
+    // Store the enriched display data in localStorage
+    localStorage.setItem('walletData', JSON.stringify(agentData));
+
+    // Navigate to the Generate COI page for Practo
+    navigate('/GenerateCOI_Practo', {
+      state: {
+        agentData: agentData,
+      }
+    });
+  };
 
   const gotoMISPracto = () => {
     if (!agentData) {
@@ -575,8 +589,32 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
         </div>
       </header>
 
-      <main className="main-content">
+     <main className="main-content">
         <div className="practo-page-container">
+
+          {/* TOP ACTIONS - OUTSIDE AND ABOVE CARD (Matching Ayushpay) */}
+          <div className="practo-actions-wrapper">
+            <button onClick={handleGoToPlanSelection} className="practo-back-btn">
+              <ArrowLeftCircle size={18} />
+              <span>Back To Plan Selection</span>
+            </button>
+
+            <div className="practo-actions-right">
+              <button className="practo-wallet-btn-top" onClick={handleGoToWalletPagePracto}>
+                <Wallet size={18} />
+                <span>Wallet</span>
+              </button>
+              <button className="practo-coi-btn-top" onClick={goToCOIPracto}>
+                <FileText size={18} />
+                <span>View COI</span>
+              </button>
+              <button className="practo-mis-btn-top" onClick={gotoMISPracto}>
+                MIS Report
+              </button>
+            </div>
+          </div>
+
+          {/* MAIN CARD */}
           <div className="practo-card">
             <h1 className="practo-header">Welcome to Practo</h1>
             <p className="practo-text">Please input the below details.</p>
@@ -679,31 +717,6 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
               </div>
             )}
 
-            <div className="containerpractoleft">
-              <button onClick={handleGoToPlanSelection} className="back-to-selection-btn1">
-                <ArrowLeftCircle size={18} />
-                <span>Back To Plan Selection</span>
-              </button>
-            </div>
-
-
-            <div className="containerpractoright">
-
-
-
-              <div style={{ marginRight: '10px', padding: '12px' }} className="wallet-containerA" onClick={handleGoToWalletPagePracto}>
-                <div className="wallet-icon-wrapper">
-                  <Wallet className="wallet-iconA" />
-                </div>
-                <span className="wallet-textA">Wallet</span>
-              </div>
-              <button onClick={gotoMISPracto} className='Premium-btn-MIS' >
-                MIS Report
-              </button>
-            </div>
-
-
-
             <div style={{ padding: '20px', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '20px' }}>
               <div className="info-item" style={{ paddingBottom: '10px' }}>
                 <strong>Wallet Amount:</strong>
@@ -756,7 +769,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 {(selectedOption === 'full' || selectedOption === 'discount') && agentcollected !== null && (
                   <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#fef2f2', border: '2px solid #ef4444', transition: 'all 0.3s ease' }}>
                     <span style={{ fontSize: '18px', fontWeight: '600', color: '#b91c1c' }}>
-                      To be collected from Agent<br />
+                      To be collected from Agent<br />
                       <b>₹{agentcollected?.toFixed(0)}</b>
                     </span>
                   </div>
@@ -764,7 +777,7 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 {selectedOption === 'Upfront' && agentcollected !== null && (
                   <div style={{ padding: '15px 25px', borderRadius: '8px', backgroundColor: '#f5f3ff', border: '2px solid #7c3aed', transition: 'all 0.3s ease' }}>
                     <span style={{ fontSize: '18px', fontWeight: '600', color: '#6d28d9' }}>
-                      To be collected from Agent<br />
+                      To be collected from Agent<br />
                       <b>₹{agentcollected?.toFixed(0)}</b>
                     </span>
                   </div>
@@ -780,12 +793,9 @@ const Practo: React.FC<PractoProps> = ({ onLogout = () => { } }) => {
                 <button className='apply-btn-emp' type="button" onClick={handleCancel}>
                   Cancel
                 </button>
-
               </div>
 
-
             </div>
-
           </div>
         </div>
       </main>
