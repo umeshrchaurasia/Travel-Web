@@ -108,6 +108,7 @@ const BajajTravelWallet = () => {
 
       try {
         // Call the generatePolicybyPolicyno API function from api.js
+      
         const generatePolicyResponse = await generatePolicybyPolicyno_bajaj({
           Policyno: policyNo
         });
@@ -133,6 +134,9 @@ const BajajTravelWallet = () => {
 
       // Then generate the invoice PDF
       try {
+
+              console.log("[UI] Sending Calculate Payload:", JSON.stringify(policyNo));
+
         const invoiceResponse = await generateBajajInvoicePdf(policyNo);
 
         if (invoiceResponse?.Status === "Success") {

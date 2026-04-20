@@ -283,10 +283,10 @@ const BajajTravelProposal = () => {
   const validateField = (name: string, value: string) => {
     let errorMsg = '';
     switch (name) {
-     case 'ProposerMobile':
+      case 'ProposerMobile':
       case 'TravellerMobile':
         if (value && !/^[6-9][0-9]{9}$/.test(value)) {
-           errorMsg = 'Must be 10 digits and start with 6, 7, 8, or 9';
+          errorMsg = 'Must be 10 digits and start with 6, 7, 8, or 9';
         }
         break;
       case 'ProposerEmail':
@@ -452,7 +452,8 @@ const BajajTravelProposal = () => {
 
     try {
       const payload = buildPayload();
-      console.log("[UI] Sending Calculate Payload:", payload);
+
+      console.log("[UI] Sending Calculate Payload:", JSON.stringify(payload));
 
       const response = await saveMasterPlan_calc(payload);
       console.log("[UI] Received Response:", response);
