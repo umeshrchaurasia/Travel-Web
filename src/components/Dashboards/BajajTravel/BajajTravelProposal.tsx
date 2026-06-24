@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../services/auth';
-import { saveMasterPlan_calc } from '../../../services/api';
+import { saveMasterPlan_calc, Getbajajpincode } from '../../../services/api';
 import './BajajTravel.css';
 import logo from '../../../../src/assets/img/TravelAssist.webp';
 
@@ -226,10 +226,10 @@ const BajajTravelProposal = () => {
   const [premiumResult, setPremiumResult] = useState<PremiumResult | null>(null);
   const [policyResult, setPolicyResult] = useState<PolicyResult | null>(null);
   const [proposalData, setProposalData] = useState<any>(null);
-
+  const [isSameAsProposer, setIsSameAsProposer] = useState<boolean>(false);
   // Form State
   const [formData, setFormData] = useState<FormData>({
-    StartDate: '', EndDate: '', NoOfDays: '', Plan: 'TPHGLD',
+    StartDate: '', EndDate: '', NoOfDays: '', Plan: '',
     GeographicalCover: 'Worldwide Including USA and Canada', CountryName: '',
     ProposerTitle: 'Mr', ProposerFirstName: '', ProposerMiddleName: '', ProposerLastName: '', ProposerDOB: '',
     ProposerEmail: '', ProposerMobile: '', ProposerAddress: '', ProposerCity: '',
@@ -269,7 +269,7 @@ const BajajTravelProposal = () => {
         StartDate: parsedData.travelDetails.departureDate,
         EndDate: parsedData.travelDetails.arrivalDate,
         NoOfDays: parsedData.travelDetails.numberOfDays,
-        Plan: 'TPHGLD',
+        Plan: parsedData.insuranceDetails.planCode || 'TPHGLD' || parsedData.travelDetails.plan,
         GeographicalCover: parsedData.travelDetails.geographicalCover === 'INCL'
           ? 'Worldwide Including USA and Canada'
           : 'Worldwide Excluding USA and Canada',
@@ -324,6 +324,33 @@ const BajajTravelProposal = () => {
     setApiError('');
     if (premiumResult) setPremiumResult(null);
     if (policyResult) setPolicyResult(null);
+  };
+
+  const handleSameAsProposerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setIsSameAsProposer(checked);
+    if (checked) {
+      setFormData(prev => ({
+        ...prev,
+        TravellerTitle: prev.ProposerTitle,
+        TravellerFirstName: prev.ProposerFirstName,
+        TravellerMiddleName: prev.ProposerMiddleName,
+        TravellerLastName: prev.ProposerLastName,
+        TravellerDOB: prev.ProposerDOB,
+        TravellerGender: prev.ProposerGender,
+        TravellerMobile: prev.ProposerMobile,
+        TravellerEmail: prev.ProposerEmail,
+        TravellerPassport: prev.ProposerPassport,
+        TravellerRelation: 'SELF'
+      }));
+
+      setErrors(prev => ({
+        ...prev,
+        TravellerMobile: '',
+        TravellerEmail: '',
+        TravellerPassport: ''
+      }));
+    }
   };
 
   const handleLogout = () => {
@@ -578,8 +605,8 @@ const BajajTravelProposal = () => {
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
 
-                <InputField label="Start Date" name="StartDate" type="date" value={formData.StartDate} onChange={handleInputChange} required />
-                <InputField label="End Date" name="EndDate" type="date" value={formData.EndDate} onChange={handleInputChange} required />
+                <InputField label="Start Date" name="StartDate" type="date" value={formData.StartDate} onChange={handleInputChange} required disabled />
+                <InputField label="End Date" name="EndDate" type="date" value={formData.EndDate} onChange={handleInputChange} required disabled />
                 <InputField label="Duration (Days)" name="NoOfDays" value={formData.NoOfDays} onChange={handleInputChange} disabled />
                 <InputField label="Country Visiting" name="CountryName" value={formData.CountryName} onChange={handleInputChange} required />
                 <InputField label="Plan" name="Plan" value={formData.Plan} onChange={handleInputChange} disabled />
@@ -607,9 +634,10 @@ const BajajTravelProposal = () => {
                 <InputField label="Passport No" name="ProposerPassport" value={formData.ProposerPassport} onChange={handleInputChange} error={errors.ProposerPassport} />
 
                 <InputField label="Address" name="ProposerAddress" value={formData.ProposerAddress} onChange={handleInputChange} />
-                <InputField label="City" name="ProposerCity" value={formData.ProposerCity} onChange={handleInputChange} />
-                <InputField label="State" name="ProposerState" type="select" value={formData.ProposerState} onChange={handleInputChange} required options={[{ value: '', label: 'Select State' }, ...INDIAN_STATES]} />
                 <InputField label="Pincode" name="ProposerPincode" value={formData.ProposerPincode} onChange={handleInputChange} error={errors.ProposerPincode} />
+                <InputField label="City" name="ProposerCity" value={formData.ProposerCity} onChange={handleInputChange} />
+
+                <InputField label="State" name="ProposerState" type="select" value={formData.ProposerState} onChange={handleInputChange} required options={[{ value: '', label: 'Select State' }, ...INDIAN_STATES]} />
 
                 {/* GSTIN Default Read Only */}
                 <InputField label="GSTIN Number" name="ProposerGSTIN" value={formData.ProposerGSTIN} onChange={handleInputChange} disabled={true} />
@@ -631,9 +659,23 @@ const BajajTravelProposal = () => {
 
             {/* 3. Traveller Details Section */}
             <div style={{ marginBottom: '40px' }}>
-              <h4 style={{ color: '#6c63ff', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '18px', borderBottom: '2px solid #f3f4f6', paddingBottom: '10px' }}>
-                <User size={20} /> Traveller Details
-              </h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #f3f4f6', paddingBottom: '10px', marginBottom: '20px' }}>
+                <h4 style={{ color: '#6c63ff', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '18px', borderBottom: '2px solid #f3f4f6', paddingBottom: '10px' }}>
+                  <User size={20} /> Traveller Details
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#1f2937' }}>
+                    <input
+                      type="checkbox"
+                      checked={isSameAsProposer}
+                      onChange={handleSameAsProposerChange}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    Same as Proposer
+                  </label>
+                </h4>
+
+
+              </div>
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
                 <TitleSelect
                   name="TravellerTitle"
@@ -644,8 +686,8 @@ const BajajTravelProposal = () => {
                 <InputField label="Last Name" name="TravellerLastName" value={formData.TravellerLastName} onChange={handleInputChange} />
                 <InputField label="Date of Birth" name="TravellerDOB" type="date" value={formData.TravellerDOB} onChange={handleInputChange} required />
 
-                <InputField label="Mobile" name="TravellerMobile" value={formData.TravellerMobile} onChange={handleInputChange} required error={errors.ProposerMobile} />
-                <InputField label="Email" name="TravellerEmail" type="email" value={formData.TravellerEmail} onChange={handleInputChange} required error={errors.ProposerEmail} />
+                <InputField label="Mobile" name="TravellerMobile" value={formData.TravellerMobile} onChange={handleInputChange} required error={errors.TravellerMobile} />
+                <InputField label="Email" name="TravellerEmail" type="email" value={formData.TravellerEmail} onChange={handleInputChange} required error={errors.TravellerEmail} />
 
                 <InputField label="Passport No" name="TravellerPassport" value={formData.TravellerPassport} onChange={handleInputChange} required error={errors.TravellerPassport} />
                 <InputField label="Gender" name="TravellerGender" type="select" value={formData.TravellerGender} onChange={handleInputChange} options={[{ value: 'M', label: 'Male' }, { value: 'F', label: 'Female' }]} />
@@ -688,13 +730,13 @@ const BajajTravelProposal = () => {
                     <p style={{ margin: '0', fontSize: '14px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Policy Number</p>
                     <p style={{ margin: '10px 0 0', fontSize: '20px', fontWeight: 'bold', color: '#374151' }}>{premiumResult.PolicyNo}</p>
                   </div>
-
+                  {/*
                   <div style={{ background: '#ecfdf5', padding: '20px', borderRadius: '8px', border: '2px solid #10b981', textAlign: 'center', minWidth: '220px' }}>
                     <p style={{ margin: '0', fontSize: '14px', color: '#047857', textTransform: 'uppercase', letterSpacing: '1px' }}>Final Premium (Incl. GST)</p>
                     <p style={{ margin: '10px 0 0', fontSize: '28px', fontWeight: 'bold', color: '#059669' }}>
-                      ₹ {premiumResult.FinalPremium}
+                      ₹ {premiumResult.FinalPremium}  
                     </p>
-                  </div>
+                  </div>*/}
                 </div>
 
                 <div style={{ marginTop: '40px', textAlign: 'center', display: 'flex', gap: '15px', justifyContent: 'center' }}>

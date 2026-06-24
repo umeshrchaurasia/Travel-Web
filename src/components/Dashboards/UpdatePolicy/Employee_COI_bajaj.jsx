@@ -9,7 +9,7 @@ import { logout } from '../../../services/auth';
 
 import {
     getProposalDetailsByEmployee_bajaj, PDF_BASE_URL,
-    getPolicyDetailsbyPolicyno_bajaj, cancelpolicy_bajaj
+    getPolicyDetailsbyPolicyno_bajaj, cancelpolicy_bajaj,downloadBajajLivePdf
 } from '../../../services/api';
 import logo from '../../../../src/assets/img/TravelAssist.webp';
 import './generatecoi.css';
@@ -360,6 +360,34 @@ const Employee_COI_bajaj = () => {
         }
     };
 
+    const handleDownloadBajajPdf = async (policyNo) => {
+        if(!policyNo) {
+            alert("No Policy Number found.");
+            return;
+        }
+        
+        try {
+            setLoading(true);
+            setError('');
+            
+            const response = await downloadBajajLivePdf(policyNo);
+            
+            if (response.Status === 'Success') {
+                // Open the downloaded PDF in a new tab
+                window.open(`${PDF_BASE_URL}${response.MasterData.dbUrl}`, '_blank');
+                // Refresh the table to reflect the new file URL
+                fetchEmployeeProposalsWithDates(empId, startDate, endDate);
+            } else {
+                setError(response.Message || 'Failed to download Bajaj PDF.');
+            }
+        } catch (err) {
+            console.error('Error downloading Bajaj PDF:', err);
+            setError('An error occurred while downloading the Bajaj PDF.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Pagination handlers
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const goToPreviousPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
@@ -547,7 +575,9 @@ const Employee_COI_bajaj = () => {
                                             <th className="coi-table-header">Status</th>
                                             <th className="coi-table-header">Invoice</th>
                                             <th className="coi-table-header">Policy</th>
-                                         
+                                            <th className="coi-table-header">Bajaj PDF</th>
+                                             <th className="coi-table-header">Update Policy</th>
+                                                <th className="coi-table-header">Cancel Policy</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -604,8 +634,23 @@ const Employee_COI_bajaj = () => {
                                                         ) : (
                                                             <span style={{ color: '#9ca3af', fontSize: '12px' }}>No Policy</span>
                                                         )}
-                                                    </td>
-                                                   {/*
+                                                    </td> 
+                                                    {/*
+                                                     <td className="coi-table-cell">
+                                                        {policyNo ? (
+                                                            <button
+                                                                onClick={() => handleDownloadBajajPdf(policyNo)}
+                                                                className="coi-button"
+                                                                style={{ backgroundColor: '#10b981', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                                            >
+                                                                <Download size={16} className="mr-1" /> Get Bajaj PDF
+                                                            </button>
+                                                        ) : (
+                                                            <span style={{ color: '#9ca3af', fontSize: '12px' }}>No Policy No</span>
+                                                        )}
+                                                    </td>       
+                                                        */}
+                                                  
                                                     <td className="coi-table-cell">
                                                         {proposal.RelianceUrl ? (
                                                             <a
@@ -650,7 +695,7 @@ const Employee_COI_bajaj = () => {
                                                                 <CircleX size={16} style={{ marginRight: '5px' }} /> Cancel Policy
                                                             </button>
                                                         </div>
-                                                    </td>*/}
+                                                    </td>
                                                 </tr>
                                             );
                                         })}

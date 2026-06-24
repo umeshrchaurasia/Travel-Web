@@ -93,6 +93,7 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
   // Initialize form state with all fields
   const [formData, setFormData] = useState({
     AgentId: "",
+    Ss_Id: "",
     Product_Code: "2822",
     AgentCode_BASCode: "14A07082",
     UserName: "14a07082-14040",
@@ -591,8 +592,10 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
 
       try {
         // Call Reliance API for validation
+         console.log('Calling our API with data:', JSON.stringify(relianceData));
+
         relianceResponse = await validatePolicyWithReliance(relianceData);
-        //        console.log('Reliance API Response:', relianceResponse);
+        
 
         // Check for Reliance API validation errors
         if (relianceResponse && relianceResponse.CustomerDetails) {
@@ -622,9 +625,7 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
         }
       } catch (error) {
         console.error('Reliance API Error:', error);
-
-        // For demo/development purposes, set bypass to true to continue the flow
-        // You may want to adjust this logic in production
+      
         bypassRelianceValidation = window.confirm(
           "Reliance API validation failed. Do you want to continue without validation? (For testing purposes only)"
         );
@@ -696,10 +697,13 @@ const ProposalDocument = ({ userData = null, onLogout = () => { } }) => {
         NameOfDiseases: formData.traveller.SufferingFromAnyPreExistingDisease ?
           (formData.traveller.NameOfDiseases === "AnyOther" ? customDiseaseName : formData.traveller.NameOfDiseases) :
           null,
-        AddressOfTheHome: formData.AddressLine1 + (formData.AddressLine2 ? ", " + formData.AddressLine2 : "") + ", " + formData.CityName + ", " + formData.State + ", " + formData.PinCode
+        AddressOfTheHome: formData.AddressLine1 + (formData.AddressLine2 ? ", " + formData.AddressLine2 : "") + ", " + formData.CityName + ", " + formData.State + ", " + formData.PinCode,
+        Ss_id: ""
       };
 
-      //     console.log('Calling our API with data:', JSON.stringify(submitData));
+    //  console.log('Calling our API with data:', JSON.stringify(submitData));
+    
+
 
       const response = await createProposal(submitData);
       if (response.Status === "Success") {

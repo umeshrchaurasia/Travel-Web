@@ -28,6 +28,7 @@ interface WelcomeLetter {
     cust_MobileNumber: string;
     travelDuration: string;
     Created_Date: string;
+    Issue_Date: string;
 }
 
 const WelcomeLetterBajajSearch = () => {
@@ -146,7 +147,8 @@ const WelcomeLetterBajajSearch = () => {
             "End Date",
             "Duration (Days)",
             "Premium",
-            "Created Date"
+            "Created Date",
+            "Issue Date"
         ];
 
         const csvRows = results.map(res => [
@@ -157,7 +159,10 @@ const WelcomeLetterBajajSearch = () => {
             `"${formatDate(res.PolicyEndDate) || ''}"`,
             `"${res.travelDuration || ''}"`,
             `"${res.PremiumAmount || ''}"`,
-            `"${formatDate(res.Created_Date) || ''}"`
+            `"${formatDate(res.Created_Date) || ''}"`,
+            `"${formatDate(res.Issue_Date) || ''}"`
+        
+            
         ]);
 
         const csvContent = [headers.join(","), ...csvRows.map(row => row.join(","))].join("\n");

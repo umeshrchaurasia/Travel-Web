@@ -354,19 +354,19 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
               <div className="selection-card" onClick={handleAgentDashboardClick}>
                 {/* Reusing a styled icon for Reliance */}
                 <Plane size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)' }} />
-                <h3>Reliance Traveller</h3>
-                <p>Calculate premium for Reliance Travel Insurance.</p>
+                <h3>WITH PED</h3>
+                <p>TRAVEL ASSISTANCE PLAN</p>
               </div>
 
-                {/* Card 2: Bajaj Traveller */}
-               {[42, 12, 28, 29].includes(currentAgentId) && (           
+                {/* Card 2: Bajaj Traveller  {[42, 12, 28, 29].includes(currentAgentId) && ( */}
+                         
               <div className="selection-card" onClick={handleBajajTravelClick}>
 
                 <Shield size={48} className="selection-icon" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }} />
-                <h3>Bajaj Traveller</h3>
-                <p>Calculate premium for Bajaj Travel Insurance.</p>
+                <h3>WITHOUT PED</h3>
+                <p>TRAVEL ASSISTANCE PLAN</p>
               </div>
-             )}
+             
             </>
           )}
 

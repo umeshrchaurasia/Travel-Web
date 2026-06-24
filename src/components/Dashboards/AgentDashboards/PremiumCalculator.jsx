@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, AlertTriangle } from 'lucide-react';
 import { calculatePremiumIncluding, calculatePremiumExcluding } from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const PremiumCalculator = ({ agentData, walletStatus }) => {
     const navigate = useNavigate();
+
+    const [validationError, setValidationError] = useState(null);
 
     // Calculate the date 3 months ago from the current date
     const getMaxDateOfBirth = () => {
@@ -59,7 +62,13 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
 
         if (radiobtn_selectedAmount > currentWalletAmount) {
             const shortfall = radiobtn_selectedAmount - currentWalletAmount;
-            setError(`Insufficient wallet balance! Required: ₹${radiobtn_selectedAmount.toFixed(0)}, Available: ₹${currentWalletAmount.toFixed(0)}. You need ₹${shortfall.toFixed(0)} more to proceed. Please contact admin to top up your wallet.`);
+            // setError(`Insufficient wallet balance! Required: ₹${radiobtn_selectedAmount.toFixed(0)}, Available: ₹${currentWalletAmount.toFixed(0)}. You need ₹${shortfall.toFixed(0)} more to proceed. Please contact admin to top up your wallet.`);
+            setValidationError(`Insufficient wallet balance! Required: ₹${radiobtn_selectedAmount.toFixed(0)}, Available: ₹${currentWalletAmount.toFixed(0)}. You need ₹${shortfall.toFixed(0)} more to proceed. Please contact admin to top up your wallet.`);
+            toast.error(
+                `Insufficient wallet balance! Required: ₹${radiobtn_selectedAmount.toFixed(0)}, Available: ₹${currentWalletAmount.toFixed(0)}. You need ₹${shortfall.toFixed(0)} more.`,
+                { duration: 10000 } // Stays on screen a bit longer so they can read it
+            );
+
             return; // Stop execution, don't navigate
         }
         setError('');
@@ -414,6 +423,7 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
                 </div>
             )}
 
+
             <form onSubmit={handleSubmit}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                     <div><label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Departure Date</label><input type="date" name="departureDate" min={new Date().toISOString().split('T')[0]} value={formData.departureDate} onChange={handleChange} style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }} required /></div>
@@ -426,11 +436,17 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
 
                 {error && (<div style={{ color: '#dc2626', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '4px', marginBottom: '15px', textAlign: 'center' }}>{error}</div>)}
 
+                
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                    <button className='Premium-btn'  type="submit" >Calculate Premium</button>
-                    <button className='apply-btn-emp'  type="button" onClick={handleCancel}>Cancel</button>
+                    <button className='Premium-btn' type="submit" >Calculate Premium</button>
+                    <button className='apply-btn-emp' type="button" onClick={handleCancel}>Cancel</button>
                 </div>
 
+                 {validationError && (
+                            <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c',marginTop: '15px', padding: '15px', borderRadius: '5px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span className="block sm:inline">{validationError}</span>
+                            </div>
+                        )}
                 {lastApiResponse && (
                     <div style={{ padding: '20px', backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '20px' }}>
                         <div style={radioStyles.radioGroup}>
@@ -462,7 +478,7 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
                                 </div>
                             )}
                         </div>
-
+                       
                         <div style={{ paddingTop: '30px', display: 'flex', justifyContent: 'center' }}>
                             {renderProceedButton()}
                         </div>

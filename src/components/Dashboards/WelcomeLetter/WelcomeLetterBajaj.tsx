@@ -10,6 +10,7 @@ import { generateWelcomeLetterBajaj, downloadWelcomeBajajZip, PDF_BASE_URL } fro
 import './WelcomeLetterForm.css';
 import './WelcomeLetterFormbajaj.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ProcessResult {
@@ -25,9 +26,9 @@ interface ExcelRow {
     'Customer Name': string;
     'Address': string;
     'Email': string;
-    'Date': string;
-    'Departure Date': string;
-    'Arrival Date': string;
+    'Date': string | number;
+    'Departure Date': string | number;
+    'Arrival Date': string | number;
     'Duration': string | number;
     'Policy Number': string;
     'Charges': string | number;
@@ -41,7 +42,6 @@ const WelcomeLetterBajaj: React.FC = () => {
     const location = useLocation();
     const state = location.state || {};
     const [agentId, setAgentId] = useState<string>(state.agent || state.agentData?.AgentId || '');
-
     const [adminId, setAdminId] = useState<string>(state.adminId || '');
     const [userType, setUserType] = useState<string>(state.userType || '');
 
@@ -52,14 +52,13 @@ const WelcomeLetterBajaj: React.FC = () => {
     const [isZipping, setIsZipping] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // ─── Download All Zip Handler ─────────────────────────────────────────────
+    // ─── Handlers ─────────────────────────────────────────────────────────────
 
     const handleLogout = () => {
         try {
             localStorage.clear();
             sessionStorage.clear();
             logout();
-
             window.location.href = '/login';
         } catch (error) {
             console.error('Error during logout:', error);
@@ -69,6 +68,7 @@ const WelcomeLetterBajaj: React.FC = () => {
     const goBack = () => {
         navigate('/dashboard');
     };
+
     const handleDownloadAll = async () => {
         const successPolicies = results.filter(r => r.status === 'Success').map(r => r.policyNumber);
 
@@ -107,16 +107,15 @@ const WelcomeLetterBajaj: React.FC = () => {
 
     const WelcomeLetterSearch = () => {
         navigate('/WelcomeLetterBajajSearch', {
-            state: {
-                agentId}
+            state: { agentId }
         });
     }
 
     const downloadSampleCSV = () => {
         const csvContent =
             'Customer Name,Address,Email,Date,Departure Date,Arrival Date,Duration,Policy Number,Charges,custcontactno\n' +
-            'Ravi Sharma,101 Horizon Towers Andheri East Mumbai 400053,ravi.sharma@example.com,2026-03-15,2026-04-01,2026-04-15,15,BAJ1002003001,2500,9224624999\n' +
-            'Priya Patel,Flat 4B Green Enclave Koramangala Mumbai 400034,priya.p@example.com,2026-03-16,2026-05-10,2026-05-20,10,BAJ1002003002,1850,9876543210';
+            'Ravi Sharma,101 Horizon Towers Andheri East Mumbai 400053,ravi.sharma@example.com,15/03/2026,1/04/2026,15/04/2026,15,BAJ1002003001,2500,9224624999\n' +
+            'Priya Patel,Flat 4B Green Enclave Koramangala Mumbai 400034,priya.p@example.com,16/03/2026,10/05/2026,20/05/2026,10,BAJ1002003002,1850,9876543210';
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
@@ -128,42 +127,53 @@ const WelcomeLetterBajaj: React.FC = () => {
         document.body.removeChild(link);
     };
 
-    // Helper to convert Excel serial dates AND string dates (like DD-MM-YYYY) into YYYY-MM-DD
-    const formatExcelDate = (dateVal: string | number | undefined) => {
-        if (dateVal === undefined || dateVal === null) return '';
+    // ─── STRICT DATE FORMATTER (Converts EVERYTHING to YYYY-MM-DD) ──────
+    const forceYYYYMMDD = (dateVal: string | number | undefined) => {
+        if (dateVal === undefined || dateVal === null || dateVal === '') return '';
 
-        // 1. Handle Excel Serial Numbers
-        if (typeof dateVal === 'number' || (!isNaN(Number(dateVal)) && Number(dateVal) > 20000)) {
-            const excelDays = Number(dateVal);
-            const jsDate = new Date(Math.round((excelDays - 25569) * 86400 * 1000));
-            return jsDate.toISOString().split('T')[0];
+        // 1. Handle Excel Serial Numbers (e.g., 46026.00011574074)
+        const numericVal = Number(dateVal);
+        if (!isNaN(numericVal) && numericVal > 20000) {
+            // Convert Excel serial number to JS Date
+            const jsDate = new Date(Math.round((numericVal - 25569) * 86400 * 1000));
+            
+            // Excel US-locale turns 1/4/2026 (April 1) into Jan 4.
+            // We forcefully swap the month and day back to correct it.
+            const excelMonth = (jsDate.getUTCMonth() + 1).toString().padStart(2, '0');
+            const excelDay = jsDate.getUTCDate().toString().padStart(2, '0');
+            const excelYear = jsDate.getUTCFullYear();
+            
+            // Swapping: excelMonth becomes the Day, excelDay becomes the Month
+            return `${excelYear}-${excelDay}-${excelMonth}`; 
         }
 
-        // 2. Handle Text Dates (e.g. "15-04-2026" or "15/04/2026")
+        // 2. Handle CSV Raw Text Strings (e.g., "1/04/2026", "15-03-2026")
         const strVal = String(dateVal).trim();
-        const parts = strVal.split(/[-/]/);
 
-        if (parts.length === 3) {
-            // If year is at the end (e.g., DD-MM-YYYY -> 15-04-2026)
-            if (parts[2].length === 4) {
-                const day = parts[0].padStart(2, '0');
-                const month = parts[1].padStart(2, '0');
-                const year = parts[2];
-                return `${year}-${month}-${day}`;
-            }
-            // If year is at the beginning (e.g., YYYY-MM-DD -> 2026-04-15)
-            if (parts[0].length === 4) {
-                const year = parts[0];
-                const month = parts[1].padStart(2, '0');
-                const day = parts[2].padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
+        // Match DD/MM/YYYY or D/M/YYYY or DD-MM-YYYY
+        const dmyRegex = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
+        const dmyMatch = strVal.match(dmyRegex);
+        if (dmyMatch) {
+            const day = dmyMatch[1].padStart(2, '0');
+            const month = dmyMatch[2].padStart(2, '0');
+            const year = dmyMatch[3];
+            return `${year}-${month}-${day}`; 
         }
-        return strVal;
+
+        // Match YYYY-MM-DD or YYYY/MM/DD
+        const ymdRegex = /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/;
+        const ymdMatch = strVal.match(ymdRegex);
+        if (ymdMatch) {
+            const year = ymdMatch[1];
+            const month = ymdMatch[2].padStart(2, '0');
+            const day = ymdMatch[3].padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        return strVal; // Fallback
     };
 
     // ─── File upload handler ──────────────────────────────────────────────────
-
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -182,7 +192,9 @@ const WelcomeLetterBajaj: React.FC = () => {
                 const wb = XLSX.read(bstr, { type: 'binary' });
                 const wsname = wb.SheetNames[0];
                 const ws = wb.Sheets[wsname];
-                const data = XLSX.utils.sheet_to_json<ExcelRow>(ws);
+                
+                // Read data with raw: true so we can catch and fix those Excel Serial Numbers
+                const data = XLSX.utils.sheet_to_json<ExcelRow>(ws, { raw: true });
 
                 if (data.length === 0) {
                     setError('The uploaded file contains no data rows.');
@@ -195,7 +207,6 @@ const WelcomeLetterBajaj: React.FC = () => {
                 for (let i = 0; i < data.length; i++) {
                     const row = data[i];
 
-                    // 1. Strict Validation for Policy Number
                     const policyNumber = String(row['Policy Number'] ?? '').trim();
 
                     if (!policyNumber) {
@@ -205,30 +216,29 @@ const WelcomeLetterBajaj: React.FC = () => {
                             status: 'Failed',
                             error: 'Policy Number is required and cannot be empty.',
                         });
-                        continue; // Skip processing this row
+                        continue; 
                     }
 
-                    // 2. Formatting Duration with fallback
                     const rawDuration = String(row['Duration'] ?? '').trim();
                     const formattedDuration = rawDuration
                         ? (rawDuration.toLowerCase().includes('day') ? rawDuration : `${rawDuration} Days`)
                         : 'N/A';
 
-                    // 3. Payload with Null-Safety for optional fields
+                    // ✅ Send EVERYTHING to forceYYYYMMDD
                     const payload = {
                         customerName: row['Customer Name'] || 'N/A',
-                        customerAddress: row['Address'] || '', // Optional
-                        customerEmail: row['Email'] || '',     // Optional
-                        customerDate: formatExcelDate(row['Date']),
-                        departureDate: formatExcelDate(row['Departure Date']),
-                        arrivalDate: formatExcelDate(row['Arrival Date']),
+                        customerAddress: row['Address'] || '',
+                        customerEmail: row['Email'] || '',
+                        departureDate: forceYYYYMMDD(row['Departure Date']),
+                        arrivalDate: forceYYYYMMDD(row['Arrival Date']),
+                        issueDate: forceYYYYMMDD(row['Date']),               
                         travelDuration: formattedDuration,
                         policyNumber: policyNumber,
                         assistanceCharges: String(row['Charges'] ?? '0'),
                         SupportEmail: 'support@interstellarservices.com',
                         SupportcontactNo: '+91-9876543210',
-                        contactNo: String(row['custcontactno'] ?? ''), // Optional
-                        isBajaj: true,
+                        contactNo: String(row['custcontactno'] ?? ''),
+                        isBajaj: true
                     };
 
                     try {
@@ -326,14 +336,12 @@ const WelcomeLetterBajaj: React.FC = () => {
                     <div className="card">
                         <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h2 className="card-title m-0">Bajaj Welcome Letter Generator</h2>
-                           <button type="button" className="btn btn-outline-primary btn-sm" onClick={WelcomeLetterSearch} disabled={isZipping || loading}>
+                            <button type="button" className="btn btn-outline-primary btn-sm" onClick={WelcomeLetterSearch} disabled={isZipping || loading}>
                                 Welcome Letter Search
                             </button>
                             <button type="button" className="btn btn-outline-primary btn-sm" onClick={downloadSampleCSV} disabled={isZipping || loading}>
                                 Download Sample CSV
                             </button>
-                          
-                          
                         </div>
 
                         <div className="card-body">
@@ -385,7 +393,6 @@ const WelcomeLetterBajaj: React.FC = () => {
                                                 <th style={{ width: '15%' }}>AS Number</th>
                                                 <th style={{ width: '15%' }}>Status</th>
                                                 <th style={{ width: '25%' }} className="text-center">
-                                                    {/* Download All Button moved inside the Header! */}
                                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                                                         <span>Downloads</span>
                                                         {results.some(r => r.status === 'Success') && (

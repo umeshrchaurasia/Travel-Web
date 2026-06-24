@@ -1508,4 +1508,30 @@ export const getProposalTDS_SubAgent_bajaj = async (startdate, enddate, empId, a
   }
 };
 
+export const downloadBajajLivePdf = async (policyNo) => {
+    try {
+      const response = await api.post('/bajajlivepdf', {
+        policyNo
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Bajaj Live PDF Download error:', error);
+      throw error;
+    }
+  };
+  
+  export const Getbajajpincode = async (pincode) => {
+    try {
+      const response = await api.post('/bajajpincode', {
+        pincode
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Bajaj Pin Code error:', error);
+      throw error;
+    }
+  };
+
+
+
 export default api;

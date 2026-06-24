@@ -130,7 +130,7 @@ const BajajTravel = () => {
   const getNameOfPlan = () => {
     const amountMap: Record<string, string> = {
       '50000': '50K PLAN',
-      '200000 ': '2LPLAN',
+      '200000': '2LPLAN',
       '500000': '5L PLAN'
     };
     const baseLabel = amountMap[formData.planAmount] || '';
@@ -197,7 +197,8 @@ const BajajTravel = () => {
     localStorage.clear();
     sessionStorage.clear();
     logout();
-    navigate('/login');
+    // navigate('/login');
+    window.location.href = '/login';
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -370,18 +371,26 @@ const BajajTravel = () => {
         }
       });
     }
-  }
+  };
 
   const handleProceedToProposal = () => {
+    setError('');
     const radiobtn_selectedAmount = selectedOption === 'full' ? premium : agentcollected;
-    const currentWalletAmount = parseFloat(displayData?.Wallet_Amount?.toString() || '0');
+    const currentWalletAmount = parseFloat(displayData?.Wallet_Amount?.toString() || '0') || 0;
 
     if (radiobtn_selectedAmount !== null && radiobtn_selectedAmount > currentWalletAmount) {
       const shortfall = radiobtn_selectedAmount - currentWalletAmount;
       setError(`Insufficient wallet balance! Required: ₹${radiobtn_selectedAmount.toFixed(0)}, Available: ₹${currentWalletAmount.toFixed(0)}. You need ₹${shortfall.toFixed(0)} more to proceed.`);
       return;
     }
-    setError('');
+
+    const getBajajPlanCode = (amount: string | number) => {
+      const cleanAmount = String(amount).trim(); // .trim() handles the '200000 ' space issue
+      if (cleanAmount === '50000') return 'TPHSLV';
+      if (cleanAmount === '200000') return 'TPHGLD';
+      if (cleanAmount === '500000') return 'TPHPLT';
+      return ''; // Default fallback
+    };
 
     const proposalData = {
       agentDetails: {
@@ -398,11 +407,12 @@ const BajajTravel = () => {
         arrivalDate: formData.arrivalDate,
         numberOfDays: formData.numberOfDays,
         geographicalCover: formData.geographicalCover,
-        NameofPlan: getNameOfPlan()
+        NameofPlan: getNameOfPlan(),
       },
       insuranceDetails: {
         dateOfBirth: formData.dateOfBirth,
         planAmount: formData.planAmount,
+        planCode: getBajajPlanCode(formData.planAmount),
         premium: premium,
         bajaj_premium_amount: reliancePremiumAmount,
         agentCollection: agentcollected,
@@ -510,6 +520,15 @@ const BajajTravel = () => {
             </div>
           )}
 
+          {/* Show general errors here (but hide the specific Wallet error so it shows only at the bottom) */}
+          {error && !error.includes('Insufficient') && (
+            <div style={{ color: '#dc2626', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '4px', marginBottom: '15px', textAlign: 'center' }}>
+              <AlertTriangle size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+              {error}
+            </div>
+          )}
+
+
           <form onSubmit={handleCalculatePremium}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', marginBottom: '20px' }}>
               <div>
@@ -542,8 +561,6 @@ const BajajTravel = () => {
                 </select>
               </div>
             </div>
-
-            {error && (<div style={{ color: '#dc2626', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '4px', marginBottom: '15px', textAlign: 'center' }}>{error}</div>)}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
               <button className='Premium-btn' type="submit" disabled={calculating}>
@@ -593,7 +610,7 @@ const BajajTravel = () => {
                   )}
                 </div>
 
-                <div style={{ paddingTop: '30px', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ paddingTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   {walletStatus && !walletStatus.eligibleProposal ? (
                     <div style={{ textAlign: 'center' }}>
                       <button disabled={true} style={{ padding: '12px 24px', backgroundColor: '#9ca3af', color: 'white', border: 'none', borderRadius: '6px', cursor: 'not-allowed', fontWeight: '500', opacity: 0.7 }}>
@@ -605,14 +622,59 @@ const BajajTravel = () => {
                       </div>
                     </div>
                   ) : (
-                    <button onClick={handleProceedToProposal} style={{ padding: '12px 24px', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '16px' }}>
-                      Proceed to Proposal
-                    </button>
+                    <>
+                      {/* RENDER THE INSUFFICIENT WALLET ERROR RIGHT ABOVE THE BUTTON */}
+                      {error && error.includes('Insufficient') && (
+                        <div style={{
+                          backgroundColor: '#fef2f2',
+                          border: '1px solid #ef4444',
+                          color: '#b91c1c',
+                          padding: '12px 20px',
+                          borderRadius: '6px',
+                          marginBottom: '15px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          textAlign: 'left',
+                          maxWidth: '600px',
+                          boxShadow: '0 2px 4px rgba(239, 68, 68, 0.1)'
+                        }}>
+                          <AlertTriangle size={24} style={{ flexShrink: 0, color: '#ef4444' }} />
+                          <div>
+                            <strong style={{ display: 'block', fontSize: '15px', marginBottom: '4px' }}>
+                              Insufficient Wallet Balance
+                            </strong>
+                            {error.replace('Insufficient wallet balance! ', '')}
+                          </div>
+                        </div>
+                      )}
+                      {/* THE PROCEED BUTTON */}
+                      <button
+                        type="button"
+                        onClick={handleProceedToProposal}
+                        className="Premium-btn"
+                        style={{
+                          padding: '12px 24px',
+                          backgroundColor: '#059669',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontWeight: '500',
+                          fontSize: '16px'
+                        }}
+                      >
+                        Proceed to Proposal
+                      </button>
+                       </>
+
+
                   )}
+                    </div>
                 </div>
-              </div>
             )}
-          </form>
+              </form>
         </div>
       </main>
 
