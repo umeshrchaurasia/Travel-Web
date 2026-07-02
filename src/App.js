@@ -113,6 +113,7 @@ import GenerateCOI_Ayushpay from './components/Dashboards/Ayushpayhealth/Generat
 
 import GenerateCOI_Practo from './components/Dashboards/Practo/GenerateCOI_Practo';
 
+import UpdatePolicyInsurance_bajaj from './components/Dashboards/UpdatePolicy/UpdatePolicyInsurance_bajaj';
 
 function App() {
   const [userData, setUserData] = useState(() => {
@@ -531,6 +532,14 @@ function App() {
             </ProtectedRoute>
           } />
 
+           <Route path="/UpdatePolicyInsurance_bajaj" element={
+            <ProtectedRoute>
+              <UpdatePolicyInsurance_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
+          
           <Route path="/GenerateCOI_Ayushpay" element={
             <ProtectedRoute>
               <GenerateCOI_Ayushpay userData={userData} onLogout={handleLogout} />

@@ -1144,7 +1144,7 @@ const UpdatePolicyInsurance = ({ userData = null, onLogout = () => { } }) => {
           }}>
             <button
               type="button"
-              onClick={() => navigate('/GenerateCOI')}
+              onClick={() => navigate('/Employee_COI')}
               disabled={submitting || generatingPolicy}
               style={{
                 padding: '10px 20px',

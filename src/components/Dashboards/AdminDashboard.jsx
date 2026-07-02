@@ -262,7 +262,19 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-  const handlewelcomeLetterBajajClick = () => {
+  const handleuploadPolicyClick = () => {
+    localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/welcomeLetterBajaj', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  }
+
+    const handlewelcomeLetterBajajClick= () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/welcomeLetterBajaj', {
       state: {
@@ -510,6 +522,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       <button onClick={handlewelcomeLetterBajajClick} className="action-button button-bajajwelcome">
                         <NotebookPen className="w-4 h-4 mr-2" size={20} /> Welcome Letter Bajaj
                       </button>
+                       
                     </>
                   )}
 

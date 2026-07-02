@@ -139,16 +139,25 @@ const BajajTravel = () => {
   };
 
   // -- 3. EFFECTS --
-  useEffect(() => {
+ useEffect(() => {
     if (formData.dateOfBirth) {
       const birth = new Date(formData.dateOfBirth);
       const today = new Date();
+      
       let years = today.getFullYear() - birth.getFullYear();
       let months = today.getMonth() - birth.getMonth();
+      
+      // --- ADD THESE 3 LINES TO CHECK THE DAY ---
+      if (today.getDate() < birth.getDate()) {
+        months--;
+      }
+      // ------------------------------------------
+      
       if (months < 0) {
         years--;
         months += 12;
       }
+      
       setAge({ years, months });
     }
   }, [formData.dateOfBirth]);

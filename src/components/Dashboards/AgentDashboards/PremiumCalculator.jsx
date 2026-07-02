@@ -202,21 +202,38 @@ const PremiumCalculator = ({ agentData, walletStatus }) => {
     };
 
     // Calculate age effect
+   // Calculate age effect
     useEffect(() => {
         if (formData.dateOfBirth) {
             const birth = new Date(formData.dateOfBirth);
-            const today = new Date();
-            let years = today.getFullYear() - birth.getFullYear();
-            let months = today.getMonth() - birth.getMonth();
+            
+            // It is usually best to calculate age at the time of departure for insurance. 
+            // If you prefer to use today's date, replace `referenceDate` with `new Date()`.
+            const referenceDate = formData.departureDate ? new Date(formData.departureDate) : new Date();
+            
+            let years = referenceDate.getFullYear() - birth.getFullYear();
+            let months = referenceDate.getMonth() - birth.getMonth();
 
-            if (months < 0) {
+            // If the current month is before the birth month, OR 
+            // if it is the birth month but the current day is before the birth day
+            if (months < 0 || (months === 0 && referenceDate.getDate() < birth.getDate())) {
                 years--;
+                months += 12; // Add 12 months to compensate for the subtracted year
+            }
+
+            // Adjust the months if the specific day hasn't been reached yet
+            if (referenceDate.getDate() < birth.getDate()) {
+                months--;
+            }
+
+            // Handle wrap-around if months drop below 0
+            if (months < 0) {
                 months += 12;
             }
 
             setAge({ years, months });
         }
-    }, [formData.dateOfBirth]);
+    }, [formData.dateOfBirth, formData.departureDate]);
 
     // FIX: This effect now correctly sets the available radio buttons and initial selection
     useEffect(() => {

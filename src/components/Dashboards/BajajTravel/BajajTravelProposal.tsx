@@ -279,6 +279,56 @@ const BajajTravelProposal = () => {
     }
   }, []);
 
+  // --- PINCODE API INTEGRATION ---
+
+  useEffect(() => {
+    const fetchCityState = async () => {
+      // Only fire API when exactly 6 digits are entered
+      if (formData.ProposerPincode && /^[0-9]{6}$/.test(formData.ProposerPincode)) {
+        try {
+          const response = await Getbajajpincode(formData.ProposerPincode);
+
+          // Success: errorCode "0" and pincodeDetail exists
+          if (response?.MasterData?.applicationError?.errorCode === "0" && response?.MasterData?.pincodeDetail) {
+            const { cityName, stateName } = response.MasterData.pincodeDetail;
+
+            setFormData(prev => ({
+              ...prev,
+              ProposerCity: cityName,
+              ProposerState: stateName
+            }));
+
+            // Clear any pincode errors
+            setErrors(prev => ({ ...prev, ProposerPincode: '' }));
+
+          } else {
+            // Failure: e.g. errorCode "11", "Pincode is invalid"
+            const errorMsg = response?.MasterData?.applicationError?.errorDescription || 'Pincode is invalid';
+
+            setFormData(prev => ({
+              ...prev,
+              ProposerCity: '',
+              ProposerState: ''
+            }));
+
+            // Set the error message directly to the Pincode field
+            setErrors(prev => ({ ...prev, ProposerPincode: errorMsg }));
+          }
+        } catch (error) {
+          console.error("Error fetching pincode details:", error);
+          setFormData(prev => ({ ...prev, ProposerCity: '', ProposerState: '' }));
+          setErrors(prev => ({ ...prev, ProposerPincode: 'Failed to verify pincode with server' }));
+        }
+      } else if (formData.ProposerPincode && formData.ProposerPincode.length !== 6) {
+        // UPDATED: clear city/state if user alters a valid pincode making it invalid length
+        if (formData.ProposerCity || formData.ProposerState) {
+          setFormData(prev => ({ ...prev, ProposerCity: '', ProposerState: '' }));
+        }
+      }
+    };
+
+    fetchCityState();
+  }, [formData.ProposerPincode]);
   // -- 3. VALIDATION LOGIC --
   const validateField = (name: string, value: string) => {
     let errorMsg = '';
@@ -295,7 +345,9 @@ const BajajTravelProposal = () => {
         break;
       case 'ProposerPassport':
       case 'TravellerPassport':
-        if (value && !/^[A-Z][0-9]{7}$/.test(value.toUpperCase())) errorMsg = 'Invalid Passport (e.g. Z1234567)';
+        if (value && !/^[A-Z]{1,2}[0-9]{6,7}$/.test(value.toUpperCase())) {
+          errorMsg = 'Invalid Passport format (e.g., Z1234567 or ZA045860)';
+        }
         break;
       case 'ProposerPincode':
         if (value && !/^[0-9]{6}$/.test(value)) errorMsg = 'Must be exactly 6 digits';
@@ -312,6 +364,11 @@ const BajajTravelProposal = () => {
     // Auto-uppercase specific fields
     if (name === 'ProposerCity' || name === 'ProposerPassport' || name === 'TravellerPassport') {
       value = value.toUpperCase();
+    }
+
+    // NEW: Strict Pincode input handling (Only numbers, Max 6 digits)
+    if (name === 'ProposerPincode') {
+      value = value.replace(/\D/g, '').slice(0, 6);
     }
 
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -366,8 +423,8 @@ const BajajTravelProposal = () => {
       setApiError("Travel dates and Country are required.");
       return false;
     }
-    if (!formData.ProposerFirstName || !formData.ProposerMobile || !formData.ProposerEmail || !formData.ProposerState) {
-      setApiError("Please fill all required Proposer details including State.");
+    if (!formData.ProposerFirstName || !formData.ProposerMobile || !formData.ProposerEmail || !formData.ProposerAddress || !formData.ProposerPincode || !formData.ProposerState) {
+      setApiError("Please fill all required Proposer details. Ensure a valid Pincode is entered to auto-fill City and State.");
       return false;
     }
     if (!formData.TravellerFirstName || !formData.TravellerDOB || !formData.TravellerPassport) {
@@ -633,11 +690,12 @@ const BajajTravelProposal = () => {
                 <InputField label="Email" name="ProposerEmail" type="email" value={formData.ProposerEmail} onChange={handleInputChange} required error={errors.ProposerEmail} />
                 <InputField label="Passport No" name="ProposerPassport" value={formData.ProposerPassport} onChange={handleInputChange} error={errors.ProposerPassport} />
 
-                <InputField label="Address" name="ProposerAddress" value={formData.ProposerAddress} onChange={handleInputChange} />
-                <InputField label="Pincode" name="ProposerPincode" value={formData.ProposerPincode} onChange={handleInputChange} error={errors.ProposerPincode} />
-                <InputField label="City" name="ProposerCity" value={formData.ProposerCity} onChange={handleInputChange} />
+                <InputField label="Address" name="ProposerAddress" value={formData.ProposerAddress} onChange={handleInputChange} required />
+                <InputField label="Pincode" name="ProposerPincode" value={formData.ProposerPincode} onChange={handleInputChange} required error={errors.ProposerPincode} />
 
-                <InputField label="State" name="ProposerState" type="select" value={formData.ProposerState} onChange={handleInputChange} required options={[{ value: '', label: 'Select State' }, ...INDIAN_STATES]} />
+                <InputField label="City" name="ProposerCity" value={formData.ProposerCity} onChange={handleInputChange} disabled={true} />
+
+                <InputField label="State" name="ProposerState" value={formData.ProposerState} onChange={handleInputChange} disabled={true} />
 
                 {/* GSTIN Default Read Only */}
                 <InputField label="GSTIN Number" name="ProposerGSTIN" value={formData.ProposerGSTIN} onChange={handleInputChange} disabled={true} />
