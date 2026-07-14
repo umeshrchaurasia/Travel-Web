@@ -11,13 +11,13 @@ import axios from 'axios';
 //export const BASE_URL = 'http://3.111.41.93:3000/api';
 
 //Local Server
-//export const BASE_URL = 'http://localhost:3000/api';
-//export const PDF_BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3000/api';
+export const PDF_BASE_URL = 'http://localhost:3000';
 
 //Live Server
 
-export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
-export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
+//export const BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api/api';
+//export const PDF_BASE_URL = 'http://zextratravelassist.interstellar.co.in/travel-api';
 
 const HEADER_TOKEN = '1234567890';
 
@@ -1413,6 +1413,20 @@ export const searchWelcomeLettersBajaj = async (searchData) => {
   }
 };
 
+export const ERP_search_welcome_letters_bajaj = async (searchData) => {
+  try {
+    // searchData contains { startDate, endDate }
+    const response = await api.post('/ERP_search_welcome_letters_bajaj', searchData);
+    return response.data;
+  } catch (error) {
+    console.error('Error searching welcome letters:', error);
+    throw error;
+  }
+};
+
+
+
+
 export const getSub_Main_AgentMIS_byAdmin_bajaj = async (startdate, enddate, empId, agentId) => {
   try {
     const response = await api.post('/getSub_Main_AgentMIS_byAdmin_bajaj', {
@@ -1540,7 +1554,36 @@ export const downloadBajajLivePdf = async (policyNo) => {
     console.error('Error updating proposer details:', error);
     throw error;
   }
+
+  
 };
+
+export const excelInsertBajajProposal = async (payload) => {
+  try {
+    const response = await api.post('/excel-insert-bajaj-proposal', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error inserting Bajaj Proposal via Excel:', error);
+    return {
+      Status: "Failed",
+      Message: error.response?.data?.Message || error.message || "Failed to insert record"
+    };
+  }
+};
+
+export const uploadBajajPdfApi = async (payload) => {
+  try {
+    const response = await api.post('/uploadBajajManualPdf', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading Bajaj Manual PDF:', error);
+    return {
+      Status: "Failed",
+      Message: error.response?.data?.Message || error.message || "Failed to upload PDF"
+    };
+  }
+};
+
 
 
 export default api;

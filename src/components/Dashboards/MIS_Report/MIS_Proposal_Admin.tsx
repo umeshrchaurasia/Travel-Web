@@ -21,13 +21,16 @@ interface Proposal {
     Assiatance_charges_PreTaxAmount?: string | number;
     Assiatance_charges_PostTaxAmount?: string | number;
     AgentId?: number;
+    UId?: string;
     UserID_Mobileno?: string;
+    travel_Mobileno?: string;
+    travel_emailId?: string;
     Selected_Payment_Mode?: string;
     PaymentType?: string;
     Discount?: string;
     Fullpay_Discount_amount_to_be_paid?: string | number;
     Paymentreceived?: string;
-    UId?: string;
+  
     Payment_Status?: string;
     assistancepremium_Inc_gst?: string;
     Reliance_Premium__Inc_gst?: string;
@@ -195,7 +198,10 @@ const MIS_Proposal_Admin: React.FC = () => {
             'Policy End Date',
             'Assistance Charges Pre Tax Amount',
             'Assistance Charges Post Tax Amount',
+            'UID',
             'User ID-Mobile No',
+            'Customer-Mobile No',
+            'Customer-Email',
             'Selected Payment Mode',
             'Payment Type',
             'Discount/Comm%',
@@ -232,7 +238,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                 formatDate(item.PolicyEndDate),
                 item.Assiatance_charges_PostTaxAmount || '',
                 item.Assiatance_charges_PreTaxAmount || '',
+                item.UId || '',
                 item.UserID_Mobileno || '',
+                item.travel_Mobileno || '',
+                item.travel_emailId || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
                 item.Discount || '',
@@ -501,7 +510,10 @@ const MIS_Proposal_Admin: React.FC = () => {
                                             <th className="coi-table-header">Policy End Date</th>
                                             <th className="coi-table-header">Assistance Charges Pre Tax Amount</th>
                                             <th className="coi-table-header">Assistance Charges Post Tax Amount</th>
+                                            <th className="coi-table-header">UID</th>
                                             <th className="coi-table-header">User ID-Mobile No</th>
+                                            <th className="coi-table-header">Customer-Mobile No</th>
+                                            <th className="coi-table-header">Customer-Email</th>
                                             <th className="coi-table-header">Selected Payment Mode</th>
                                             <th className="coi-table-header">Payment Type</th>
                                             <th className="coi-table-header">Discount/Comm%</th>
@@ -539,8 +551,11 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PostTaxAmount || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Assiatance_charges_PreTaxAmount}</td>
 
+                                                                      <td className="coi-table-cell">{proposal.UId || ''}</td>
                                                     <td className="coi-table-cell">{proposal.UserID_Mobileno || ''}</td>
 
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.travel_Mobileno || ''}</td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.travel_emailId || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Selected_Payment_Mode || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.PaymentType || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Discount || ''}</td>

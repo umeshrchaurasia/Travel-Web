@@ -115,6 +115,12 @@ import GenerateCOI_Practo from './components/Dashboards/Practo/GenerateCOI_Pract
 
 import UpdatePolicyInsurance_bajaj from './components/Dashboards/UpdatePolicy/UpdatePolicyInsurance_bajaj';
 
+import Excel_InsertTravelProposal from './components/Dashboards/WelcomeLetter/Excel_InsertTravelProposal';
+
+import Excel_LetterBajajSearch from './components/Dashboards/WelcomeLetter/Excel_LetterBajajSearch';  
+
+
+
 function App() {
   const [userData, setUserData] = useState(() => {
     const savedData = localStorage.getItem('userData');
@@ -549,6 +555,19 @@ function App() {
           <Route path="/GenerateCOI_Practo" element={
             <ProtectedRoute>
               <GenerateCOI_Practo userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+           <Route path="/Excel_InsertTravelProposal" element={
+            <ProtectedRoute>
+              <Excel_InsertTravelProposal userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
+   <Route path="/Excel_LetterBajajSearch" element={
+            <ProtectedRoute>
+              <Excel_LetterBajajSearch userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 

@@ -878,3 +878,18 @@
     display: none;
   }
 }
+
+/* --- SELECTED STATE STYLING --- */
+.AdminDashboard .product-card.selected-card {
+  border: 2px solid #6c63ff;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.15);
+  transform: translateY(-4px);
+  background: #e0e7ff; /* Very light blue/purple tint */
+}
+
+/* Add a subtle blue tint to the main upload card when active */
+.AdminDashboard .upload-card-container {
+  border-top: 4px solid #6c63ff;
+  border-radius: 8px;
+  background: #fdfdff;
+}

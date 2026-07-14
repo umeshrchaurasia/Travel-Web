@@ -264,7 +264,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
 
   const handleuploadPolicyClick = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
-    navigate('/welcomeLetterBajaj', {
+    navigate('/Excel_InsertTravelProposal', {
       state: {
         empid: '',
         agentData: displayData,
@@ -274,7 +274,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
-    const handlewelcomeLetterBajajClick= () => {
+  const handlewelcomeLetterBajajClick = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/welcomeLetterBajaj', {
       state: {
@@ -449,8 +449,8 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                   onClick={() => handleTravelProductSelection(PRODUCT_RELIANCE_TRAVEL)}
                 >
                   <Plane size={48} className="card-icon" style={{ color: '#3b82f6' }} />
-                  <h3>Reliance Traveller</h3>
-                  <p>Manage Reliance Travel Assist Agents, Wallet, and Reports.</p>
+                  <h3>IndusInd Travel Insurance</h3>
+                  <p>Manage IndusInd Travel Assist Agents, Wallet, and Reports.</p>
                 </div>
 
                 <div
@@ -522,7 +522,11 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       <button onClick={handlewelcomeLetterBajajClick} className="action-button button-bajajwelcome">
                         <NotebookPen className="w-4 h-4 mr-2" size={20} /> Welcome Letter Bajaj
                       </button>
-                       
+                      <button onClick={handleuploadPolicyClick} className="action-button button-agent-details">
+                        <Upload className="w-4 h-4 mr-2" size={20} /> Upload Policy
+                      </button>
+
+
                     </>
                   )}
 
