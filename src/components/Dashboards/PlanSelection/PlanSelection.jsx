@@ -117,7 +117,8 @@ const PlanSelection = ({ userData = null, onLogout = () => { } }) => {
         agentEmail: displayData_sel.email || displayData_sel.EmailID,
         Agent_Code: displayData_sel.Agent_Code,
         MobileNumber: displayData_sel.MobileNumber,
-        UId: displayData_sel.UId
+        UId: displayData_sel.UId,
+        Same_employee: displayData_sel.Same_employee || ""
       };
       // 2. Dispatch to the AGENT store
       dispatch(setAgentData(reduxPayload));

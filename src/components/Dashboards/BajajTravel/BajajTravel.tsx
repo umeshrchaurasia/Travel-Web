@@ -21,8 +21,10 @@ interface DisplayData {
   email?: string;
   Paymentmode?: string;
   Payout?: string;
+  Payout_Bajaj?: string; // Corrected exact casing
   MobileNumber?: string;
   Wallet_Amount?: string | number;
+  Same_employee?: string;
 }
 
 const BajajTravel = () => {
@@ -43,8 +45,10 @@ const BajajTravel = () => {
         email: agentFromRedux.agentEmail,
         Paymentmode: agentFromRedux.Paymentmode,
         Payout: agentFromRedux.Payout,
+        Payout_Bajaj: agentFromRedux.Payout_Bajaj, // Mapped with exact casing
         MobileNumber: agentFromRedux.MobileNumber,
-        Wallet_Amount: agentFromRedux.Wallet_Amount
+        Wallet_Amount: agentFromRedux.Wallet_Amount,
+        Same_employee: agentFromRedux.Same_employee
       };
     }
     const stored = localStorage.getItem('userProfile');
@@ -76,6 +80,7 @@ const BajajTravel = () => {
   const [premium_without_gst, setPremiumWithoutGst] = useState<number | null>(null);
   const [premium_gst, setPremiumGst] = useState<number | null>(null);
 
+  const [customPayoutPercentage, setCustomPayoutPercentage] = useState<string>('');
 
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -85,6 +90,7 @@ const BajajTravel = () => {
   const [availableOptions, setAvailableOptions] = useState<Set<string>>(new Set());
   const [calculating, setCalculating] = useState<boolean>(false);
 
+  // Fallback state if they never type a custom payout
   const [Payout_Bajaj, setPayout_Bajaj] = useState<number | null>(null);
 
   const plans = [
@@ -139,25 +145,23 @@ const BajajTravel = () => {
   };
 
   // -- 3. EFFECTS --
- useEffect(() => {
+  useEffect(() => {
     if (formData.dateOfBirth) {
       const birth = new Date(formData.dateOfBirth);
       const today = new Date();
-      
+
       let years = today.getFullYear() - birth.getFullYear();
       let months = today.getMonth() - birth.getMonth();
-      
-      // --- ADD THESE 3 LINES TO CHECK THE DAY ---
+
       if (today.getDate() < birth.getDate()) {
         months--;
       }
-      // ------------------------------------------
-      
+
       if (months < 0) {
         years--;
         months += 12;
       }
-      
+
       setAge({ years, months });
     }
   }, [formData.dateOfBirth]);
@@ -193,11 +197,10 @@ const BajajTravel = () => {
       }
       setpaymentmode(apiPaymentMode);
 
-      // Setting new parameters
       setCommissionAgent(parseFloat(data.commission_agent || '0'));
       setPremiumWithoutGst(parseFloat(data.premium_without_gst || '0'));
       setPremiumGst(parseFloat(data.premium_gst || '0'));
-
+      setPayout_Bajaj(parseFloat(data.payout_bajaj || displayData.Payout_Bajaj || '0'));
     }
   }, [lastApiResponse]);
 
@@ -206,14 +209,13 @@ const BajajTravel = () => {
     localStorage.clear();
     sessionStorage.clear();
     logout();
-    // navigate('/login');
     window.location.href = '/login';
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name === 'numberOfDays' && parseInt(value) > 182) {
-      setError('Duration cannot exceed 182 days. Please enter a value less than 182 days.');
+    if (name === 'numberOfDays' && parseInt(value) > 180) {
+      setError('Duration cannot exceed 180 days. Please enter a value less than 180 days.');
       return;
     }
     setFormData(prev => {
@@ -225,8 +227,8 @@ const BajajTravel = () => {
       } else if (name === 'numberOfDays' && newData.departureDate) {
         newData.arrivalDate = calculateArrivalDate(newData.departureDate, newData.numberOfDays);
       }
-      if (parseInt(newData.numberOfDays) > 182) {
-        setError('Duration cannot exceed 182 days. Please adjust your dates.');
+      if (parseInt(newData.numberOfDays) > 180) {
+        setError('Duration cannot exceed 180 days. Please adjust your dates.');
       } else {
         setError('');
       }
@@ -252,17 +254,20 @@ const BajajTravel = () => {
           setagentcollected(parseFloat(data.agentcollected));
         }
       }
+      setCustomPayoutPercentage('');
+      setPayout_Bajaj(parseFloat(data.payout_bajaj || displayData.Payout_Bajaj || '0'));
     }
   };
 
-  const handleCalculatePremium = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCalculatePremium = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setLastApiResponse(null);
     setPremium(null);
     setagentcollected(null);
     setCommissionAgent(null);
     setPremiumWithoutGst(null);
     setPremiumGst(null);
+    setCustomPayoutPercentage('');
     setError('');
 
     if (!formData.departureDate || !formData.arrivalDate || !formData.dateOfBirth || !formData.numberOfDays) {
@@ -307,6 +312,59 @@ const BajajTravel = () => {
     }
   };
 
+  const handleReCalculatePremium = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
+    if (!customPayoutPercentage) {
+      setError('Please fill in the Payout Percentage field');
+      return;
+    }
+    if (!lastApiResponse || !lastApiResponse.MasterData) {
+      setError('Please calculate the standard premium first.');
+      return;
+    }
+
+    // 1. Declare data first before trying to access variables inside it
+    const data = lastApiResponse.MasterData;
+
+    // 2. Safely parse the maximum payout using the correctly cased variable
+    const maxPayout = parseFloat(data.payout_bajaj || displayData.Payout_Bajaj || '0');
+    const newPayout = parseFloat(customPayoutPercentage);
+
+    if (isNaN(newPayout) || newPayout < 0 || newPayout > maxPayout) {
+      setError(`Payout cannot exceed your eligible limit of ${maxPayout}%`);
+      return;
+    }
+
+    setError('');
+
+    // 3. Perform Math
+    const basePremium = parseFloat(data.premium_without_gst || '0');
+    const totalPremium = parseFloat(data.premium_amount || '0');
+
+    // Commission = Premium Without GST * (New Payout / 100)
+    const newCommission = basePremium * (newPayout / 100);
+
+    // 4. Update States based on Selected Mode
+    setCommissionAgent(newCommission);
+    setPayout_Bajaj(newPayout); // Updates Payout_Bajaj to pass into the proposal
+
+    setSelectedOption('discount');
+    setpaymentmode('Discount'); // Keep paymentmode matching the discount option for the proposal
+    
+
+    // if (selectedOption === 'full') {
+    //   setagentcollected(parseFloat(data.fullpay_agentcollected || data.premium_amount));
+    // } else if (selectedOption === 'Upfront') {
+    //   setagentcollected(newCommission);
+    // } else 
+      {
+      // DISCOUNT MODE: To be collected = Total Premium - New Commission
+      const newAgentCollected = Math.round(totalPremium - newCommission);
+      setagentcollected(newAgentCollected);
+    }
+  };
+
   const handleCancel = () => {
     setFormData({
       departureDate: '',
@@ -322,6 +380,7 @@ const BajajTravel = () => {
     setpaymentmode(null);
     setCommissionAgent(null);
     setPremiumWithoutGst(null);
+    setCustomPayoutPercentage('');
     setPremiumGst(null);
     setSelectedOption('');
     setError('');
@@ -329,55 +388,29 @@ const BajajTravel = () => {
     setShowEligibilityMessage(false);
   };
 
-
   const handleWalletBajajClick = () => {
-    // Store the enriched display data in localStorage
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
-    // Navigate to the wallet page with the enriched state
     navigate('/walletPage_bajaj', {
-      state: {
-        agentData: displayData,
-        walletStatus: walletStatus
-      }
+      state: { agentData: displayData, walletStatus: walletStatus }
     });
   };
 
   const goToCOIBajaj = () => {
-    // Store the enriched display data in localStorage
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
-    // Navigate to the wallet page with the enriched state
     navigate('/GenerateCOI_bajaj', {
-      state: {
-        agentData: displayData,
-        walletStatus: walletStatus
-      }
+      state: { agentData: displayData, walletStatus: walletStatus }
     });
   };
 
-
   const gotoMISBajaj = () => {
-    //const empId = displayData.id || displayData.UId;
     localStorage.setItem('walletData', JSON.stringify(displayData));
-
     if (displayData.Paymentmode === 'Upfront Commission') {
       navigate('/TDS_Proposal_bajaj', {
-        state: {
-          empid: '',
-          agentData: displayData,
-          userType: 'Agent',
-          adminId: ''
-        }
+        state: { empid: '', agentData: displayData, userType: 'Agent', adminId: '' }
       });
     } else {
       navigate('/MIS_Proposal_bajaj', {
-        state: {
-          empid: '',
-          agentData: displayData,
-          userType: 'Agent',
-          adminId: ''
-        }
+        state: { empid: '', agentData: displayData, userType: 'Agent', adminId: '' }
       });
     }
   };
@@ -394,11 +427,11 @@ const BajajTravel = () => {
     }
 
     const getBajajPlanCode = (amount: string | number) => {
-      const cleanAmount = String(amount).trim(); // .trim() handles the '200000 ' space issue
+      const cleanAmount = String(amount).trim();
       if (cleanAmount === '50000') return 'TPHSLV';
       if (cleanAmount === '200000') return 'TPHGLD';
       if (cleanAmount === '500000') return 'TPHPLT';
-      return ''; // Default fallback
+      return '';
     };
 
     const proposalData = {
@@ -438,7 +471,6 @@ const BajajTravel = () => {
     navigate('/BajajTravelProposal');
   };
 
-  // -- 5. STYLES (Inline specific to radio buttons) --
   const radioStyles = {
     radioGroup: { display: 'flex', gap: '20px', margin: '15px 0', justifyContent: 'center' },
     radioLabel: { display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '8px 16px', border: '1px solid #d1d5db', borderRadius: '6px', backgroundColor: '#f9fafb' },
@@ -449,7 +481,6 @@ const BajajTravel = () => {
 
   return (
     <div className="dashboard-wrapper">
-      {/* HEADER */}
       <header className="top-header">
         <div className="header-content">
           <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -472,7 +503,6 @@ const BajajTravel = () => {
       </header>
 
       <main className="main-content-b">
-        {/* WELCOME INFO CARD */}
         <div className="user-info-card-b">
           <div className="card-header-b" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 className="welcome-title-b">
@@ -515,9 +545,9 @@ const BajajTravel = () => {
           </div>
         </div>
 
-        {/* PREMIUM CALCULATOR CARD */}
         <div style={{ maxWidth: '100%', margin: '0 auto', padding: '30px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '30px', textAlign: 'center' }}>Travel Insurance Premium Calculator</h2>
+
 
           {showEligibilityMessage && (
             <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '15px', borderRadius: '5px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -529,14 +559,12 @@ const BajajTravel = () => {
             </div>
           )}
 
-          {/* Show general errors here (but hide the specific Wallet error so it shows only at the bottom) */}
           {error && !error.includes('Insufficient') && (
             <div style={{ color: '#dc2626', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '4px', marginBottom: '15px', textAlign: 'center' }}>
               <AlertTriangle size={20} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
               {error}
             </div>
           )}
-
 
           <form onSubmit={handleCalculatePremium}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', marginBottom: '20px' }}>
@@ -577,6 +605,33 @@ const BajajTravel = () => {
               </button>
               <button className='apply-btn-emp' type="button" onClick={handleCancel}>Cancel</button>
             </div>
+
+            {displayData.Same_employee === 'Y' && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px', padding: '15px', backgroundColor: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+                  Payout: <span style={{ color: '#059669' }}>{displayData.Payout_Bajaj || '0'}%</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <label style={{ fontWeight: '500', color: '#374151' }}>Payout Change:</label>
+                  <input
+                    type="number"
+                    value={customPayoutPercentage}
+                    name="txtayoutPercentage"
+                    onChange={(e) => setCustomPayoutPercentage(e.target.value)}
+                    style={{ width: '100px', padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }}
+                    placeholder="%"
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => handleReCalculatePremium(e)}
+                    className="Premium-btn"
+                  >
+                    Re-Calculate Premium
+                  </button>
+                </div>
+              </div>
+            )}
+
 
             {lastApiResponse && (
               <div style={{ padding: '20px', backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px', marginTop: '30px' }}>
@@ -632,7 +687,6 @@ const BajajTravel = () => {
                     </div>
                   ) : (
                     <>
-                      {/* RENDER THE INSUFFICIENT WALLET ERROR RIGHT ABOVE THE BUTTON */}
                       {error && error.includes('Insufficient') && (
                         <div style={{
                           backgroundColor: '#fef2f2',
@@ -658,7 +712,6 @@ const BajajTravel = () => {
                           </div>
                         </div>
                       )}
-                      {/* THE PROCEED BUTTON */}
                       <button
                         type="button"
                         onClick={handleProceedToProposal}
@@ -676,14 +729,12 @@ const BajajTravel = () => {
                       >
                         Proceed to Proposal
                       </button>
-                       </>
-
-
+                    </>
                   )}
-                    </div>
                 </div>
+              </div>
             )}
-              </form>
+          </form>
         </div>
       </main>
 

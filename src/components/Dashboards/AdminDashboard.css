@@ -717,6 +717,11 @@
   background: #ec4899;
 }
 
+.AdminDashboard .button-mis-bajaj {
+  background: #008080;
+}
+
+
 .AdminDashboard .button-mis-ayushpay:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);

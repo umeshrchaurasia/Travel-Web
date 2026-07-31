@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   UserCircle, Mail, BadgeCheck, LogOut, RefreshCw, Home, CreditCard, ArrowLeft,
-  Check, X, Download, Upload, DollarSign, Clock, CheckCircle, XCircle, Wallet, AlertTriangle
+  Check, X, Download, Upload, FileText, DollarSign, Clock, CheckCircle, XCircle, Wallet, AlertTriangle
 } from 'lucide-react';
 import { logout } from '../../../services/auth';
 import {
@@ -10,7 +10,8 @@ import {
   applyWalletPayment_bajaj,
   getAgentById,
   ApplyWalletBalance_bajaj,
-  PDF_BASE_URL // Assumed imported here; remove if declared elsewhere
+  PDF_BASE_URL, // Assumed imported here; remove if declared elsewhere
+  uploadWalletPaymentDocument_bajaj
 } from '../../../services/api';
 import '../Wallet/WalletPage.css';
 import logo from '../../../../src/assets/img/TravelAssist.webp';
@@ -94,6 +95,12 @@ const calculateRemainingDays = (
 const WalletPage_bajaj: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  // New States for Upload Modal
+  const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
+  const [activePaymentRef, setActivePaymentRef] = useState<string>('');
+  const [uploadingDoc, setUploadingDoc] = useState<boolean>(false);
+  const [uploadError, setUploadError] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Get user profile either from location state or localStorage
   const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
@@ -326,7 +333,7 @@ const WalletPage_bajaj: React.FC = () => {
         policyNo: policiesString,
         totalAmount: selectedAmount.toString(),
         paymentMode: 'InProcess',
-        utr: '' 
+        utr: ''
       };
 
       const response: any = await applyWalletPayment_bajaj(paymentData);
@@ -336,6 +343,15 @@ const WalletPage_bajaj: React.FC = () => {
         setSuccessMessage(
           `Payment of ₹${selectedAmount.toFixed(2)} applied successfully for ${policiesCount} ${policiesCount === 1 ? 'policy' : 'policies'}`
         );
+
+        // --- NEW: Trigger Upload Modal ---
+        const refNo =  response.MasterData?.paymentRefNo || response.PaymentRefNo || '';
+        if (refNo) {
+          setActivePaymentRef(refNo);
+          setSelectedFile(null);
+          setUploadError('');
+          setShowUploadModal(true);
+        }
 
         setTotalWalletAmount(totalWalletAmount);
 
@@ -347,12 +363,20 @@ const WalletPage_bajaj: React.FC = () => {
           localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
           localStorage.setItem('walletData', JSON.stringify(updatedProfile));
           setUserProfile(updatedProfile);
+
+
         }
 
         setRefreshTrigger(prev => prev + 1);
         setSelectedProposals([]);
         setSelectedAmount(0);
-      } else {
+
+        const newPaymentRef = response.MasterData?.paymentRefNo || response.PaymentRefNo || '';
+
+        setActivePaymentRef(newPaymentRef);
+        setShowUploadModal(true); // Trigger the popup
+      }
+      else {
         setError(response?.Message || 'Payment processing failed');
       }
     } catch (error: unknown) {
@@ -362,6 +386,48 @@ const WalletPage_bajaj: React.FC = () => {
       setProcessingPayment(false);
     }
   };
+
+  const handleFileUploadSubmit = async () => {
+    if (!selectedFile || !activePaymentRef) {
+      setUploadError('Please select a file to upload.');
+      return;
+    }
+    setUploadingDoc(true);
+    setUploadError('');
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onload = async () => {
+        const base64String = reader.result as string;
+
+        const payload = {
+          paymentRefNo: activePaymentRef,
+          fileBase64: base64String,
+          fileName: selectedFile.name
+        };
+
+        const uploadResp: any = await uploadWalletPaymentDocument_bajaj(payload);
+        if (uploadResp && (uploadResp.Status === 'Success' || uploadResp.Status === 0)) {
+          setSuccessMessage('Payment document uploaded successfully!');
+          setShowUploadModal(false);
+          setSelectedFile(null);
+          setRefreshTrigger(prev => prev + 1);
+        } else {
+          setUploadError(uploadResp.Message || 'Failed to upload document.');
+        }
+        setUploadingDoc(false);
+      };
+
+      reader.onerror = () => {
+        setUploadError('Failed to read the selected file.');
+        setUploadingDoc(false);
+      };
+    } catch (err: any) {
+      setUploadError(err.message || 'An error occurred during upload.');
+      setUploadingDoc(false);
+    }
+  };
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -907,6 +973,82 @@ const WalletPage_bajaj: React.FC = () => {
       <footer className="footer">
         <p>© {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All rights reserved</p>
       </footer>
+
+      {/* Upload Confirmation Modal */}
+      {showUploadModal && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1100 }}>
+          <div className="modal-content" style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', width: '90%', maxWidth: '450px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', margin: 0, color: '#1f2937' }}>Upload Payment Document</h3>
+              <button onClick={() => setShowUploadModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: '14px', color: '#4b5563', marginBottom: '16px' }}>
+              Please upload the payment receipt or proof for Reference Number: <strong style={{ color: '#1f2937' }}>{activePaymentRef}</strong>
+            </p>
+
+            {uploadError && (
+              <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '10px', borderRadius: '6px', fontSize: '14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <AlertTriangle size={16} />
+                <span>{uploadError}</span>
+              </div>
+            )}
+
+            <div style={{ border: '2px dashed #d1d5db', borderRadius: '6px', padding: '20px', textAlign: 'center', marginBottom: '20px', backgroundColor: '#f9fafb' }}>
+              <input
+                type="file"
+                id="doc-upload"
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    if (file.size > 4 * 1024 * 1024) {
+                      setUploadError('File size must be under 4MB.');
+                      return;
+                    }
+                    setUploadError('');
+                    setSelectedFile(file);
+                  }
+                }}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="doc-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Upload size={32} style={{ color: '#6b7280', marginBottom: '8px' }} />
+                <span style={{ fontSize: '14px', fontWeight: '500', color: '#4f46e5' }}>Click to select PDF or Image</span>
+                <span style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>Supported formats: PDF, JPG, PNG (Max 4MB)</span>
+              </label>
+
+              {selectedFile && (
+                <div style={{ marginTop: '12px', padding: '8px', backgroundColor: '#e0e7ff', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '13px', color: '#3730a3' }}>
+                  <FileText size={16} />
+                  <span style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '250px' }}>{selectedFile.name}</span>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button
+                type="button"
+                onClick={() => setShowUploadModal(false)}
+                disabled={uploadingDoc}
+                style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid #d1d5db', backgroundColor: 'white', color: '#374151', cursor: 'pointer', fontWeight: '500' }}
+              >
+                Skip / Later
+              </button>
+              <button
+                type="button"
+                onClick={handleFileUploadSubmit}
+                disabled={!selectedFile || uploadingDoc}
+                style={{ padding: '8px 16px', borderRadius: '6px', border: 'none', backgroundColor: '#4f46e5', color: 'white', cursor: (!selectedFile || uploadingDoc) ? 'not-allowed' : 'pointer', fontWeight: '500', opacity: (!selectedFile || uploadingDoc) ? 0.6 : 1 }}
+              >
+                {uploadingDoc ? 'Uploading...' : 'Submit Document'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

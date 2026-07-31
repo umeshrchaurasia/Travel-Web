@@ -189,6 +189,7 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     loadAgents();
   };
 
+  
   const gotoMIS = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
     navigate('/MIS_Proposal_Admin', {
@@ -249,6 +250,32 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
     });
   }
 
+    const goToAdminCOIBajaj = () => {
+
+   localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/Admin_COI_bajaj', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  };
+
+  
+     const goToAdminCOIReliance = () => {
+
+   localStorage.setItem('walletData', JSON.stringify(displayData));
+    navigate('/Admin_COI', {
+      state: {
+        empid: '',
+        agentData: displayData,
+        userType: 'Admin',
+        adminId: userData?.UId
+      }
+    });
+  };
 
   const gotoUpdateAgent = () => {
     localStorage.setItem('walletData', JSON.stringify(displayData));
@@ -508,6 +535,9 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       <button onClick={handleWalletClick} className="action-button button-replenish">
                         <Wallet className="w-4 h-4 mr-2" size={20} /> Replenish Wallet
                       </button>
+                      <button onClick={goToAdminCOIReliance} className="action-button button-mis-bajaj">
+                         View COI
+                      </button>
                     </>
                   )}
 
@@ -525,7 +555,9 @@ const AdminDashboard = ({ userData = null, onLogout = () => { } }) => {
                       <button onClick={handleuploadPolicyClick} className="action-button button-agent-details">
                         <Upload className="w-4 h-4 mr-2" size={20} /> Upload Policy
                       </button>
-
+                      <button onClick={goToAdminCOIBajaj} className="action-button button-mis-bajaj">
+                        Bajaj View COI
+                      </button>
 
                     </>
                   )}

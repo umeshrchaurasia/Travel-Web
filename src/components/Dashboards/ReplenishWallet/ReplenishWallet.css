@@ -511,3 +511,7 @@
 }
 
 /* --- END PROFESSIONAL DESIGN FOR "BACK TO DASHBOARD" BUTTON --- */
+
+.replenish-wallet-wrapper .proposals-table {
+  min-width: 1350px !important;
+}

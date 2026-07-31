@@ -155,6 +155,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
         return strVal; // Fallback
     };
 
+    // For ERP Update PDF File
     const handlePdfUpload = async (e: ChangeEvent<HTMLInputElement>, index: number, policyNo: string) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -263,10 +264,14 @@ const Excel_InsertTravelProposal: React.FC = () => {
                         JourneyFromDate: forceYYYYMMDD(row.StartDate),
                         JourneyToDate: forceYYYYMMDD(row.EndDate),
                         NoOfDays: row.NoOfDays || 0, FinalPremium: row.FinalPremium || 0,
-                        Selected_PremiumAmount: row.Selected_PremiumAmount || 0, Actual_PremiumAmount: row.Actual_PremiumAmount || 0,
-                        gstamount: row.gstamount || 0, commission_agentamount: row.commission_agentamount || 0,
-                        Premium_without_gst: row.Premium_without_gst || 0, Payout_Bajaj: row.Payout_Bajaj || 0,
-                        Selected_Payment_Mode: row.Selected_Payment_Mode, Prop_Pincode: row.Prop_Pincode,
+                        Selected_PremiumAmount: row.Selected_PremiumAmount || 0,
+                        Actual_PremiumAmount: row.Actual_PremiumAmount || 0,
+                        gstamount: row.gstamount || 0, 
+                        commission_agentamount: row.commission_agentamount || 0,
+                        Premium_without_gst: row.Premium_without_gst || 0, 
+                        Payout_Bajaj: row.Payout_Bajaj || 0,
+                        Selected_Payment_Mode: row.Selected_Payment_Mode, 
+                        Prop_Pincode: row.Prop_Pincode,
                         Prop_State: row.Prop_State, Prop_City: row.Prop_City, Prop_Address: row.Prop_Address,
                         Prop_Email: row.Prop_Email, Prop_Mobile: row.Prop_Mobile,
                         Trv_Title: row.Trv_Title, Trv_Gender: row.Trv_Gender, Trv_FirstName: row.Trv_FirstName,
@@ -335,9 +340,9 @@ const Excel_InsertTravelProposal: React.FC = () => {
     });
     const [selectedProduct, setSelectedProduct] = useState(() => {
         if (location.state?.product === 'indusindTravel') return PRODUCT_RELIANCE_TRAVEL;
-        if (location.state?.product === 'bajajTravel') return PRODUCT_BAJAJ_TRAVEL;
+       // if (location.state?.product === 'bajajTravel') return PRODUCT_BAJAJ_TRAVEL;
 
-        return null;
+        return PRODUCT_BAJAJ_TRAVEL;
     });
 
     const handleTravelProductSelection = (product: string) => {

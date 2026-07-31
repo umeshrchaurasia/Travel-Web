@@ -588,7 +588,9 @@ const BajajTravelProposal = () => {
     }, 500);
   };
 
-
+  const paymentModeVal = proposalData?.agentDetails?.Paymentmode || 'N/A';
+  const payoutVal = proposalData?.agentDetails?.Payout_Bajaj || 'N/A';
+  const amountVal = proposalData?.insuranceDetails?.radiobtn_selectedAmount || 'N/A';
 
   // -- 4. UI RENDER --
   return (
@@ -654,6 +656,32 @@ const BajajTravelProposal = () => {
             <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '30px', textAlign: 'center', color: '#1f2937' }}>
               Bajaj Travel Proposal Form
             </h2>
+
+             {/* NEW: Payment Info Summary Row */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: '#f3f4f6',
+              padding: '15px 25px',
+              borderRadius: '8px',
+              marginBottom: '30px',
+              border: '1px solid #e5e7eb'
+            }}>
+              <div>
+                <span style={{ color: '#6b7280', fontSize: '14px', marginRight: '8px' }}>Payment Mode:</span>
+                <span style={{ fontWeight: '600', color: '#1f2937' }}>{paymentModeVal}</span>
+              </div>
+              <div>
+                <span style={{ color: '#6b7280', fontSize: '14px', marginRight: '8px' }}>Payout Percentage:</span>
+                <span style={{ fontWeight: '600', color: '#059669' }}>{payoutVal}%</span>
+              </div>
+              <div>
+                <span style={{ color: '#6b7280', fontSize: '14px', marginRight: '8px' }}>Amount to Collect:</span>
+                <span style={{ fontWeight: 'bold', color: '#dc2626', fontSize: '18px' }}>₹{amountVal}</span>
+              </div>
+            </div>
+
 
             {/* 1. Travel Details Section */}
             <div style={{ marginBottom: '40px' }}>

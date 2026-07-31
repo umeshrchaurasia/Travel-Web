@@ -498,6 +498,18 @@ export const getProposalDetailsByEmployee = async (empId, startdate, enddate) =>
   }
 };
 
+export const getProposalDetailsByAdmin = async ( startdate, enddate) => {
+  try {
+    const response = await api.post('/getProposalDetailsByAdmin', {
+       startdate, enddate
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
 
 export const getProposalMIS = async (startdate, enddate, empId, agentId) => {
   try {
@@ -1346,6 +1358,18 @@ export const ApplyWalletBalance_bajaj = async (walletData) => {
   }
 };
 
+export const uploadWalletPaymentDocument_bajaj = async (payload) => {
+  try {
+    const response = await api.post('/upload-wallet-payment-document_bajaj', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading wallet payment document:', error);
+    throw error;
+  }
+};
+
+
+
 export const getBatchPaymentsByStatus_bajaj = async (status) => {
   try {
     const response = await api.post('/getBatchPaymentsByStatus_bajaj', { status });
@@ -1451,6 +1475,21 @@ export const getProposalDetailsByEmployee_bajaj = async (empId, startdate, endda
     throw error;
   }
 };
+
+export const getProposalDetailsByAdmin_bajaj = async ( startdate, enddate) => {
+  try {
+    const response = await api.post('/getProposalDetailsByAdmin_bajaj', {
+       startdate, enddate
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching proposal details:', error);
+    throw error;
+  }
+};
+
+
+
 
 export const getPolicyDetailsbyPolicyno_bajaj = async (Policyno) => {
   try {
@@ -1583,7 +1622,6 @@ export const uploadBajajPdfApi = async (payload) => {
     };
   }
 };
-
 
 
 export default api;

@@ -9,6 +9,7 @@ interface AgentState {
   FullName: string;
   Agent_Code: string;
   MobileNumber: string;
+  Same_employee: string;
 }
 
 const initialState: AgentState = {
@@ -19,6 +20,7 @@ const initialState: AgentState = {
   FullName: "",
   Agent_Code: "",
   MobileNumber: "",
+  Same_employee: "",
 };
 
 const agentSlice = createSlice({

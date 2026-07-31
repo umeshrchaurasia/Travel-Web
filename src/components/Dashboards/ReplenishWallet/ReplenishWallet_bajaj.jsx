@@ -3,14 +3,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   UserCircle, Mail, BadgeCheck, LogOut, RefreshCw, Home, CreditCard, ArrowLeft,
   Check, X, Download, Upload, DollarSign, Clock, ArrowLeftCircle,
-  CheckCircle, XCircle, Wallet, Calendar
+  CheckCircle, XCircle, Wallet, Calendar,Eye
 } from 'lucide-react';
 import { logout } from '../../../services/auth';
 import {
   getBatchPaymentsByStatus_bajaj,
   updateBatchPayment_bajaj,
   getWalletApplications_bajaj,
-  processWalletApplication_bajaj
+  processWalletApplication_bajaj,
+  PDF_BASE_URL
 } from '../../../services/api';
 import './ReplenishWallet.css';
 
@@ -441,33 +442,62 @@ const ReplenishWallet_bajaj = () => {
               <table className="proposals-table">
                 <thead>
                   <tr>
-                    <th style={{ width: '50px' }}>Sr No</th>
-                    <th style={{ width: '160px' }}>Payment Ref No</th>
-                    <th style={{ width: '120px' }}>Agent Code</th>
-                    <th style={{ width: '150px' }}>Agent Name</th>
-                    <th style={{ width: '120px' }}>Wallet Amount</th>
-                    <th style={{ width: '120px' }}>Policy Amount</th>
-                    <th style={{ width: '100px' }}>Status</th>
-                    <th style={{ width: '160px' }}>UTR</th>
-                    <th style={{ width: '100px' }}>Action</th>
-                    <th style={{ width: '120px' }}>Create Date</th>
+                    <th style={{ width: '50px', textAlign: 'center' }}>Sr No</th>
+                    <th style={{ width: '160px', textAlign: 'center' }}>Payment Ref No</th>
+                 
+                    <th style={{ width: '150px', textAlign: 'center' }}>Agent Name</th>
+                    <th style={{ width: '120px' , textAlign: 'center'}}>Wallet Amount</th>
+                    <th style={{ width: '120px', textAlign: 'center' }}>Policy Amount</th>
+                    <th style={{ width: '100px', textAlign: 'center' }}>Status</th>
+                    <th style={{ width: '140px', textAlign: 'center' }}>Doc</th>
+                    <th style={{ width: '160px', textAlign: 'center'}}>UTR</th>
+                    <th style={{ width: '100px', textAlign: 'center' }}>Action</th>
+                    <th style={{ width: '120px', textAlign: 'center' }}>Create Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {batchPayments.map((payment, index) => (
                     <tr key={payment.BatchNo || index}>
-                      <td>{index + 1}</td>
-                      <td>{payment.Payment_Ref_No}</td>
-                      <td>{payment.Agent_Code}</td>
-                      <td>{payment.FullName}</td>
-                      <td>₹ {parseFloat(payment.Wallet_Amount || 0).toLocaleString()}</td>
-                      <td>₹ {parseFloat(payment.Total_Amount || 0).toLocaleString()}</td>
-                      <td>
+                      <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                       <td style={{ textAlign: 'center' }}>{payment.Payment_Ref_No}</td>
+                    
+                       <td style={{ textAlign: 'center' }}>{payment.FullName}</td>
+                      <td style={{ textAlign: 'center' }}>₹ {parseFloat(payment.Wallet_Amount || 0).toLocaleString()}</td>
+                      <td style={{ textAlign: 'center' }}>₹ {parseFloat(payment.Total_Amount || 0).toLocaleString()}</td>
+                      <td style={{ textAlign: 'center' }}>
                         <span className="status-badge inprocess">
                           <Clock size={10} className="status-icon in-process" />
 
-                          <span>InProcess</span>
+                          <span    style={{
+                              padding: '2px', }} >InProcess</span>
                         </span>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        {payment.paymentdoc ? (
+                          <a
+                            href={`${PDF_BASE_URL}${payment.paymentdoc}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '6px',
+                              padding: '6px 12px',
+                              backgroundColor: '#6366f1',
+                              color: 'white',
+                              borderRadius: '6px',
+                              textDecoration: 'none',
+                              fontSize: '13px',
+                              fontWeight: '500'
+                            }}
+                          >
+                            <Eye size={15} />
+                            <span>Click to View</span>
+                          </a>
+                        ) : (
+                          <span style={{ color: '#9ca3af', fontSize: '13px' }}>No Doc</span>
+                        )}
                       </td>
                       <td>
                         <input

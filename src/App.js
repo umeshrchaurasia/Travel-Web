@@ -99,6 +99,10 @@ import MIS_Proposal_Admin_bajaj from './components/Dashboards/MIS_Report/MIS_Pro
 
 import Employee_COI_bajaj from './components/Dashboards/UpdatePolicy/Employee_COI_bajaj';
 
+import Admin_COI_bajaj from './components/Dashboards/UpdatePolicy/Admin_COI_bajaj';
+
+import Admin_COI from './components/Dashboards/UpdatePolicy/Admin_COI';
+
 import MIS_Proposal_bajaj from './components/Dashboards/MIS_Report/MIS_Proposal_bajaj';
 
 import TDS_Proposal_bajaj from './components/Dashboards/MIS_Report/TDS_Proposal_bajaj';
@@ -117,8 +121,7 @@ import UpdatePolicyInsurance_bajaj from './components/Dashboards/UpdatePolicy/Up
 
 import Excel_InsertTravelProposal from './components/Dashboards/WelcomeLetter/Excel_InsertTravelProposal';
 
-import Excel_LetterBajajSearch from './components/Dashboards/WelcomeLetter/Excel_LetterBajajSearch';  
-
+import Excel_LetterBajajSearch from './components/Dashboards/WelcomeLetter/Excel_LetterBajajSearch';
 
 
 function App() {
@@ -508,6 +511,20 @@ function App() {
             </ProtectedRoute>
           } />
 
+          <Route path="/Admin_COI_bajaj" element={
+            <ProtectedRoute>
+              <Admin_COI_bajaj userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
+          <Route path="/Admin_COI" element={
+            <ProtectedRoute>
+              <Admin_COI userData={userData} onLogout={handleLogout} />
+            </ProtectedRoute>
+          } />
+
+
           <Route path="/MIS_Proposal_bajaj" element={
             <ProtectedRoute>
               <MIS_Proposal_bajaj userData={userData} onLogout={handleLogout} />
@@ -538,14 +555,14 @@ function App() {
             </ProtectedRoute>
           } />
 
-           <Route path="/UpdatePolicyInsurance_bajaj" element={
+          <Route path="/UpdatePolicyInsurance_bajaj" element={
             <ProtectedRoute>
               <UpdatePolicyInsurance_bajaj userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
 
-          
+
           <Route path="/GenerateCOI_Ayushpay" element={
             <ProtectedRoute>
               <GenerateCOI_Ayushpay userData={userData} onLogout={handleLogout} />
@@ -558,21 +575,22 @@ function App() {
             </ProtectedRoute>
           } />
 
-           <Route path="/Excel_InsertTravelProposal" element={
+          <Route path="/Excel_InsertTravelProposal" element={
             <ProtectedRoute>
               <Excel_InsertTravelProposal userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
 
-   <Route path="/Excel_LetterBajajSearch" element={
+          <Route path="/Excel_LetterBajajSearch" element={
             <ProtectedRoute>
               <Excel_LetterBajajSearch userData={userData} onLogout={handleLogout} />
             </ProtectedRoute>
           } />
 
+         
 
-        </Routes>
+          </Routes>
       </div>
     </Router>
   );
