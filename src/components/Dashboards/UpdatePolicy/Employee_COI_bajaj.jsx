@@ -232,16 +232,16 @@ const Employee_COI_bajaj = () => {
 
     const CancelPolicyDetails = async (cancelData) => {
         try {
-            // setLoading(true); // Show loading state
+             setLoading(true); // Show loading state
 
-            // // Call the API to get detailed policy information
-            // const response = await cancelpolicy_bajaj(cancelData);
+            // Call the API to get detailed policy information
+            const response = await cancelpolicy_bajaj(cancelData);
 
-            // if (response.Status === 'Success') {
-            //     fetchEmployeeProposalsWithDates(empId, startDate, endDate);
-            // } else {
-            //     setError(response.Message || 'Failed to cancel policy. Please try again.');
-            // }
+            if (response.Status === 'Success') {
+                fetchEmployeeProposalsWithDates(empId, startDate, endDate);
+            } else {
+                setError(response.Message || 'Failed to cancel policy. Please try again.');
+            }
         } catch (error) {
             console.error('Error fetching policy details:', error);
             // Fall back to the original proposal data

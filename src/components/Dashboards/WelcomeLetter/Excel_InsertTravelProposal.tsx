@@ -18,6 +18,7 @@ interface ProcessResult {
     customerName: string;
     policyNumber: string;
     asNumber: string;
+    createDate: string | null;
     startDate: string | null;
     endDate: string | null;
     finalPremium: string | number;
@@ -32,7 +33,9 @@ interface ExcelRow {
     AgentId: string;
     UId: string;
     Asnumber_bajaj: string;
-    PolicyNo: string; GeographicalCover: string; CountryName: string;
+    PolicyNo: string; GeographicalCover: string; 
+    CountryName: string;
+    CreateDate: string | number;
     StartDate: string | number; EndDate: string | number; JourneyFromDate: string | number; JourneyToDate: string | number; NoOfDays: string | number;
     FinalPremium: string | number; Selected_PremiumAmount: string | number; Actual_PremiumAmount: string | number; gstamount: string | number; commission_agentamount: string | number;
     Premium_without_gst: string | number; Payout_Bajaj: string | number; Selected_Payment_Mode: string;
@@ -85,14 +88,14 @@ const Excel_InsertTravelProposal: React.FC = () => {
 
     const downloadSampleCSV = () => {
         const headers = [
-            "AgentId", "UId", "Asnumber_bajaj", "PolicyNo", "GeographicalCover", "CountryName", "StartDate", "EndDate", "NoOfDays",
+            "AgentId", "UId", "Asnumber_bajaj", "PolicyNo", "GeographicalCover", "CountryName","CreateDate", "StartDate", "EndDate", "NoOfDays",
             "FinalPremium", "Selected_PremiumAmount", "Actual_PremiumAmount", "gstamount", "commission_agentamount", "Premium_without_gst", "Payout_Bajaj", "Selected_Payment_Mode",
             "Prop_Pincode", "Prop_State", "Prop_City", "Prop_Address", "Prop_Email", "Prop_Mobile",
             "Trv_Title", "Trv_Gender", "Trv_FirstName", "Trv_MiddleName", "Trv_LastName", "Trv_DOB", "Trv_Passport", "Trv_RelationWithProposer", "Trv_NomineeName", "Trv_NomineeRelation", "Trv_Email", "Trv_Mobile", "Trv_PreExistingDisease"
         ].join(',');
 
         const row = [
-            "28", "119590", "BEU00090031", "000-12345678", "Worldwide Including USA and Canada", "USA", "05-04-2026", "15-04-2026", "10",
+            "28", "119590", "BEU00090031", "000-12345678", "Worldwide Including USA and Canada", "USA","01-04-2026", "05-04-2026", "15-04-2026", "10",
             "472", "977", "977", "149", "414", "828", "50", "full",
             "400021", "Maharashtra", "Mumbai", "123 Main St", "prop@example.com", "9876543210",
             "Mr", "M", "Umesh", "M", "Chaurasia", "1990-01-01", "Z1234567", "SELF", "Rahul Chaurasia", "BROTHER", "umesh@example.com", "9876543210", "No"
@@ -238,6 +241,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                             customerName: row.Trv_FirstName || 'Unknown',
                             policyNumber: 'MISSING',
                             asNumber: row.Asnumber_bajaj || '-',
+                            createDate: forceYYYYMMDD(row.CreateDate),
                             startDate: forceYYYYMMDD(row.StartDate),
                             endDate: forceYYYYMMDD(row.EndDate),
                             finalPremium: row.FinalPremium || 0,
@@ -258,7 +262,9 @@ const Excel_InsertTravelProposal: React.FC = () => {
                         UId: row.UId,
                         Asnumber_bajaj: row.Asnumber_bajaj,
                         PolicyNo: policyNumber,
-                        GeographicalCover: row.GeographicalCover, CountryName: row.CountryName,
+                        GeographicalCover: row.GeographicalCover, 
+                        CountryName: row.CountryName,
+                        CreateDate: forceYYYYMMDD(row.CreateDate),
                         StartDate: forceYYYYMMDD(row.StartDate),
                         EndDate: forceYYYYMMDD(row.EndDate),
                         JourneyFromDate: forceYYYYMMDD(row.StartDate),
@@ -293,6 +299,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                                 customerName: `${payload.Trv_FirstName} ${payload.Trv_LastName}`,
                                 policyNumber: payload.PolicyNo,
                                 asNumber: payload.Asnumber_bajaj || '-',
+                                createDate: payload.CreateDate,
                                 startDate: payload.StartDate,
                                 endDate: payload.EndDate,
                                 finalPremium: payload.FinalPremium,
@@ -308,6 +315,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                             customerName: `${payload.Trv_FirstName} ${payload.Trv_LastName}`,
                             policyNumber: payload.PolicyNo,
                             asNumber: payload.Asnumber_bajaj || '-',
+                            createDate: payload.CreateDate,
                             startDate: payload.StartDate,
                             endDate: payload.EndDate,
                             finalPremium: payload.FinalPremium,
@@ -441,6 +449,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Customer Name</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Policy Number</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>AS Number</th>
+                                                        <th style={{ fontWeight: '600', color: '#4b5563' }}>Create Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Start Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>End Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Final Premium</th>
@@ -456,6 +465,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                                                             <td style={{ verticalAlign: 'middle' }}>{res.customerName}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.policyNumber}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.asNumber}</td>
+                                                            <td style={{ verticalAlign: 'middle' }}>{res.createDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.startDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.endDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>₹{res.finalPremium || '0'}</td>
@@ -571,6 +581,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Customer Name</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Policy Number</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>AS Number</th>
+                                                        <th style={{ fontWeight: '600', color: '#4b5563' }}>Create Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Start Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>End Date</th>
                                                         <th style={{ fontWeight: '600', color: '#4b5563' }}>Final Premium</th>
@@ -586,6 +597,7 @@ const Excel_InsertTravelProposal: React.FC = () => {
                                                             <td style={{ verticalAlign: 'middle' }}>{res.customerName}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.policyNumber}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.asNumber}</td>
+                                                            <td style={{ verticalAlign: 'middle' }}>{res.createDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.startDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>{res.endDate || '-'}</td>
                                                             <td style={{ verticalAlign: 'middle' }}>₹{res.finalPremium || '0'}</td>

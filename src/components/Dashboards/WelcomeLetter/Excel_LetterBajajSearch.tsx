@@ -279,7 +279,7 @@ const Excel_LetterBajajSearch = () => {
                                             <tr key={index}>
 
                                                 <td className="fw-semibold text-primary">{res.fullname}</td>
-                                                <td>{res.Policy_Number}</td>
+                                                <td  style={{  minWidth: '190px'}}>{res.Policy_Number}</td>
                                                 <td>{res.Asnumber_bajaj || "—"}</td>
                                                 <td>{formatDate(res.PolicyStartDate)}</td>
                                                 <td>{formatDate(res.PolicyEndDate)}</td>
