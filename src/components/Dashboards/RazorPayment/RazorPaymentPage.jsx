@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Home, CreditCard, Wallet, AlertCircle } from 'lucide-react';
 import { logout } from '../../../services/auth';
-import { getPolicyDetailsbyPolicyno, generateInvoicePdf, generatePolicybyPolicyno } from '../../../services/api';
+import { getPolicyDetailsbyPolicyno, generateInvoicePdf, generatePolicybyPolicyno,generateindusindPolicy_forCS} from '../../../services/api';
 import logo from '../../../../src/assets/img/TravelAssist.webp';
 
 // Create a ConfirmationDialog component
@@ -206,6 +206,26 @@ const RazorPaymentPage = ({ userData = null, onLogout = () => { } }) => {
         // This matches your current behavior in paste-2.txt (line 153)
       }
 
+
+         // erp_cs_travel Data Push
+      try {
+        const indusindPolicyResponse = await generateindusindPolicy_forCS(policyNo);
+
+        if (indusindPolicyResponse?.Status === "Success") {
+          console.log(" generated Indusind erp_cs_travel successfully:", indusindPolicyResponse);
+          // Navigate to wallet payment page
+         
+        } else {
+          console.error("Failed to generate erp_cs_travel:", indusindPolicyResponse);
+          setError("Failed to generate erp_cs_travel. Please try again.");
+         
+        }
+      } catch (invoiceError) {
+        console.error("Error generating erp_cs_travel:", invoiceError);
+        setError("Failed to generate erp_cs_travel. Please try again.");
+       
+      }
+
       // Then generate the invoice PDF
       try {
         const invoiceResponse = await generateInvoicePdf(policyNo);
@@ -226,6 +246,9 @@ const RazorPaymentPage = ({ userData = null, onLogout = () => { } }) => {
         setError("Failed to generate invoice. Please try again.");
         setProcessingPayment(false);
       }
+
+  
+
     } catch (error) {
       console.error('Error during wallet payment process:', error);
       setError('Failed to process wallet payment. Please try again.');

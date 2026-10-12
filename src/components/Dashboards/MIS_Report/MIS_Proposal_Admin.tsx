@@ -30,6 +30,8 @@ interface Proposal {
     Discount?: string;
     Fullpay_Discount_amount_to_be_paid?: string | number;
     Paymentreceived?: string;
+    UTR?: string;          // <-- ADD THIS
+    Payment_Ref?: string;  // <-- ADD THIS
   
     Payment_Status?: string;
     assistancepremium_Inc_gst?: string;
@@ -40,6 +42,7 @@ interface Proposal {
     SubAgentPayout?: string;
     commissionamount?: string;
     commissionamountpercentage?: string;
+
 }
 
 interface ApiResponse {
@@ -210,6 +213,8 @@ const MIS_Proposal_Admin: React.FC = () => {
             'Assistance Premium Inclusive GST',
             'Reliance Premium Inclusive GST',
             'Payment Received',
+            'UTR',
+            'Payment Reference',
             'Main Agent',
             'Sub Agent Name',
             'Main Agent Payout',
@@ -239,8 +244,8 @@ const MIS_Proposal_Admin: React.FC = () => {
                 item.Assiatance_charges_PostTaxAmount || '',
                 item.Assiatance_charges_PreTaxAmount || '',
                 item.UId || '',
-                item.UserID_Mobileno || '',
-                item.travel_Mobileno || '',
+                `\t${item.UserID_Mobileno|| ''}`,
+                `\t${item.travel_Mobileno || ''}`,
                 item.travel_emailId || '',
                 item.Selected_Payment_Mode || '',
                 item.PaymentType || '',
@@ -250,6 +255,8 @@ const MIS_Proposal_Admin: React.FC = () => {
                 item.assistancepremium_Inc_gst || '',
                 item.Reliance_Premium__Inc_gst || '',
                 item.Paymentreceived || '',
+                `\t${item.UTR || ''}`,
+                `\t${item.Payment_Ref || ''}`,
                 item.Main_Agent || '',
                 item.SubAgentName || '',
                 item.MainAgentPayout || '',
@@ -525,6 +532,8 @@ const MIS_Proposal_Admin: React.FC = () => {
                                             <th className="coi-table-header">Assistance Premium Inclusive GST</th>
                                             <th className="coi-table-header">Reliance Premium Inclusive GST</th>
                                             <th className="coi-table-header">Payment Received</th>
+                                            <th className="coi-table-header" style={{textAlign: "center",verticalAlign: "middle"}}>UTR</th>
+                                            <th className="coi-table-header">Payment Reference</th>
                                             <th className="coi-table-header">Main Agent</th>
                                             <th className="coi-table-header">Sub Agent Name</th>
                                             <th className="coi-table-header">Main Agent Payout</th>
@@ -582,6 +591,8 @@ const MIS_Proposal_Admin: React.FC = () => {
                                                             {proposal.Paymentreceived || ''}
                                                         </span>
                                                     </td>
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.UTR || 'N/A'}</td>         {/* <-- ADD THIS */}
+                                                    <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.Payment_Ref || 'N/A'}</td> {/* <-- ADD THIS */}
                                                     <td className="coi-table-cell">{proposal.Main_Agent || ''}</td>
                                                     <td className="coi-table-cell">{proposal.SubAgentName || ''}</td>
                                                     <td className="coi-table-cell" style={{ textAlign: "center", verticalAlign: "middle" }}>{proposal.MainAgentPayout || ''}</td>

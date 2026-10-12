@@ -28,6 +28,9 @@ interface Agent {
     AdminApproved_Date?: string;
     Created_on?: string;
     isactive?: number;
+    Wallet_Amount?: string;
+    AgentOtppdff?: string;
+
 }
 
 // Define the API response interface
@@ -192,6 +195,7 @@ const MIS_Agentdetail_Admin: React.FC = () => {
             'GST',
             'Admin Approved Date',
             'Created On',
+            'Agent OTP Document',
             'Status'
         ];
 
@@ -215,6 +219,7 @@ const MIS_Agentdetail_Admin: React.FC = () => {
             agent.GST || '',
             formatDate(agent.AdminApproved_Date),
             formatDate(agent.Created_on),
+            agent.AgentOtppdff ? 'Available' : 'N/A', // Output availability
             agent.isactive === 1 ? 'Active' : 'Inactive'
         ]);
 
@@ -454,6 +459,7 @@ const MIS_Agentdetail_Admin: React.FC = () => {
 
                                             <th className="coi-table-header">Agent ID</th>
                                             <th className="coi-table-header">Agent Document</th>
+                                            <th className="coi-table-header">Agent OTP Document</th>
                                             <th className="coi-table-header">Agent Code</th>
                                             <th className="coi-table-header">Agent Name</th>
                                             <th className="coi-table-header">Email ID</th>
@@ -484,7 +490,24 @@ const MIS_Agentdetail_Admin: React.FC = () => {
                                                         Click Here
                                                     </button>
                                                 </td>
+
+                                                  <td className="coi-table-cell" style={{ textAlign: 'center' }}>
+                                                    {agent.AgentOtppdff ? (
+                                                        <button
+                                                            className="click-here-btn"
+                                                            onClick={() => window.open(`${PDF_BASE_URL}${agent.AgentOtppdff}`, '_blank')}
+                                                        >
+                                                            View Doc
+                                                        </button>
+                                                    ) : (
+                                                        <span style={{ color: '#9ca3af', fontSize: '14px' }}>N/A</span>
+                                                    )}
+                                                </td>
                                                 <td className="coi-table-cell">{agent.Agent_Code || ''}</td>
+                                               
+                                               
+                                               
+                                               
                                                 <td className="coi-table-cell">{agent.FullName || ''}</td>
                                                 <td className="coi-table-cell">{agent.EmailID || ''}</td>
                                                 <td className="coi-table-cell">{agent.MobileNumber || ''}</td>
