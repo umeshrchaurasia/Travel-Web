@@ -57,11 +57,11 @@ export const signupUser = async (userData) => {
 
 export const fetchAgentsList = async (uId) => {
   try {
-  //  console.log(uId);
+    //  console.log(uId);
     const response = await api.get('/agents_listByEmp', {
       params: { UId: uId }
     });
-//    console.log(response.data);
+    //    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -71,11 +71,11 @@ export const fetchAgentsList = async (uId) => {
 
 export const fetchAgentsList_Agent = async (agentId) => {
   try {
-  //  console.log(agentid);
+    //  console.log(agentid);
     const response = await api.get('/agents_listBy_Agent', {
       params: { agentId: agentId }
     });
-//    console.log(response.data);
+    //    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -86,11 +86,11 @@ export const fetchAgentsList_Agent = async (agentId) => {
 
 export const GetAgentSummary = async (uId) => {
   try {
-  //  console.log(uId);
+    //  console.log(uId);
     const response = await api.get('/GetAgentSummary', {
       params: { UId: uId }
     });
-  //  console.log(response.data);
+    //  console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -181,10 +181,10 @@ export const get_agentlist_admin = async (startdate, enddate) => {
   }
 };
 
-export const get_agentnamelist_admin = async (startdate, enddate,agentname) => {
+export const get_agentnamelist_admin = async (startdate, enddate, agentname) => {
   try {
     const response = await api.post('/get_agentnamelist_admin', {
-      startdate, enddate,agentname
+      startdate, enddate, agentname
     });
     return response.data;
   } catch (error) {
@@ -370,12 +370,12 @@ export const getProposalDetailsByAgent = async (agentId, paymentStatus) => {
 // New function to apply wallet payment
 export const applyWalletPayment = async (paymentData) => {
   try {
- //   console.log('Sending payment data to API:', paymentData);
+    //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment', paymentData);
 
- //   console.log('API response received:', response.data);
+    //   console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -498,10 +498,10 @@ export const getProposalDetailsByEmployee = async (empId, startdate, enddate) =>
   }
 };
 
-export const getProposalDetailsByAdmin = async ( startdate, enddate) => {
+export const getProposalDetailsByAdmin = async (startdate, enddate) => {
   try {
     const response = await api.post('/getProposalDetailsByAdmin', {
-       startdate, enddate
+      startdate, enddate
     });
     return response.data;
   } catch (error) {
@@ -563,11 +563,11 @@ export const updateProposal_policy = async (paymentData) => {
 export const addRazorpayData = async (paymentData) => {
   try {
     // Log the request data for debugging
-  //  console.log("Sending to Razorpay API:", paymentData);
+    //  console.log("Sending to Razorpay API:", paymentData);
 
     try {
       const response = await api.post('/Addtorazorpaydata', paymentData);
-  //    console.log("API Response:", response);
+      //    console.log("API Response:", response);
       return response;
     } catch (localApiError) {
       console.error("Error in addRazorpayData:", localApiError);
@@ -621,7 +621,7 @@ export const sendOtp = async (data) => {
       agentId: data.agentId
     });
 
-   // console.log('OTP send response:', response.data);
+    // console.log('OTP send response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error sending OTP:', error);
@@ -735,12 +735,12 @@ export const verifyPanpro = async (panNumber, fullName) => {
 
 export const generatePolicybyPolicyno = async (data) => {
   try {
-  //  console.log("Generating policy with data:", data);
+    //  console.log("Generating policy with data:", data);
     // Changed from GET to POST to match your backend route
     const response = await api.post('/generatePolicybyPolicyno', {
       Policyno: data.Policyno
     });
-  //  console.log("Policy generation response:", response.data);
+    //  console.log("Policy generation response:", response.data);
     return response.data;
   } catch (error) {
     console.error('Policy generation error:', error);
@@ -961,12 +961,12 @@ export const getAyushPayPremium = async (agentId) => {
 // New function to apply wallet payment
 export const applyWalletPayment_Practo = async (paymentData) => {
   try {
- //   console.log('Sending payment data to API:', paymentData);
+    //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment_Practo', paymentData);
 
-//    console.log('API response received:', response.data);
+    //    console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -1025,11 +1025,11 @@ export const getProposalTDS_Practo = async (startdate, enddate, empId, agentId) 
 
 export const fetchSubAgentsList = async (agentId) => {
   try {
-  
+
     const response = await api.get('/subagents_listByagent', {
       params: { agentId: agentId }
     });
-  //  console.log(response.data);
+    //  console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
@@ -1078,12 +1078,12 @@ export const getSub_Main_AgentMIS_byAdmin = async (startdate, enddate, empId, ag
 
 export const applyWalletPayment_AyushPay = async (paymentData) => {
   try {
- //   console.log('Sending payment data to API:', paymentData);
+    //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment_AyushPay', paymentData);
 
-//    console.log('API response received:', response.data);
+    //    console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -1220,12 +1220,12 @@ export const calculatePremiumExcluding_bajaj = async (premiumData) => {
 
 export const generatePolicybyPolicyno_bajaj = async (data) => {
   try {
-  //  console.log("Generating policy with data:", data);
+    //  console.log("Generating policy with data:", data);
     // Changed from GET to POST to match your backend route
-      const response = await api.post('/generatePolicybyPolicyno_bajaj', {
+    const response = await api.post('/generatePolicybyPolicyno_bajaj', {
       Policyno: data.Policyno
     });
-  //  console.log("Policy generation response:", response.data);
+    //  console.log("Policy generation response:", response.data);
     return response.data;
   } catch (error) {
     console.error('Policy generation error:', error);
@@ -1271,7 +1271,7 @@ export const generateWelcomeLetterBajaj = async (formData) => {
 // ADD THIS NEW FUNCTION AT THE BOTTOM OF api.js
 export const downloadWelcomeBajajZip = async (policyNumbers) => {
   try {
-    const response = await api.post('/download_welcome_bajaj_zip', 
+    const response = await api.post('/download_welcome_bajaj_zip',
       { policyNumbers },
       { responseType: 'blob' } // CRITICAL: This tells Axios to expect a binary file
     );
@@ -1333,12 +1333,12 @@ export const getProposalDetailsByAgent_bajaj = async (agentId, paymentStatus) =>
 // New function to apply wallet payment
 export const applyWalletPayment_bajaj = async (paymentData) => {
   try {
- //   console.log('Sending payment data to API:', paymentData);
+    //   console.log('Sending payment data to API:', paymentData);
 
     // Use api instance with proper headers and base URL
     const response = await api.post('/insertBatchPayment_bajaj', paymentData);
 
- //   console.log('API response received:', response.data);
+    //   console.log('API response received:', response.data);
 
     // Return the data from the response
     return response.data;
@@ -1476,10 +1476,10 @@ export const getProposalDetailsByEmployee_bajaj = async (empId, startdate, endda
   }
 };
 
-export const getProposalDetailsByAdmin_bajaj = async ( startdate, enddate) => {
+export const getProposalDetailsByAdmin_bajaj = async (startdate, enddate) => {
   try {
     const response = await api.post('/getProposalDetailsByAdmin_bajaj', {
-       startdate, enddate
+      startdate, enddate
     });
     return response.data;
   } catch (error) {
@@ -1562,30 +1562,30 @@ export const getProposalTDS_SubAgent_bajaj = async (startdate, enddate, empId, a
 };
 
 export const downloadBajajLivePdf = async (policyNo) => {
-    try {
-      const response = await api.post('/bajajlivepdf', {
-        policyNo
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Bajaj Live PDF Download error:', error);
-      throw error;
-    }
-  };
-  
-  export const Getbajajpincode = async (pincode) => {
-    try {
-      const response = await api.post('/bajajpincode', {
-        pincode
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Bajaj Pin Code error:', error);
-      throw error;
-    }
-  };
+  try {
+    const response = await api.post('/bajajlivepdf', {
+      policyNo
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Bajaj Live PDF Download error:', error);
+    throw error;
+  }
+};
 
-  export const updateBajajProposer = async (data) => {
+export const Getbajajpincode = async (pincode) => {
+  try {
+    const response = await api.post('/bajajpincode', {
+      pincode
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Bajaj Pin Code error:', error);
+    throw error;
+  }
+};
+
+export const updateBajajProposer = async (data) => {
   try {
     const response = await api.post('/UpdateBajajProposer_policy', data);
     return response.data;
@@ -1594,7 +1594,7 @@ export const downloadBajajLivePdf = async (policyNo) => {
     throw error;
   }
 
-  
+
 };
 
 export const excelInsertBajajProposal = async (payload) => {
@@ -1633,6 +1633,14 @@ export const generateindusindPolicy_forCS = async (policyNo) => {
   }
 };
 
+export const pushCsDataBajajApi = async (data) => {
+  try {
 
+    const response = await api.post(`/generateBajajPolicy_forCS`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export default api;

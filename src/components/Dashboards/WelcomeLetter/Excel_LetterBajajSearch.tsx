@@ -11,19 +11,20 @@ import {
     CheckCircle2,
     ChevronLeft,
     ChevronRight,
-    UserSearch
+    UserSearch,
 } from "lucide-react";
-import { logout } from '../../../services/auth';
+import { logout } from "../../../services/auth";
 
 // Import your properly configured axios API calls
 import {
     ERP_search_welcome_letters_bajaj,
-    uploadBajajPdfApi
+    uploadBajajPdfApi,
+    pushCsDataBajajApi,
 } from "../../../services/api";
 
-import logo from '../../../../src/assets/img/TravelAssist.webp';
-import '../UpdatePolicy/generatecoi.css';
-import './WelcomeLetterFormbajaj.css';
+import logo from "../../../../src/assets/img/TravelAssist.webp";
+import "../UpdatePolicy/generatecoi.css";
+import "./WelcomeLetterFormbajaj.css";
 
 interface WelcomeLetter {
     id: number;
@@ -41,8 +42,8 @@ interface WelcomeLetter {
     Created_Date: string;
     Issue_Date: string;
     error?: string;
-    erpStatus: 'Pending' | 'Uploading...' | 'Success' | 'Failed';
-    csPushStatus?: 'Idle' | 'Pushing...' | 'Pushed' | 'Failed';
+    erpStatus: "Pending" | "Uploading..." | "Success" | "Failed";
+    csPushStatus?: "Idle" | "Pushing..." | "Pushed" | "Failed";
 }
 
 const ITEMS_PER_PAGE = 15;
@@ -54,7 +55,9 @@ const Excel_LetterBajajSearch = () => {
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    const [startDate, setStartDate] = useState(firstDayOfMonth.toISOString().split("T")[0]);
+    const [startDate, setStartDate] = useState(
+        firstDayOfMonth.toISOString().split("T")[0],
+    );
     const [endDate, setEndDate] = useState(today.toISOString().split("T")[0]);
     const [customerNameSearch, setCustomerNameSearch] = useState("");
     const [dateError, setDateError] = useState("");
@@ -64,6 +67,13 @@ const Excel_LetterBajajSearch = () => {
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
+
+    const isSuccessStatus = (status: string | undefined) => {
+        if (!status) return false;
+        const s = status.toLowerCase().trim();
+        return s === 'success' || s === 'sucess';
+    };
+
 
     const handleSearch = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -81,13 +91,22 @@ const Excel_LetterBajajSearch = () => {
 
         try {
             setLoading(true);
-            const data = await ERP_search_welcome_letters_bajaj({ startDate, endDate });
+            const data = await ERP_search_welcome_letters_bajaj({
+                startDate,
+                endDate,
+            });
 
             if (data && (data.Status === "Success" || data.status === "Success")) {
-                const fetchedData = (data.MasterData || []).map((item: WelcomeLetter) => ({
-                    ...item,
-                    csPushStatus: item.csPushStatus || 'Idle'
-                }));
+                const fetchedData = (data.MasterData || []).map(
+                    (item: WelcomeLetter) => {
+                         const isErpSuccess = isSuccessStatus(item.erpStatus);
+
+                         return {
+                            ...item,
+                             csPushStatus: isErpSuccess ? 'Pushed' :'Idle' // Set to Idle if ERP upload was successful, else Failed
+                         };
+                    },
+                );
                 setResults(fetchedData);
                 setCurrentPage(1); // Reset to page 1 on new search
                 if (fetchedData.length === 0) {
@@ -98,7 +117,9 @@ const Excel_LetterBajajSearch = () => {
             }
         } catch (error: any) {
             console.error("Search error", error);
-            setDateError(error?.response?.data?.Message || "An error occurred while searching.");
+            setDateError(
+                error?.response?.data?.Message || "An error occurred while searching.",
+            );
         } finally {
             setLoading(false);
         }
@@ -123,7 +144,10 @@ const Excel_LetterBajajSearch = () => {
     const totalRecords = filteredResultsWithIndex.length;
     const totalPages = Math.ceil(totalRecords / ITEMS_PER_PAGE) || 1;
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const paginatedRecords = filteredResultsWithIndex.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const paginatedRecords = filteredResultsWithIndex.slice(
+        startIndex,
+        startIndex + ITEMS_PER_PAGE,
+    );
 
     const handlePageChange = (newPage: number) => {
         if (newPage >= 1 && newPage <= totalPages) {
@@ -131,55 +155,76 @@ const Excel_LetterBajajSearch = () => {
         }
     };
 
-    const goBack = () => navigate('/Excel_InsertTravelProposal');
-    const gotoDashboard = () => navigate('/dashboard');
+    const goBack = () => navigate("/Excel_InsertTravelProposal");
+    const gotoDashboard = () => navigate("/dashboard");
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        navigate("/login");
     };
 
     const formatDate = (dateString: string) => {
         if (!dateString) return "—";
         const date = new Date(dateString);
-        return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('en-IN');
+        return isNaN(date.getTime())
+            ? dateString
+            : date.toLocaleDateString("en-IN");
     };
 
     // Handle CS Data Push Button Click
-    const handleCsDataPush = async (originalIndex: number, record: WelcomeLetter) => {
+    const handleCsDataPush = async (
+        originalIndex: number,
+        record: WelcomeLetter,
+    ) => {
         setResults((prev) => {
             const updated = [...prev];
-            updated[originalIndex] = { ...updated[originalIndex], csPushStatus: 'Pushing...' };
+            updated[originalIndex] = {
+                ...updated[originalIndex],
+                csPushStatus: "Pushing...",
+            };
             return updated;
         });
 
         try {
             // Replace or hook up your CS Data Push API call here if needed:
-            // const response = await pushCsDataBajajApi({ policyNo: record.Policy_Number, asNumber: record.Asnumber_bajaj });
-            await new Promise((resolve) => setTimeout(resolve, 600));
-
-            setResults((prev) => {
-                const updated = [...prev];
-                updated[originalIndex] = { ...updated[originalIndex], csPushStatus: 'Pushed' };
-                return updated;
+            const response = await pushCsDataBajajApi({
+                Policyno: record.Policy_Number,
             });
-        } catch (error) {
-            console.error("CS Data Push Error:", error);
-            setResults((prev) => {
-                const updated = [...prev];
-                updated[originalIndex] = { ...updated[originalIndex], csPushStatus: 'Failed' };
-                return updated;
-            });
-        }
+            if (
+                response &&
+                (response.Status === "Success" || response.status === "Success")
+            ) {
+                // Set state to Pushed
+                setResults((prev) => {
+                    const updated = [...prev];
+                    updated[originalIndex] = {
+                        ...updated[originalIndex],
+                        csPushStatus: "Pushed",
+                    };
+                    return updated;
+                });
+                // Optional: You can show a success toast/alert here
+                // alert(`Successfully pushed data for policy ${record.Policy_Number}`);
+            } else {
+                throw new Error(response.Message || "Failed to push data");
+            }
+        } catch (error) { }
     };
 
-    const handlePdfUpload = async (e: ChangeEvent<HTMLInputElement>, originalIndex: number, policyNo: string) => {
+    const handlePdfUpload = async (
+        e: ChangeEvent<HTMLInputElement>,
+        originalIndex: number,
+        policyNo: string,
+    ) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setResults((prevResults) => {
             const updatedResults = [...prevResults];
-            updatedResults[originalIndex] = { ...updatedResults[originalIndex], erpStatus: 'Uploading...' };
+            updatedResults[originalIndex] = {
+                ...updatedResults[originalIndex],
+                erpStatus: "Uploading...",
+            };
             return updatedResults;
         });
 
@@ -189,7 +234,10 @@ const Excel_LetterBajajSearch = () => {
             const base64File = reader.result as string;
 
             try {
-                const response = await uploadBajajPdfApi({ policyNo: policyNo, pdfBase64: base64File });
+                const response = await uploadBajajPdfApi({
+                    policyNo: policyNo,
+                    pdfBase64: base64File,
+                });
 
                 if (
                     response?.Status === "Success" ||
@@ -199,7 +247,11 @@ const Excel_LetterBajajSearch = () => {
                 ) {
                     setResults((prevResults) => {
                         const finalResults = [...prevResults];
-                        finalResults[originalIndex] = { ...finalResults[originalIndex], erpStatus: 'Success' };
+                        finalResults[originalIndex] = {
+                            ...finalResults[originalIndex],
+                            erpStatus: "Success",
+                             csPushStatus: 'Pushed'
+                        };
                         return finalResults;
                     });
                 } else {
@@ -209,7 +261,10 @@ const Excel_LetterBajajSearch = () => {
                 console.error("PDF Upload Error:", error);
                 setResults((prevResults) => {
                     const finalResults = [...prevResults];
-                    finalResults[originalIndex] = { ...finalResults[originalIndex], erpStatus: 'Failed' };
+                    finalResults[originalIndex] = {
+                        ...finalResults[originalIndex],
+                        erpStatus: "Failed",
+                    };
                     return finalResults;
                 });
             }
@@ -220,15 +275,24 @@ const Excel_LetterBajajSearch = () => {
         <div className="coi-container">
             <header className="coi-header">
                 <div className="coi-header-content">
-                    <img src={logo} alt="ZextrA Travel Assist" className="logo-image" style={{ maxHeight: '60px', width: 'auto' }} />
+                    <img
+                        src={logo}
+                        alt="ZextrA Travel Assist"
+                        className="logo-image"
+                        style={{ maxHeight: "60px", width: "auto" }}
+                    />
                     <div className="d-flex justify-content-center py-4">
                         <div className="logo d-flex align-items-center w-auto">
                             <span className="page-title">Travel Assistance Service</span>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                        <button onClick={gotoDashboard} className="coi-button"><Home size={18} /> Dashboard</button>
-                        <button onClick={handleLogout} className="coi-button"><LogOut size={18} /> Logout</button>
+                    <div style={{ display: "flex", gap: "20px" }}>
+                        <button onClick={gotoDashboard} className="coi-button">
+                            <Home size={18} /> Dashboard
+                        </button>
+                        <button onClick={handleLogout} className="coi-button">
+                            <LogOut size={18} /> Logout
+                        </button>
                     </div>
                 </div>
             </header>
@@ -237,20 +301,30 @@ const Excel_LetterBajajSearch = () => {
                 <div className="coi-card shadow-sm border-0">
                     <div className="coi-card-header d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-3">
-                            <button onClick={goBack} className="btn btn-link text-primary p-0">
+                            <button
+                                onClick={goBack}
+                                className="btn btn-link text-primary p-0"
+                            >
                                 <ArrowLeftCircle size={28} />
                             </button>
-                            <h2 className="coi-card-title mb-0">ERP Upload - Welcome Letter Bajaj Proposal</h2>
+                            <h2 className="coi-card-title mb-0">
+                                ERP Upload - Welcome Letter Bajaj Proposal
+                            </h2>
                         </div>
                     </div>
 
                     <div className="card-body p-4 bg-light">
-                        <form onSubmit={handleSearch} className="d-flex flex-wrap align-items-end gap-3 mb-2">
-                            <div style={{ minWidth: '200px' }}>
-                                <label className="form-label fw-bold text-secondary mb-1">From Date</label>
+                        <form
+                            onSubmit={handleSearch}
+                            className="d-flex flex-wrap align-items-end gap-3 mb-2"
+                        >
+                            <div style={{ minWidth: "200px" }}>
+                                <label className="form-label fw-bold text-secondary mb-1">
+                                    From Date
+                                </label>
                                 <input
                                     type="date"
-                                    className={`form-control ${dateError ? 'is-invalid' : ''}`}
+                                    className={`form-control ${dateError ? "is-invalid" : ""}`}
                                     value={startDate}
                                     onChange={(e) => {
                                         setStartDate(e.target.value);
@@ -258,11 +332,13 @@ const Excel_LetterBajajSearch = () => {
                                     }}
                                 />
                             </div>
-                            <div style={{ minWidth: '200px' }}>
-                                <label className="form-label fw-bold text-secondary mb-1">To Date</label>
+                            <div style={{ minWidth: "200px" }}>
+                                <label className="form-label fw-bold text-secondary mb-1">
+                                    To Date
+                                </label>
                                 <input
                                     type="date"
-                                    className={`form-control ${dateError ? 'is-invalid' : ''}`}
+                                    className={`form-control ${dateError ? "is-invalid" : ""}`}
                                     value={endDate}
                                     min={startDate}
                                     onChange={(e) => {
@@ -273,8 +349,16 @@ const Excel_LetterBajajSearch = () => {
                             </div>
 
                             {/* Customer Name Search Input */}
-                            <div style={{ minWidth: '260px', flex: '1 1 260px', maxWidth: '340px' }}>
-                                <label className="form-label fw-bold text-secondary mb-1">Customer Name</label>
+                            <div
+                                style={{
+                                    minWidth: "260px",
+                                    flex: "1 1 260px",
+                                    maxWidth: "340px",
+                                }}
+                            >
+                                <label className="form-label fw-bold text-secondary mb-1">
+                                    Customer Name
+                                </label>
                                 <div className="position-relative">
                                     <input
                                         type="text"
@@ -285,12 +369,17 @@ const Excel_LetterBajajSearch = () => {
                                             setCustomerNameSearch(e.target.value);
                                             setCurrentPage(1); // Reset to first page when filtering
                                         }}
-                                        style={{ paddingLeft: '36px' }}
+                                        style={{ paddingLeft: "36px" }}
                                     />
                                     <UserSearch
                                         size={18}
                                         className="text-secondary position-absolute"
-                                        style={{ left: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
+                                        style={{
+                                            left: "10px",
+                                            top: "50%",
+                                            transform: "translateY(-50%)",
+                                            pointerEvents: "none",
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -300,19 +389,35 @@ const Excel_LetterBajajSearch = () => {
                                     type="submit"
                                     className="btn btn-primary fw-bold shadow-sm"
                                     disabled={loading}
-                                    style={{ height: '42px', padding: '0 24px', backgroundColor: '#5a52ff', borderColor: '#5a52ff' }}
+                                    style={{
+                                        height: "42px",
+                                        padding: "0 24px",
+                                        backgroundColor: "#5a52ff",
+                                        borderColor: "#5a52ff",
+                                    }}
                                 >
                                     {loading ? (
-                                        <><RefreshCw size={18} className="me-2 animate-spin d-inline" /> Searching...</>
+                                        <>
+                                            <RefreshCw
+                                                size={18}
+                                                className="me-2 animate-spin d-inline"
+                                            />{" "}
+                                            Searching...
+                                        </>
                                     ) : (
-                                        <><Search size={18} className="me-2 d-inline" /> Search</>
+                                        <>
+                                            <Search size={18} className="me-2 d-inline" /> Search
+                                        </>
                                     )}
                                 </button>
                             </div>
                         </form>
 
                         {dateError && (
-                            <div className="text-danger fw-semibold mt-2 d-flex align-items-center" style={{ fontSize: '14px' }}>
+                            <div
+                                className="text-danger fw-semibold mt-2 d-flex align-items-center"
+                                style={{ fontSize: "14px" }}
+                            >
                                 <AlertTriangle size={16} className="me-2" />
                                 {dateError}
                             </div>
@@ -323,8 +428,13 @@ const Excel_LetterBajajSearch = () => {
                         <div>
                             {/* Summary Bar */}
                             <div className="d-flex justify-content-between align-items-center mb-3">
-                                <span className="text-muted fw-semibold" style={{ fontSize: '14px' }}>
-                                    Showing {totalRecords === 0 ? 0 : startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, totalRecords)} of {totalRecords} records
+                                <span
+                                    className="text-muted fw-semibold"
+                                    style={{ fontSize: "14px" }}
+                                >
+                                    Showing {totalRecords === 0 ? 0 : startIndex + 1} to{" "}
+                                    {Math.min(startIndex + ITEMS_PER_PAGE, totalRecords)} of{" "}
+                                    {totalRecords} records
                                 </span>
                             </div>
 
@@ -335,8 +445,8 @@ const Excel_LetterBajajSearch = () => {
                                             <th className="text-center">Customer Name</th>
                                             <th className="text-center">Policy Number</th>
                                             <th className="text-center">AS Number</th>
-                                            <th >Start Date</th>
-                                            <th >End Date</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
                                             <th className="text-center">Duration (Days)</th>
                                             <th>Premium</th>
                                             <th className="text-center">CS Data Push</th>
@@ -348,48 +458,77 @@ const Excel_LetterBajajSearch = () => {
                                         {paginatedRecords.length > 0 ? (
                                             paginatedRecords.map(({ item: res, originalIndex }) => (
                                                 <tr key={res.Policy_Number || originalIndex}>
-                                                    <td style={{ minWidth: '190px' }} className="fw-semibold text-primary">{res.fullname}</td>
-                                                    <td style={{ minWidth: '190px' }}>{res.Policy_Number}</td>
+                                                    <td
+                                                        style={{ minWidth: "190px" }}
+                                                        className="fw-semibold text-primary"
+                                                    >
+                                                        {res.fullname}
+                                                    </td>
+                                                    <td style={{ minWidth: "190px" }}>
+                                                        {res.Policy_Number}
+                                                    </td>
                                                     <td>{res.Asnumber_bajaj || "—"}</td>
-                                                    <td style={{ minWidth: '105px' }}>{formatDate(res.PolicyStartDate)}</td>
-                                                    <td style={{ minWidth: '105px' }}>{formatDate(res.PolicyEndDate)}</td>
-                                                    <td className="text-center fw-bold text-dark">{res.travelDuration || "—"}</td>
-                                                    <td className="fw-bold text-success">₹{res.PremiumAmount}</td>
+                                                    <td style={{ minWidth: "105px" }}>
+                                                        {formatDate(res.PolicyStartDate)}
+                                                    </td>
+                                                    <td style={{ minWidth: "105px" }}>
+                                                        {formatDate(res.PolicyEndDate)}
+                                                    </td>
+                                                    <td className="text-center fw-bold text-dark">
+                                                        {res.travelDuration || "—"}
+                                                    </td>
+                                                    <td className="fw-bold text-success">
+                                                        ₹{res.PremiumAmount}
+                                                    </td>
 
                                                     {/* Updated Styled CS Data Push Button */}
-                                                    <td className="text-center" style={{ minWidth: '145px', verticalAlign: 'middle' }}>
+                                                    <td
+                                                        className="text-center"
+                                                        style={{
+                                                            minWidth: "145px",
+                                                            verticalAlign: "middle",
+                                                        }}
+                                                    >
                                                         <button
                                                             type="button"
-                                                            onClick={() => handleCsDataPush(originalIndex, res)}
-                                                            disabled={res.csPushStatus === 'Pushing...' || res.csPushStatus === 'Pushed'}
-                                                            className={`btn btn-sm fw-semibold d-inline-flex align-items-center justify-content-center gap-1 shadow-sm ${
-                                                                res.csPushStatus === 'Pushed'
-                                                                    ? 'btn-success'
-                                                                    : res.csPushStatus === 'Failed'
-                                                                    ? 'btn-danger'
-                                                                    : 'btn-primary'
-                                                            }`}
+                                                            onClick={() =>
+                                                                handleCsDataPush(originalIndex, res)
+                                                            }
+                                                            disabled={
+                                                                res.csPushStatus === "Pushing..." ||
+                                                                res.csPushStatus === "Pushed"
+                                                            }
+                                                            className={`btn btn-sm fw-semibold d-inline-flex align-items-center justify-content-center gap-1 shadow-sm ${res.csPushStatus === "Pushed"
+                                                                    ? "btn-success"
+                                                                    : res.csPushStatus === "Failed"
+                                                                        ? "btn-danger"
+                                                                        : "btn-primary"
+                                                                }`}
                                                             style={{
-                                                                padding: '6px 12px',
-                                                                fontSize: '12px',
-                                                                borderRadius: '6px',
-                                                                minWidth: '120px',
+                                                                padding: "6px 12px",
+                                                                fontSize: "12px",
+                                                                borderRadius: "6px",
+                                                                minWidth: "120px",
                                                                 backgroundColor:
-                                                                    res.csPushStatus === 'Pushed'
-                                                                        ? '#198754'
-                                                                        : res.csPushStatus === 'Failed'
-                                                                        ? '#dc3545'
-                                                                        : '#4f46e5',
-                                                                borderColor: 'transparent',
-                                                                color: '#fff',
-                                                                transition: 'all 0.2s ease'
+                                                                    res.csPushStatus === "Pushed"
+                                                                        ? "#198754"
+                                                                        : res.csPushStatus === "Failed"
+                                                                            ? "#dc3545"
+                                                                            : "#4f46e5",
+                                                                borderColor: "transparent",
+                                                                color: "#fff",
+                                                                transition: "all 0.2s ease",
                                                             }}
                                                         >
-                                                            {res.csPushStatus === 'Pushing...' ? (
+                                                            {res.csPushStatus === "Pushing..." ? (
                                                                 <>
-                                                                    <RefreshCw size={14} className="animate-spin" /> Pushing...
+                                                                    <RefreshCw
+                                                                        size={14}
+                                                                        className="animate-spin"
+                                                                    />{" "}
+                                                                    Pushing...
                                                                 </>
-                                                            ) : res.csPushStatus === 'Pushed' ? (
+                                                            ) : res.csPushStatus === "Pushed" ? (
                                                                 <>
                                                                     <CheckCircle2 size={14} /> CS Pushed
                                                                 </>
@@ -401,35 +540,50 @@ const Excel_LetterBajajSearch = () => {
                                                         </button>
                                                     </td>
 
-                                                    <td style={{ verticalAlign: 'middle' }}>
+                                                    <td style={{ verticalAlign: "middle" }}>
                                                         <input
                                                             type="file"
                                                             accept="application/pdf"
-                                                            onChange={(e) => handlePdfUpload(e, originalIndex, res.Policy_Number)}
-                                                            disabled={res.erpStatus === 'Uploading...'}
+                                                            onChange={(e) =>
+                                                                handlePdfUpload(
+                                                                    e,
+                                                                    originalIndex,
+                                                                    res.Policy_Number,
+                                                                )
+                                                            }
+                                                            disabled={res.erpStatus === "Uploading..."}
                                                             className="form-control"
-                                                            style={{ padding: '4px', fontSize: '12px', minWidth: '200px' }}
+                                                            style={{
+                                                                padding: "4px",
+                                                                fontSize: "12px",
+                                                                minWidth: "200px",
+                                                            }}
                                                         />
                                                     </td>
-                                                    <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>
+                                                    <td
+                                                        style={{
+                                                            verticalAlign: "middle",
+                                                            textAlign: "center",
+                                                        }}
+                                                    >
                                                         <span
-                                                            className={`badge ${
-                                                                res.erpStatus?.toLowerCase() === 'success'
-                                                                    ? 'badge-success'
-                                                                    : res.erpStatus === 'Uploading...'
-                                                                    ? 'badge-info'
-                                                                    : 'badge-danger'
-                                                            }`}
+                                                            className={`badge ${res.erpStatus?.toLowerCase() === "success"
+                                                                    ? "badge-success"
+                                                                    : res.erpStatus === "Uploading..."
+                                                                        ? "badge-info"
+                                                                        : "badge-danger"
+                                                                }`}
                                                             style={{
-                                                                padding: '6px 10px',
-                                                                borderRadius: '4px',
-                                                                display: 'inline-block',
-                                                                minWidth: '80px',
+                                                                padding: "6px 10px",
+                                                                borderRadius: "4px",
+                                                                display: "inline-block",
+                                                                minWidth: "80px",
+                                                                fontSize: '15px',
                                                                 color:
-                                                                    res.erpStatus?.toLowerCase() === 'success'
-                                                                        ? '#28a745'
-                                                                        : '#dc3545',
-                                                                fontWeight: '600'
+                                                                    res.erpStatus?.toLowerCase() === "success"
+                                                                        ? "#28a745"
+                                                                        : "#dc3545",
+                                                                fontWeight: "600",
                                                             }}
                                                         >
                                                             {res.erpStatus}
@@ -439,8 +593,12 @@ const Excel_LetterBajajSearch = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={10} className="text-center py-4 text-muted fw-semibold">
-                                                    No matching customer records found for "{customerNameSearch}".
+                                                <td
+                                                    colSpan={10}
+                                                    className="text-center py-4 text-muted fw-semibold"
+                                                >
+                                                    No matching customer records found for "
+                                                    {customerNameSearch}".
                                                 </td>
                                             </tr>
                                         )}
@@ -451,8 +609,9 @@ const Excel_LetterBajajSearch = () => {
                             {/* Pagination Controls (15 per page) */}
                             {totalPages > 1 && (
                                 <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-                                    <div className="text-muted" style={{ fontSize: '13px' }}>
-                                        Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                                    <div className="text-muted" style={{ fontSize: "13px" }}>
+                                        Page <strong>{currentPage}</strong> of{" "}
+                                        <strong>{totalPages}</strong>
                                     </div>
                                     <div className="d-flex align-items-center gap-1">
                                         <button
@@ -465,10 +624,11 @@ const Excel_LetterBajajSearch = () => {
                                         </button>
 
                                         {Array.from({ length: totalPages }, (_, idx) => idx + 1)
-                                            .filter(page =>
-                                                page === 1 ||
-                                                page === totalPages ||
-                                                Math.abs(page - currentPage) <= 2
+                                            .filter(
+                                                (page) =>
+                                                    page === 1 ||
+                                                    page === totalPages ||
+                                                    Math.abs(page - currentPage) <= 2,
                                             )
                                             .map((page, idx, arr) => (
                                                 <React.Fragment key={page}>
@@ -478,14 +638,17 @@ const Excel_LetterBajajSearch = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => handlePageChange(page)}
-                                                        className={`btn btn-sm ${
-                                                            currentPage === page
-                                                                ? 'btn-primary fw-bold'
-                                                                : 'btn-outline-secondary'
-                                                        }`}
+                                                        className={`btn btn-sm ${currentPage === page
+                                                                ? "btn-primary fw-bold"
+                                                                : "btn-outline-secondary"
+                                                            }`}
                                                         style={
                                                             currentPage === page
-                                                                ? { backgroundColor: '#4f46e5', borderColor: '#4f46e5', color: '#fff' }
+                                                                ? {
+                                                                    backgroundColor: "#4f46e5",
+                                                                    borderColor: "#4f46e5",
+                                                                    color: "#fff",
+                                                                }
                                                                 : {}
                                                         }
                                                     >
@@ -511,7 +674,10 @@ const Excel_LetterBajajSearch = () => {
             </main>
 
             <footer className="coi-footer">
-                <p>© {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All rights reserved</p>
+                <p>
+                    © {new Date().getFullYear()} Interstellar Services Pvt. Ltd., All
+                    rights reserved
+                </p>
             </footer>
         </div>
     );
